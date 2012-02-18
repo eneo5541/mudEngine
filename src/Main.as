@@ -6,6 +6,7 @@ package
 	import flash.events.TextEvent;
 	import flash.text.TextField;
 	import flash.text.TextFieldType;
+	import parser.OutputEvent;
 	import parser.TextParser;
 /*
  * TODO
@@ -57,6 +58,12 @@ package
 			userOutputField.appendText(str);
 			
 			stage.addEventListener(KeyboardEvent.KEY_DOWN, detectKey);
+			parse.addEventListener(OutputEvent.LOOK, lookHandler);
+		}
+		
+		public function lookHandler(e:OutputEvent):void
+		{
+			trace("caught look, "+e.values);
 		}
 		
 		private function detectKey(event:KeyboardEvent):void

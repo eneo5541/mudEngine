@@ -62,6 +62,7 @@ package parser
 			
 			if (splitSpaces[0] == "look" || splitSpaces[0] == "l")
 			{
+				this.dispatchEvent(new OutputEvent(99,OutputEvent.OUTPUT));
 				return checkLookCommand(splitSpaces);
 			}
 			else
