@@ -1,20 +1,23 @@
 package handler 
 {
+	import objects.house.BedRoom;
+	import objects.Room;
 	public class RoomHandler
 	{
-		private var firstName:String;
-		private var lastName:String;
+		public var shortDesc:String;
+		public var longDesc:String;
 		
 		function RoomHandler()
 		{
 		 
 		}
 		 
-		public function loadRoom(command:String):String
+		public function loadRoom(room:Room):void
 		{
-			
-			
-			return "TEST";
+			//var td = new BedRoom();
+			this.longDesc = room.longDesc;
+			this.shortDesc = room.shortDesc;
+			trace(longDesc);
 		}
 	}
 	

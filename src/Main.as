@@ -65,8 +65,8 @@ package
 				userInputString = "";
 				userInputField.text = "";
 				
-				//var handler:RoomHandler = new RoomHandler();
-				//var tr = handler.loadRoom("Room2");
+				var roomHandler:RoomHandler = new RoomHandler();
+				roomHandler.loadRoom(new BedRoom);
 			}
 		}
 		

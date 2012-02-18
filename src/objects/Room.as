@@ -15,7 +15,17 @@ package objects
 		// This would look for a specific action (eg: search rock) and then execute the function attached
 		//public var action:Function;
  
-		function Room() 
+		function Room()
+		{
+			setShortDesc();
+			setLongDesc();
+		}
+		
+		public function setShortDesc():void
+		{
+		}
+		
+		public function setLongDesc():void
 		{
 		}
 		

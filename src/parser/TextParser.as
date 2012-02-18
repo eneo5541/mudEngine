@@ -12,7 +12,7 @@ package parser
 		 
 		public function parseCommand(command:String):String
 		{
-			if (command.length == 0)
+			if (command == null || command.length == 0)
 				return "\n";
 			var splitSpaces:Array = command.split(" ");
 			var output:String;
