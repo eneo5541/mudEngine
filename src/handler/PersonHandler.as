@@ -11,13 +11,14 @@ package handler
 		function PersonHandler()
 		{
 		}
-		 
+		
 		public function loadPerson(person:Person):void
 		{
 			this.shortDesc = person.shortDesc;
 			this.longDesc = person.longDesc;
 			this.dialogue = person.dialogue;
 		}
+		
 	}
 	
 }

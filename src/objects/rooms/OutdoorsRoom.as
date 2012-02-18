@@ -1,4 +1,4 @@
-package objects.house 
+package objects.rooms 
 {
 	import objects.Room;
 
@@ -18,12 +18,17 @@ package objects.house
 		{
 			longDesc = "You are standing in an open field west of a white house, with a boarded front door. "+
 			"There is a small mailbox here.";
-			addExits();
 		}
 		
 		override public function setExits():void
 		{
-			exits = { west:"objects.house.JunctionRoom" };
+			exits = { west:"objects.rooms.JunctionRoom" };
+		}
+		
+		
+		override public function setNpcs():void
+		{
+			npcs = { Dog:"objects.npcs.Dog"};
 		}
 	}
 

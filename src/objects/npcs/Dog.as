@@ -16,7 +16,7 @@ package objects.npcs
 		
 		override public function setLongDesc():void
 		{
-			longDesc = "A cute corgi. He looks like a twinkie without legs.";
+			longDesc = "A cute corgi. He looks like a twinkie with legs.";
 		}
 		
 		override public function setDialogue():void

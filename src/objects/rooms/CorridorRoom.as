@@ -1,4 +1,4 @@
-package objects.house 
+package objects.rooms 
 {
 	import objects.Room;
 
@@ -18,16 +18,21 @@ package objects.house
 		{
 			longDesc = "You are standing in a corridor. It stretches endlessly to the east and west, where the light disappears into a stygian darkness. "+
 			"There is a door behind you to the south.";
-			addExits();
 		}
 		
 		override public function setExits():void
 		{
 			exits = { 
-				south:"objects.house.BedRoom",
-				east:"objects.house.DeadEndRoom",
-				west:"objects.house.Corridor2Room"
+				south:"objects.rooms.BedRoom",
+				east:"objects.rooms.DeadEndRoom",
+				west:"objects.rooms.Corridor2Room"
 			};
+		}
+		
+				
+		override public function setNpcs():void
+		{
+			npcs = { Butler:"objects.npcs.Butler" };
 		}
 	}
 

@@ -41,6 +41,21 @@ package handler
 			}
 			return listString + " are here.";
 		}
+		
+		public function listObjects(list:Array):String
+		{		
+			var listString:String = "";
+			
+			for (var i:int = 0; i < list.length; i++)
+			{
+				if(i < (list.length-1)) 
+					listString += list[i] + ".\n";
+				else
+					listString += list[i];
+			}
+			return listString;
+		}
+		
 	}
 
 }

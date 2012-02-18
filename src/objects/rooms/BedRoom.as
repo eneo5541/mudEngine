@@ -1,4 +1,4 @@
-package objects.house 
+package objects.rooms 
 {
 	import objects.Room;
 
@@ -18,13 +18,25 @@ package objects.house
 		{
 			longDesc = "You are standing in a bedroom. There is a neatly made bed with a bedside table here. "+
 			"A plain wooden door is built into the north wall.";
-			addExits();
-			addNpcs();
 		}
 		
 		override public function setExits():void
 		{
-			exits = { north:"objects.house.CorridorRoom" };
+			exits = { north:"objects.rooms.CorridorRoom" };
+		}
+		
+/*		override public function setObject():void
+		{
+			object = { 
+				Watch:"objects.items.Watch",
+				Fedora:"objects.items.Fedora",
+				Binoculars:"objects.items.Binoculars"
+			};
+		}*/
+		
+		override public function setObject():void
+		{
+		//	object = { Fedora:"objects.items.Fedora" };
 		}
 		
 		override public function setItems():void
@@ -35,11 +47,6 @@ package objects.house
 				door:"A white, wooden door. It must lead outside.",
 				wall:"The walls are a soft peach colour."
 			};
-		}
-		
-		override public function setNpcs():void
-		{
-			npcs = { Butler:"objects.npcs.Butler", Dog:"objects.npcs.Dog"};
 		}
 		
 	}

@@ -8,14 +8,14 @@ package parser
 	import objects.npcs.Dog;
 	import objects.Person;
 	import objects.Room;
-	import objects.house.BathRoom;
-	import objects.house.BedRoom;
-	import objects.house.Corridor2Room;
-	import objects.house.CorridorRoom;
-	import objects.house.DeadEndRoom;
-	import objects.house.JunctionRoom;
-	import objects.house.OutdoorsRoom;
-	import objects.house.StairsRoom;
+	import objects.rooms.BathRoom;
+	import objects.rooms.BedRoom;
+	import objects.rooms.Corridor2Room;
+	import objects.rooms.CorridorRoom;
+	import objects.rooms.DeadEndRoom;
+	import objects.rooms.JunctionRoom;
+	import objects.rooms.OutdoorsRoom;
+	import objects.rooms.StairsRoom;
 	
 	public class TextParser extends EventDispatcher
 	{
@@ -61,14 +61,14 @@ package parser
 		}
 		
 		
-		function checkLookCommand(command:Array):String
+		public function checkLookCommand(command:Array):String
 		{
 			if (command.length == 1) {// If not looking at an object, just return room description
 					var longStr:String = roomHandler.longDesc;
 					return longStr + "\n";
 				}
 				
-				var npcObject:* = roomHandler.npcs;// Check if the second work after look matches any of the rooms items
+				var npcObject:* = roomHandler.npcs;
 				for (var i:* in npcObject) 
 				{ // Need to make this non-case sensitive. By converting the name to all lower case? 
 					if (command[1] == i) 
@@ -77,9 +77,10 @@ package parser
 						personHandler.loadPerson(new mainClass as Person);
 						return personHandler.longDesc + "\n";
 					}
-				}
+				}		
 				
-				var itemObject:* = roomHandler.items;// Check if the second work after look matches any of the rooms items
+				
+				var itemObject:* = roomHandler.items;// Check if the second word after look matches any of the rooms items
 				for (var i:* in itemObject) 
 				{
 					if (command[1] == i) 
@@ -89,7 +90,7 @@ package parser
 				return "I don't see any " + command[1] + ".\n";// If not found, user is trying to look at an item that does not exist.
 		}
 		
-		function checkDynamicCommands(command:Array):String 
+		public function checkDynamicCommands(command:Array):String 
 		{
 			var obj:* = roomHandler.exits; // Check if the command matches the exits of the room. If so, change the current room to the class in the exit's value.
 			for (var i:* in obj) 

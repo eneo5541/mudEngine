@@ -9,6 +9,7 @@ package objects
 		public var exits:*;
 		public var items:*;
 		public var npcs:*;
+		public var object:*;
 		
 		private var listHandler:ListHandler;
 		// These should be arrays, item would refer only to items in the description, not items in the room
@@ -21,11 +22,17 @@ package objects
 		function Room()
 		{
 			listHandler = new ListHandler();
+			
 			setExits();	
 			setNpcs();
+			setObject();
 			setItems();
 			setShortDesc();
 			setLongDesc();
+			
+			addExits();
+			addNpcs();
+			addObject();
 		}
 		// Extend the room object, then override these functions
 		public function setExits():void
@@ -36,6 +43,11 @@ package objects
 		public function setItems():void
 		{
 			//items = { item:"A non-descript item." };
+		}
+		
+		public function setObject():void
+		{
+			//object = { Object:"objects.Item" };
 		}
 		
 		public function setShortDesc():void
@@ -52,8 +64,6 @@ package objects
 		{
 			//longDesc = "This is a long description";
 			// Must manually add this to each class that overrides setLongDesc()
-			//addExits();
-			//addNpcs();
 		}
 		
 		public function addExits():void
@@ -73,7 +83,7 @@ package objects
 		public function addNpcs():void
 		{
 			if (npcs == null) return;
-			// This adds a list of the values in the exit object to the description. 			
+			
 			var obj:* = npcs;
 			var objectList:Array = [];
 			
@@ -82,6 +92,20 @@ package objects
 			
 			var tr:String = listHandler.listNpcs(objectList);
 			longDesc += "\n" + tr;
+		}
+		
+		public function addObject():void
+		{
+		/*	if (object == null) return;	
+			
+			var obj:* = object;
+			var objectList:Array = [];
+			
+			for (var i:* in obj) 
+				objectList.push(i);
+			
+			var tr:String = listHandler.listObjects(objectList);
+			longDesc += "\n" + tr;*/
 		}
 		
 	}

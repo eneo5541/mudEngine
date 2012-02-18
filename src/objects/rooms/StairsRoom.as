@@ -1,4 +1,4 @@
-package objects.house 
+package objects.rooms 
 {
 	import objects.Room;
 
@@ -18,12 +18,11 @@ package objects.house
 		{
 			longDesc = "The stairs led you to a balcony. You can see endless fields and mountains in all directions " +
 			"and the sound of birds chirping fills your ears. You can return back down the stairs to the south.";
-			addExits();
 		}
 		
 		override public function setExits():void
 		{
-			exits = { south:"objects.house.JunctionRoom" };
+			exits = { south:"objects.rooms.JunctionRoom" };
 		}
 	}
 

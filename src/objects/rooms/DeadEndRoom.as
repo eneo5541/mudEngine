@@ -1,4 +1,4 @@
-package objects.house 
+package objects.rooms 
 {
 	import objects.Room;
 
@@ -18,12 +18,11 @@ package objects.house
 		{
 			longDesc = "The corridor extends into infinity, and there is only blackness, and nothing more. " +
 			"You can return back up the corridor to the west";
-			addExits();
 		}
 		
 		override public function setExits():void
 		{
-			exits = { west:"objects.house.CorridorRoom" };
+			exits = { west:"objects.rooms.CorridorRoom" };
 		}
 	}
 

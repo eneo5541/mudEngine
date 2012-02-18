@@ -1,4 +1,4 @@
-package objects.house 
+package objects.rooms 
 {
 	import objects.Room;
 
@@ -18,12 +18,11 @@ package objects.house
 		{
 			longDesc = "This is a plain, functional bathroom. Everything here is made of polished white marble and " +
 			"looks remarkably clean. There is a marbled door leading out, on the eastern wall.";
-			addExits();
 		}
 		
 		override public function setExits():void
 		{
-			exits = { east:"objects.house.JunctionRoom" };
+			exits = { east:"objects.rooms.JunctionRoom" };
 		}
 	}
 
