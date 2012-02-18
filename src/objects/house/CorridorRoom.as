@@ -11,13 +11,14 @@ package objects.house
 		
 		override public function setShortDesc():void
 		{
-			shortDesc = "You are standing in a corridor.";
+			shortDesc = "Corridor.";
 		}
 		
 		override public function setLongDesc():void
 		{
-			longDesc = "You are standing in a corridor. It stretches endlessly to the east and west. \n"+
-			"There is a door behind you to the south";
+			longDesc = "You are standing in a corridor. It stretches endlessly to the east and west, where the light disappears into a stygian darkness. "+
+			"There is a door behind you to the south.";
+			addExits();
 		}
 				
 		override public function setExits():void

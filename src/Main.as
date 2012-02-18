@@ -4,21 +4,16 @@ package
 	import flash.events.Event;
 	import flash.events.KeyboardEvent;
 	import flash.events.TextEvent;
-	import flash.geom.Rectangle;
 	import flash.text.TextField;
 	import flash.text.TextFieldType;
-	import handler.RoomHandler;
-	import objects.house.BedRoom;
-	import parser.LookEvent;
 	import parser.TextParser;
-	
+	//import parser.LookEvent;
 
 	public class Main extends Sprite 
 	{
 		private var userInputField:TextField = new TextField(); 
 		private var userOutputField:TextField = new TextField();
-		private var userInputString:String;
-		private var parse:TextParser;
+		private var parse:TextParser = new TextParser();
 		
 		public function Main():void 
 		{						
@@ -29,22 +24,23 @@ package
             this.graphics.drawRect(0, 0, 400, 300);
             this.graphics.endFill();
 			
-			parse = new TextParser;
-			
 			userInputField.type = TextFieldType.INPUT;
 			userInputField.x = 0; 
 			userInputField.y = 270;
-            userInputField.width = 400; userInputField.height = 30;
+            userInputField.width = 400; 
+			userInputField.height = 30;
 			userInputField.border = true;
 			userInputField.borderColor = 0xff0000;
 			userInputField.text = "";
 			addChild(userInputField); 
 			
 			userOutputField = new TextField();
-			userOutputField.multiline = true;
+			userOutputField.multiline = true; 
+			userOutputField.wordWrap = true;
 			userOutputField.x = 0; 
 			userOutputField.y = 00;
-            userOutputField.width = 400; userOutputField.height =270;
+            userOutputField.width = 400;
+			userOutputField.height = 270;
 			userOutputField.border = true;
 			userOutputField.borderColor = 0x0000ff;
 			userOutputField.text = "";
@@ -53,27 +49,24 @@ package
 			var str:String = parse.parseCommand("look");
 			userOutputField.appendText(str);
 			
-			userInputField.addEventListener(Event.CHANGE, inputEventCapture);
 			stage.addEventListener(KeyboardEvent.KEY_DOWN, detectKey);
+			//userInputField.addEventListener(Event.CHANGE, inputEventCapture);
 			//parse.addEventListener(LookEvent.LOOK, lookHandler);
-		}
-		
-		private function inputEventCapture(event:Event):void
-		{
-			userInputString = userInputField.text; 
 		}
 		
 		private function detectKey(event:KeyboardEvent):void
 		{
 			if (event.keyCode == 13)
 			{
-				var str:String = parse.parseCommand(userInputString);
+				userOutputField.appendText(">" + userInputField.text + "\n");
+				// Pass the user's input to the textParser to look for commands
+				var str:String = parse.parseCommand(userInputField.text);
 				userOutputField.appendText(str);
-				userInputString = "";
 				userInputField.text = "";
+				// Scroll to the bottom of the text field
+				userOutputField.scrollV = userOutputField.bottomScrollV;
 			}
 		}
-		
 		
 		private function init(e:Event = null):void 
 		{

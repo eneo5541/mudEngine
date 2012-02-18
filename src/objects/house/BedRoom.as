@@ -11,13 +11,14 @@ package objects.house
 		
 		override public function setShortDesc():void
 		{
-			shortDesc = "You are standing in a bedroom.";
+			shortDesc = "Bedroom.";
 		}
 		
 		override public function setLongDesc():void
 		{
-			longDesc = "You are standing in a bedroom. There is a neatly made bed with a bedside table here. \n"+
-			"You can exit through the door to the north.";
+			longDesc = "You are standing in a bedroom. There is a neatly made bed with a bedside table here. "+
+			"A plain wooden door is built into the north wall.";
+			addExits();
 		}
 		
 		override public function setExits():void

@@ -1,9 +1,6 @@
 package objects 
 {
-	/**
-	 * ...
-	 * @author eric
-	 */
+
 	public class Room 
 	{
 		public var shortDesc:String;
@@ -18,24 +15,41 @@ package objects
  
 		function Room()
 		{
+			setExits();
 			setShortDesc();
 			setLongDesc();
-			setExits();
+			
 		}
-		
+		// Extend the room object, then override these functions
+		public function setExits():void
+		{
+			exits = { exit:"objects.Room" };
+		}
 		public function setShortDesc():void
 		{
-			shortDesc = "This is a short description";
+			shortDesc = "Short.";
 		}
 		
 		public function setLongDesc():void
 		{
-			longDesc = "This is a longer description";
+			longDesc = "This is a long description";
+			// Must manually add this to each class that overrides setLongDesc()
+			addExits();
 		}
 		
-		public function setExits():void
+		public function addExits():void
 		{
-			exits = { "exit":objects.Room };
+			if (exits == null) return;
+			// This adds a list of the values in the exit object to the description. 
+			var obj:* = exits;
+			var exitString:String = "";
+			
+			for (var i:* in obj) 
+			{
+				exitString += i + ", ";
+			}
+			
+			longDesc += "\nThere are exits to the " + exitString;
 		}
 		
 	}

@@ -30,9 +30,13 @@ package parser
 			switch (splitSpaces[0])
 			{
 				case "look":case "l":
-					var str:String = roomHandler.longDesc;
-					return str + "\n";
+					var longStr:String = roomHandler.longDesc;
+					return longStr + "\n";
 					//this.dispatchEvent(new LookEvent(LookEvent.LOOK));
+					break;
+				case "glance":case "g":
+					var shortStr:String = roomHandler.shortDesc;
+					return shortStr + "\n";
 					break;
 				case "search":case "sear":
 					return  "You search around. \n";
@@ -42,15 +46,17 @@ package parser
 					break;
 				default:					
 					var obj:* = roomHandler.exits;
+					// Check if the command matches the exits of the room. If so, change the current room to the class in the exit's value.
 					for (var i:* in obj) 
 					{
 						if (splitSpaces[0] == i) {
 							var mainClass:Class = getDefinitionByName(obj[i]) as Class;
 							roomHandler.loadRoom(new mainClass as Room);
-							return "You leave out the " + splitSpaces[0] + " exit. \n";
+							return "You leave out the " + splitSpaces[0] + " exit. \n" + roomHandler.longDesc + "\n";
+					return longStr + "\n";;
 						}
 					}
-					
+					// If the command is not an exit, its unknown
 					return "I don't know how to " + splitSpaces[0] + "\n";
 					break;
 			}
