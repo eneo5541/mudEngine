@@ -3,16 +3,28 @@ package parser
 	import flash.events.EventDispatcher;
 	import flash.utils.getDefinitionByName;
 	import handler.RoomHandler;
-	import objects.house.BedRoom;
-	import objects.house.CorridorRoom;
 	import objects.Room;
+	import objects.house.BathRoom;
+	import objects.house.BedRoom;
+	import objects.house.Corridor2Room;
+	import objects.house.CorridorRoom;
+	import objects.house.DeadEndRoom;
+	import objects.house.JunctionRoom;
+	import objects.house.OutdoorsRoom;
+	import objects.house.StairsRoom;
 	
 	public class TextParser extends EventDispatcher
 	{
 		private var roomHandler:RoomHandler;
 		// Need to find out how to get getDefinitionByName to work without creating these
-		private var _corridorRoom:CorridorRoom;
+		private var _bathroom:BathRoom;
 		private var _bedRoom:BedRoom;
+		private var _corridorRoom:CorridorRoom;
+		private var _corridor2Room:Corridor2Room;
+		private var _deadEndRoom:DeadEndRoom;
+		private var _junctionRoom:JunctionRoom;
+		private var _outdoorsRoom:OutdoorsRoom;
+		private var _stairsRoom:StairsRoom;
 		
 		
 		function TextParser()

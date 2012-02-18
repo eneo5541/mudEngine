@@ -20,10 +20,14 @@ package objects.house
 			"There is a door behind you to the south.";
 			addExits();
 		}
-				
+		
 		override public function setExits():void
 		{
-			exits = { south:"objects.house.BedRoom" };
+			exits = { 
+				south:"objects.house.BedRoom",
+				east:"objects.house.DeadEndRoom",
+				west:"objects.house.Corridor2Room"
+			};
 		}
 	}
 
