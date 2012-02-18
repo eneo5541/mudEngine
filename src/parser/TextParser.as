@@ -24,6 +24,7 @@ package parser
 	
 	public class TextParser extends EventDispatcher
 	{
+		private var inputCommand:String;
 		private var roomHandler:RoomHandler;
 		private var personHandler:PersonHandler;
 		private var gettableHandler:GettableHandler;
@@ -54,6 +55,7 @@ package parser
 		 
 		public function parseCommand(command:String):String
 		{
+			inputCommand = command;
 			if (command == null || command.length == 0)
 				return "\n";
 			var splitSpaces:Array = command.split(" ");
@@ -124,7 +126,7 @@ package parser
 				}
 			}
 			
-			return "I don't know how to " + command[0] + ".\n";// If the command is not an exit, its unknown
+			return "I don't know how to " + inputCommand + ".\n";// If the command is not an exit, its unknown
 		}
 		
 	}
