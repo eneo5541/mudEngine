@@ -50,6 +50,9 @@ package
 			userOutputField.text = "";
 			this.addChild(userOutputField);
 			
+			var str:String = parse.parseCommand("look");
+			userOutputField.appendText(str);
+			
 			userInputField.addEventListener(Event.CHANGE, inputEventCapture);
 			stage.addEventListener(KeyboardEvent.KEY_DOWN, detectKey);
 			//parse.addEventListener(LookEvent.LOOK, lookHandler);

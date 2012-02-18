@@ -6,6 +6,7 @@ package handler
 	{
 		public var shortDesc:String;
 		public var longDesc:String;
+		public var exits:*;
 		
 		function RoomHandler()
 		{
@@ -15,6 +16,7 @@ package handler
 		{
 			this.longDesc = room.longDesc;
 			this.shortDesc = room.shortDesc;
+			this.exits = room.exits;
 		}
 	}
 	
