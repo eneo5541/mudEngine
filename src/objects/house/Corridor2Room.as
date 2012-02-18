@@ -16,7 +16,8 @@ package objects.house
 		
 		override public function setLongDesc():void
 		{
-			longDesc = "A plain, lonely door sits on the northern wall, while the corridor continues infinitely to the east and west. ";
+			longDesc = "A plain, lonely door sits on the northern wall, while the corridor continues infinitely to the " +
+			"east and west. ";
 			addExits();
 		}
 		

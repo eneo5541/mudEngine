@@ -1,11 +1,16 @@
 package objects 
 {
+	import handler.ListHandler;
 
 	public class Room 
 	{
 		public var shortDesc:String;
 		public var longDesc:String;
 		public var exits:*;
+		public var items:*;
+		public var npcs:*;
+		
+		private var listHandler:ListHandler;
 		// These should be arrays, item would refer only to items in the description, not items in the room
 		//public var item:Array<Items>;
 		//public var exit:Array<Exits>;
@@ -15,41 +20,68 @@ package objects
  
 		function Room()
 		{
-			setExits();
+			listHandler = new ListHandler();
+			setExits();	
+			setNpcs();
+			setItems();
 			setShortDesc();
 			setLongDesc();
-			
 		}
 		// Extend the room object, then override these functions
 		public function setExits():void
 		{
-			exits = { exit:"objects.Room" };
+			//exits = { exit:"objects.Room" };
 		}
+		
+		public function setItems():void
+		{
+			//items = { item:"A non-descript item." };
+		}
+		
 		public function setShortDesc():void
 		{
-			shortDesc = "Short.";
+			//shortDesc = "Short.";
+		}
+		
+		public function setNpcs():void
+		{
+			//npcs = { Person:"objects.Person" };
 		}
 		
 		public function setLongDesc():void
 		{
-			longDesc = "This is a long description";
+			//longDesc = "This is a long description";
 			// Must manually add this to each class that overrides setLongDesc()
-			addExits();
+			//addExits();
+			//addNpcs();
 		}
 		
 		public function addExits():void
 		{
 			if (exits == null) return;
-			// This adds a list of the values in the exit object to the description. 
+			// This adds a list of the values in the exit object to the description. 			
 			var obj:* = exits;
-			var exitString:String = "";
+			var objectList:Array = [];
 			
 			for (var i:* in obj) 
-			{
-				exitString += i + ", ";
-			}
+				objectList.push(i);
 			
-			longDesc += "\nThere are exits to the " + exitString;
+			var tr:String = listHandler.listExits(objectList);
+			longDesc += "\nThere are exits to the " + tr;
+		}
+		
+		public function addNpcs():void
+		{
+			if (npcs == null) return;
+			// This adds a list of the values in the exit object to the description. 			
+			var obj:* = npcs;
+			var objectList:Array = [];
+			
+			for (var i:* in obj) 
+				objectList.push(i);
+			
+			var tr:String = listHandler.listNpcs(objectList);
+			longDesc += "\n" + tr;
 		}
 		
 	}

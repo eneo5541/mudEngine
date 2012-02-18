@@ -17,8 +17,8 @@ package objects.house
 		override public function setLongDesc():void
 		{
 			longDesc = "You are at a crossroads in the corridor. Another corridor lies behind you to the south, " +
-			"while a marbled room lies to the east. To the north is a flight of stairs leading upwards, while you can " +
-			"hear the sound of the wind to your west. ";
+			"while a marbled room lies to the west. To the north is a flight of stairs leading upwards, while you can " +
+			"hear the sound of the wind to your east. ";
 			addExits();
 		}
 		
