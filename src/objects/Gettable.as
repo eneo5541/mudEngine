@@ -1,17 +1,15 @@
 package objects 
 {
 
-	public class Person 
+	public class Gettable 
 	{
 		public var shortDesc:String;
 		public var longDesc:String;
-		public var dialogue:Array;
  
-		function Person()
+		function Gettable()
 		{
 			setShortDesc();
 			setLongDesc();
-			setDialogue();
 		}
 		
 		public function setShortDesc():void
@@ -22,11 +20,6 @@ package objects
 		public function setLongDesc():void
 		{
 			//longDesc = "This is a long description";
-		}
-		
-		public function setDialogue():void
-		{
-			//dialogue = ["A bit of dialogue"];
 		}
 		
 	}

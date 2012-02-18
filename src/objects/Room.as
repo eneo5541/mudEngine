@@ -9,7 +9,7 @@ package objects
 		public var exits:*;
 		public var items:*;
 		public var npcs:*;
-		public var object:*;
+		public var gettables:*;
 		
 		private var listHandler:ListHandler;
 		// These should be arrays, item would refer only to items in the description, not items in the room
@@ -25,14 +25,14 @@ package objects
 			
 			setExits();	
 			setNpcs();
-			setObject();
+			setGettables();
 			setItems();
 			setShortDesc();
 			setLongDesc();
 			
 			addExits();
 			addNpcs();
-			addObject();
+			addGettables();
 		}
 		// Extend the room object, then override these functions
 		public function setExits():void
@@ -45,9 +45,9 @@ package objects
 			//items = { item:"A non-descript item." };
 		}
 		
-		public function setObject():void
+		public function setGettables():void
 		{
-			//object = { Object:"objects.Item" };
+			//gettables = { Gettable:"objects.Gettable" };
 		}
 		
 		public function setShortDesc():void
@@ -94,18 +94,18 @@ package objects
 			longDesc += "\n" + tr;
 		}
 		
-		public function addObject():void
+		public function addGettables():void
 		{
-		/*	if (object == null) return;	
+			if (gettables == null) return;	
 			
-			var obj:* = object;
+			var obj:* = gettables;
 			var objectList:Array = [];
 			
 			for (var i:* in obj) 
 				objectList.push(i);
 			
-			var tr:String = listHandler.listObjects(objectList);
-			longDesc += "\n" + tr;*/
+			var tr:String = listHandler.listGettables(objectList);
+			longDesc += "\n" + tr;
 		}
 		
 	}

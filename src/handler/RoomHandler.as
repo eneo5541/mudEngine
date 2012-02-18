@@ -13,7 +13,7 @@ package handler
 		public var exits:*;
 		public var items:*;
 		public var npcs:*;
-		public var object:*;
+		public var gettables:*;
 		
 		//private var _butler:Butler;
 		//private var _dog:Dog;
@@ -30,7 +30,7 @@ package handler
 			this.shortDesc = room.shortDesc;
 			this.longDesc = room.longDesc;
 			this.npcs = room.npcs;
-			this.object = room.object;
+			this.gettables = room.gettables;
 		
 		//	npcObjects = [];	
 		//	loadNpcs();  // No need to load the rooms NPCs for the moment, but this will be used later to randomly print NPC dialogue to the screen

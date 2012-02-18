@@ -24,6 +24,11 @@ package objects.rooms
 		{
 			exits = { south:"objects.rooms.JunctionRoom" };
 		}
+		
+		override public function setGettables():void
+		{
+			gettables = { Binoculars:"objects.gettables.Binoculars" };
+		}
 	}
 
 

@@ -42,7 +42,7 @@ package handler
 			return listString + " are here.";
 		}
 		
-		public function listObjects(list:Array):String
+		public function listGettables(list:Array):String
 		{		
 			var listString:String = "";
 			
@@ -51,7 +51,7 @@ package handler
 				if(i < (list.length-1)) 
 					listString += list[i] + ".\n";
 				else
-					listString += list[i];
+					listString += list[i] + ".";
 			}
 			return listString;
 		}

@@ -24,6 +24,11 @@ package objects.rooms
 		{
 			exits = { east:"objects.rooms.JunctionRoom" };
 		}
+		
+		override public function setGettables():void
+		{
+			gettables = { Towel:"objects.gettables.Towel" };
+		}
 	}
 
 

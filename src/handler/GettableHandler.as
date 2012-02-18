@@ -3,21 +3,19 @@ package handler
 	import objects.Gettable;
 	import objects.Person;
 
-	public class PersonHandler
+	public class GettableHandler
 	{
 		public var shortDesc:String;
 		public var longDesc:String;
-		public var dialogue:Array;
 		
-		function PersonHandler()
+		function GettableHandler()
 		{
 		}
 		
-		public function loadPerson(person:Person):void
+		public function loadGettable(person:Gettable):void
 		{
 			this.shortDesc = person.shortDesc;
 			this.longDesc = person.longDesc;
-			this.dialogue = person.dialogue;
 		}
 		
 	}

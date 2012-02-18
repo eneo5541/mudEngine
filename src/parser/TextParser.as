@@ -2,8 +2,13 @@ package parser
 {
 	import flash.events.EventDispatcher;
 	import flash.utils.getDefinitionByName;
+	import handler.GettableHandler;
 	import handler.PersonHandler;
 	import handler.RoomHandler;
+	import objects.Gettable;
+	import objects.gettables.Binoculars;
+	import objects.gettables.Towel;
+	import objects.gettables.Watch;
 	import objects.npcs.Butler;
 	import objects.npcs.Dog;
 	import objects.Person;
@@ -21,6 +26,7 @@ package parser
 	{
 		private var roomHandler:RoomHandler;
 		private var personHandler:PersonHandler;
+		private var gettableHandler:GettableHandler;
 		// Need to find out how to get getDefinitionByName to work without creating these
 		private var _bathroom:BathRoom;
 		private var _bedRoom:BedRoom;
@@ -32,6 +38,9 @@ package parser
 		private var _stairsRoom:StairsRoom;
 		private var _butler:Butler;
 		private var _dog:Dog;
+		private var _watch:Watch;
+		private var _towel:Towel;
+		private var _binoculars:Binoculars;
 		
 		
 		function TextParser()
@@ -39,7 +48,8 @@ package parser
 			roomHandler = new RoomHandler;
 			roomHandler.loadRoom(new BedRoom);
 			
-			personHandler = new PersonHandler;;
+			personHandler = new PersonHandler;
+			gettableHandler = new GettableHandler;
 		}
 		 
 		public function parseCommand(command:String):String
@@ -73,11 +83,22 @@ package parser
 				{ // Need to make this non-case sensitive. By converting the name to all lower case? 
 					if (command[1] == i) 
 					{
-						var mainClass:Class = getDefinitionByName(npcObject[i]) as Class;
-						personHandler.loadPerson(new mainClass as Person);
+						var personClass:Class = getDefinitionByName(npcObject[i]) as Class;
+						personHandler.loadPerson(new personClass as Person);
 						return personHandler.longDesc + "\n";
 					}
-				}		
+				}	
+				
+				var gettableObject:* = roomHandler.gettables;
+				for (var i:* in gettableObject) 
+				{
+					if (command[1] == i) 
+					{
+						var gettableClass:Class = getDefinitionByName(gettableObject[i]) as Class;
+						gettableHandler.loadGettable(new gettableClass as Gettable);
+						return gettableHandler.longDesc + "\n";
+					}
+				}	
 				
 				
 				var itemObject:* = roomHandler.items;// Check if the second word after look matches any of the rooms items

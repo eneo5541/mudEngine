@@ -7,7 +7,12 @@ package
 	import flash.text.TextField;
 	import flash.text.TextFieldType;
 	import parser.TextParser;
-	//import parser.LookEvent;
+/*
+ * TODO
+ * Pick up items and put them in inventory
+ * Load items and NPCs separately whenever a new room is moved to. This way their properties can be used. 
+ * Add aliases for objects
+ */
 
 	public class Main extends Sprite 
 	{
@@ -50,8 +55,6 @@ package
 			userOutputField.appendText(str);
 			
 			stage.addEventListener(KeyboardEvent.KEY_DOWN, detectKey);
-			//userInputField.addEventListener(Event.CHANGE, inputEventCapture);
-			//parse.addEventListener(LookEvent.LOOK, lookHandler);
 		}
 		
 		private function detectKey(event:KeyboardEvent):void

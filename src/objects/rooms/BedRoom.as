@@ -25,20 +25,6 @@ package objects.rooms
 			exits = { north:"objects.rooms.CorridorRoom" };
 		}
 		
-/*		override public function setObject():void
-		{
-			object = { 
-				Watch:"objects.items.Watch",
-				Fedora:"objects.items.Fedora",
-				Binoculars:"objects.items.Binoculars"
-			};
-		}*/
-		
-		override public function setObject():void
-		{
-		//	object = { Fedora:"objects.items.Fedora" };
-		}
-		
 		override public function setItems():void
 		{
 			items = { 
@@ -47,6 +33,11 @@ package objects.rooms
 				door:"A white, wooden door. It must lead outside.",
 				wall:"The walls are a soft peach colour."
 			};
+		}
+		
+		override public function setGettables():void
+		{
+			gettables = { Watch:"objects.gettables.Watch" };
 		}
 		
 	}
