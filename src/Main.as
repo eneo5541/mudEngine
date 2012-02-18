@@ -9,6 +9,7 @@ package
 	import flash.text.TextFieldType;
 	import handler.RoomHandler;
 	import objects.house.BedRoom;
+	import parser.LookEvent;
 	import parser.TextParser;
 	
 
@@ -17,6 +18,7 @@ package
 		private var userInputField:TextField = new TextField(); 
 		private var userOutputField:TextField = new TextField();
 		private var userInputString:String;
+		private var parse:TextParser;
 		
 		public function Main():void 
 		{						
@@ -26,6 +28,8 @@ package
 			this.graphics.beginFill(0xFFCC00);
             this.graphics.drawRect(0, 0, 400, 300);
             this.graphics.endFill();
+			
+			parse = new TextParser;
 			
 			userInputField.type = TextFieldType.INPUT;
 			userInputField.x = 0; 
@@ -48,6 +52,7 @@ package
 			
 			userInputField.addEventListener(Event.CHANGE, inputEventCapture);
 			stage.addEventListener(KeyboardEvent.KEY_DOWN, detectKey);
+			//parse.addEventListener(LookEvent.LOOK, lookHandler);
 		}
 		
 		private function inputEventCapture(event:Event):void
@@ -59,14 +64,10 @@ package
 		{
 			if (event.keyCode == 13)
 			{
-				var parse:TextParser = new TextParser();
 				var str:String = parse.parseCommand(userInputString);
 				userOutputField.appendText(str);
 				userInputString = "";
 				userInputField.text = "";
-				
-				var roomHandler:RoomHandler = new RoomHandler();
-				roomHandler.loadRoom(new BedRoom);
 			}
 		}
 		

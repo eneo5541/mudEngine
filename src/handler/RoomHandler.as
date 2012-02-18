@@ -9,15 +9,12 @@ package handler
 		
 		function RoomHandler()
 		{
-		 
 		}
 		 
 		public function loadRoom(room:Room):void
 		{
-			//var td = new BedRoom();
 			this.longDesc = room.longDesc;
 			this.shortDesc = room.shortDesc;
-			trace(longDesc);
 		}
 	}
 	

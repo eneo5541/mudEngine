@@ -1,13 +1,19 @@
 package parser 
 {
-	public class TextParser
+	import flash.events.EventDispatcher;
+	import flash.display.Sprite;
+	import handler.RoomHandler;
+	import objects.house.BedRoom;
+	
+	public class TextParser extends EventDispatcher
 	{
-		private var firstName:String;
-		private var lastName:String;
+		private var roomHandler:RoomHandler;
+		
 		
 		function TextParser()
 		{
-		 
+			roomHandler = new RoomHandler;
+			roomHandler.loadRoom(new BedRoom);
 		}
 		 
 		public function parseCommand(command:String):String
@@ -21,8 +27,11 @@ package parser
 			{
 				case "look":case "l":
 					output = "You look around";
+					var str:String = roomHandler.longDesc + "\n";
+					output = str;
+					//this.dispatchEvent(new LookEvent(LookEvent.LOOK));
 					break;
-				case "north":case "south":case "east":case "west":case "n":case "s":case "e":case "w":
+				case "north":case "south":case "east":case "west":
 					output = "You leave out the " + splitSpaces[0] + " exit";
 					break;
 				case "search":case "sear":
