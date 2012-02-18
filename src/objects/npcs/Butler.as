@@ -17,7 +17,8 @@ package objects.npcs
 		override public function setLongDesc():void
 		{
 			longDesc = "The butler is a tall, gaunt man wearing a stylish black-tie suit. " +
-			"He stands at attention when you approach. ";
+			"He stands at attention when you approach. \n" +
+			"He is in excellent condition.";
 		}
 		
 		override public function setDialogue():void
