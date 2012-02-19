@@ -81,6 +81,7 @@ package parser
 					checkGetCommand(splitSpaces);
 					break;
 				case "drop":case "d":
+					checkDropCommand(splitSpaces);
 					break;
 				default:
 					if (checkDirectionCommand(splitSpaces,false))
@@ -89,6 +90,29 @@ package parser
 					break;
 			}
 			
+		}
+		
+		private function checkDropCommand(command:Array):void
+		{
+			var object:* = roomHandler.gettableHandler.gettableArray;
+			for (var i:* in object)
+			{
+				if (object[i].location == "handler::InventoryHandler")  // Can only drop stuff in inventory
+				{
+					var gettableObj:Class = getDefinitionByName(object[i].gettable) as Class;
+					var child:* = new gettableObj;
+					for (var j:* in child.alias)  // Then iterate all the aliases for that object
+					{
+						if (command[1] == child.alias[j])  // If matching, change the object's location to inventory
+						{
+							object[i].location = roomHandler.room;
+							this.dispatchEvent(new OutputEvent("You drop a " + child.shortDesc + ".\n", OutputEvent.OUTPUT));
+							return;
+						}
+					}
+				}
+			}
+			this.dispatchEvent(new OutputEvent("I don't have any " + command[1] + " to drop.\n", OutputEvent.OUTPUT));
 		}
 		
 		

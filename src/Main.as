@@ -10,9 +10,7 @@ package
 	import parser.TextParser;
 /*
  * TODO
- * Items and NPCs should be moved to separate arrays (the handlers?) 
- * The room's item and NPC arrays only denote the STARTING location of the item/npc. 
- * The new location can be changed by changing the object's location in the array
+ * Handling interaction with NPC, interaction with objects, and NPC random dialogue
  */
 
 	public class Main extends Sprite 
