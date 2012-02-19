@@ -10,11 +10,9 @@ package
 	import parser.TextParser;
 /*
  * TODO
- * Add 'go' to directions
- * Make objects non-case sensitive (by changing them all to lower case when checking)
- * Pick up items and put them in inventory
- * Load items and NPCs separately whenever a new room is moved to. This way their properties can be used. 
- * Add aliases for objects
+ * Items and NPCs should be moved to separate arrays (the handlers?) 
+ * The room's item and NPC arrays only denote the STARTING location of the item/npc. 
+ * The new location can be changed by changing the object's location in the array
  */
 
 	public class Main extends Sprite 

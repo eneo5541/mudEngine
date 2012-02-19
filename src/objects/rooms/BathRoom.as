@@ -25,10 +25,10 @@ package objects.rooms
 			exits = { east:"objects.rooms.JunctionRoom" };
 		}
 		
-		override public function setGettables():void
+/*		override public function setGettables():void
 		{
 			gettables = ["objects.gettables.Towel"];
-		}
+		}*/
 	}
 
 

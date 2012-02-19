@@ -37,12 +37,12 @@ package objects.rooms
 		
 		override public function setGettables():void
 		{
-			gettables = ["objects.gettables.Watch","objects.gettables.Towel"];
+			gettables = ["objects.gettables.Watch"];
 		}
 		
 		override public function setNpcs():void
 		{
-			npcs = ["objects.npcs.Butler","objects.npcs.Dog"];
+			npcs = ["objects.npcs.Butler",];
 		}
 		
 	}

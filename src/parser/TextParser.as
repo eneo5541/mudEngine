@@ -3,6 +3,7 @@ package parser
 	import flash.events.EventDispatcher;
 	import flash.utils.getDefinitionByName;
 	import handler.GettableHandler;
+	import handler.InventoryHandler;
 	import handler.PersonHandler;
 	import handler.RoomHandler;
 	import objects.Gettable;
@@ -26,7 +27,8 @@ package parser
 	{
 		private var inputCommand:String;
 		public var roomHandler:RoomHandler;
-		private var personHandler:PersonHandler;
+		public var inventoryHandler:InventoryHandler;
+		//private var personHandler:PersonHandler;
 		private var gettableHandler:GettableHandler;
 		// Need to find out how to get getDefinitionByName to work without creating these
 		private var _bathroom:BathRoom;
@@ -46,11 +48,11 @@ package parser
 		
 		function TextParser()
 		{
-			roomHandler = new RoomHandler;
+			roomHandler = new RoomHandler();
 			roomHandler.loadRoom(new BedRoom);
-			
-			personHandler = new PersonHandler;
-			gettableHandler = new GettableHandler;
+			inventoryHandler = new InventoryHandler();
+			//personHandler = new PersonHandler;
+			//gettableHandler = new GettableHandler;
 		}
 		 
 		public function parseCommand(command:String):void
@@ -71,11 +73,38 @@ package parser
 			{
 				checkDirectionCommand(splitSpaces);
 			}
+			else if (splitSpaces[0] == "get")
+			{
+				checkGetCommand(splitSpaces);
+			}
 			else
 			{
 				checkDynamicCommands(splitSpaces);
 			}
 			
+		}
+		
+		
+		private function checkGetCommand(command:Array):void
+		{
+			trace(command[1]);
+			var object:* = roomHandler.gettableHandler.gettableArray;
+			for (var i:* in object) // Iterate through all the objects in the room (either items or npcs)
+			{
+				//trace(object[i].gettable);
+				/*if(
+				var gettableObj:Class = getDefinitionByName(object[i].gettable) as Class;
+				var child = new gettableObj;
+				
+				for (var j:* in child.alias)  // Then iterate all the aliases for that object
+				{
+					if (command[1] == child.alias[j])  // If matching, return description
+					{
+						trace(child.longDesc);
+						//roomHandler.deleteGettable(i);
+					}
+				}*/
+			}
 		}
 		
 		
@@ -90,7 +119,7 @@ package parser
 				
 			if (checkForObjects(roomHandler.npcs, command[1])) return;   // If the player is looking at NPCs, will return true. Halt this conditional
 			
-			if (checkForObjects(roomHandler.gettables, command[1])) return;  // Same deal as above with gettable items
+			if (checkForGettables(roomHandler.gettables, command[1])) return;  // Same deal as above with gettable items
 
 			var itemObject:* = roomHandler.items; // Check if the second word matches the room's items 
 			for (var i:* in itemObject) 
@@ -107,12 +136,37 @@ package parser
 		}
 		
 		
+		private function checkForGettables(target:*, command:String):Boolean
+		{
+			var object:* = roomHandler.gettableHandler.gettableArray;
+			trace(object.length);
+			for (var i:* in object) // Iterate through all the objects in the room (either items or npcs)
+			{
+				if (object[i].location == roomHandler.room)  // Find all objects that are in this current room
+				{
+					var gettableObj:Class = getDefinitionByName(object[i].gettable) as Class;
+					var child = new gettableObj;
+					for (var j:* in child.alias)  // Then iterate all the aliases for that object
+					{
+						if (command == child.alias[j])  // If matching, return description
+						{
+							this.dispatchEvent(new OutputEvent(child.longDesc + "\n", OutputEvent.OUTPUT));
+							return true;
+						}
+					}
+				}
+			}
+			
+			return false;
+		}
+		
+		
 		private function checkForObjects(target:*, command:String):Boolean
 		{
-			var npcObject:* = target;
-			for (var i:* in npcObject) // Iterate through all the objects in the room (either items or npcs)
+			var object:* = target;
+			for (var i:* in object) // Iterate through all the objects in the room (either items or npcs)
 			{
-				var child:*= npcObject[i];
+				var child:*= object[i];
 				for (var j:* in child.alias)  // Then iterate all the aliases for that object
 				{
 					if (command == child.alias[j])  // If matching, return description
