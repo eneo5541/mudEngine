@@ -21,7 +21,7 @@ package objects.npcs
 		
 		override public function setLongDesc():void
 		{
-			longDesc = "A cute corgi. He looks like a twinkie with legs. \n" +
+			longDesc = "A cute corgi. He looks like a twinkie with feets. \n" +
 			"He is in excellent condition.";
 		}
 		

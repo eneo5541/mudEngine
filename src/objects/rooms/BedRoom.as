@@ -40,11 +40,6 @@ package objects.rooms
 			gettables = ["objects.gettables.Watch"];
 		}
 		
-		override public function setNpcs():void
-		{
-			npcs = ["objects.npcs.Butler",];
-		}
-		
 	}
 
 

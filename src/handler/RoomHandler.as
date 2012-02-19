@@ -16,6 +16,7 @@ package handler
 	{
 		private var listHandler:ListHandler = new ListHandler();
 		public var gettableHandler:GettableHandler = new GettableHandler();
+		public var personHandler:PersonHandler = new PersonHandler();
 		
 		public var room:String;
 		public var shortDesc:String;
@@ -37,8 +38,9 @@ package handler
 		{	
 			this.room = getQualifiedClassName(room);
 			
-			this.npcs = loadNpcs(room.npcs)
+			//this.npcs = loadNpcs(room.npcs)
 			//this.gettables = loadGettables(room.gettables);
+			loadNpcs(room.npcs);
 			loadGettables(room.gettables);
 			
 			this.exits = room.exits;
@@ -75,7 +77,7 @@ package handler
 			}
 		}*/
 		
-		private function loadNpcs(target:*):Array
+		/*private function loadNpcs(target:*):Array
 		{
 			var npcObject:* = target;
 			var npcArray:Array = [];
@@ -86,17 +88,20 @@ package handler
 				//personHandler.loadPerson(new personClass as Person);
 			}
 			return npcArray;
+		}*/
+		
+		private function loadNpcs(target:*):void
+		{
+			var npcObject:* = target;
+			for (var i:* in npcObject)
+				personHandler.addPerson(npcObject[i], room);
 		}
 		
 		private function loadGettables(target:*):void
-		{
-			var gettableObject:* = target; // Every time a room is moved to, it attempts to add that room's objects to the gettableHandler
-			var gettableArray:Array = [];  // The handle stores each object and its location, so that the location can be changed
-			for (var i:* in gettableObject)// Room descript then references this array to add the room's objects
-			{ 
-				var gettableClass:Class = getDefinitionByName(gettableObject[i]) as Class;
+		{									
+			var gettableObject:* = target; // On loadRoom, add that room's objects to the gettableHandler
+			for (var i:* in gettableObject)// The handler stores each object, so that it can be manipulated independently of the room				   
 				gettableHandler.addGettable(gettableObject[i], room);
-			}
 		}
 		
 		
@@ -120,10 +125,7 @@ package handler
 		
 		private function addNpcs():String
 		{
-			var td:Array = [];
-			for (var i:* in npcs) 
-				td.push(npcs[i].shortDesc);
-			
+			var td:Array = personHandler.personsThisRoom(room);
 			var tr:String = listHandler.listNpcs(td);
 			return tr;
 		}

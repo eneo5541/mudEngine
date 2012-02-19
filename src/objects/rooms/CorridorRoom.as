@@ -29,15 +29,11 @@ package objects.rooms
 			};
 		}
 		
-		//override public function setNpcs():void
-		//{
-		//	npcs = ["objects.npcs.Butler"];
-		//}
-		
-		override public function setGettables():void
+		override public function setNpcs():void
 		{
-			gettables = ["objects.gettables.Towel"];
+			npcs = ["objects.npcs.Butler"];
 		}
+		
 		
 	}
 

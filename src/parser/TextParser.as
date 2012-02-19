@@ -93,7 +93,7 @@ package parser
 				if (object[i].location == roomHandler.room)  // Find all objects that are in this current room
 				{
 					var gettableObj:Class = getDefinitionByName(object[i].gettable) as Class;
-					var child = new gettableObj;
+					var child:* = new gettableObj;
 					for (var j:* in child.alias)  // Then iterate all the aliases for that object
 					{
 						if (command[1] == child.alias[j])  // If matching, change the object's location to inventory
@@ -145,7 +145,7 @@ package parser
 				if (object[i].location == roomHandler.room)  // Find all objects that are in this current room
 				{
 					var gettableObj:Class = getDefinitionByName(object[i].gettable) as Class;
-					var child = new gettableObj;
+					var child:* = new gettableObj;
 					for (var j:* in child.alias)  // Then iterate all the aliases for that object
 					{
 						if (command == child.alias[j])  // If matching, return description
@@ -163,16 +163,20 @@ package parser
 		
 		private function checkForObjects(target:*, command:String):Boolean
 		{
-			var object:* = target;
-			for (var i:* in object) // Iterate through all the objects in the room (either items or npcs)
+			var object:* = roomHandler.personHandler.personArray;
+			for (var i:* in object)
 			{
-				var child:*= object[i];
-				for (var j:* in child.alias)  // Then iterate all the aliases for that object
+				if (object[i].location == roomHandler.room)
 				{
-					if (command == child.alias[j])  // If matching, return description
+					var personObj:Class = getDefinitionByName(object[i].person) as Class;
+					var child:* = new personObj;
+					for (var j:* in child.alias)  
 					{
-						this.dispatchEvent(new OutputEvent(child.longDesc + "\n", OutputEvent.OUTPUT));
-						return true;
+						if (command == child.alias[j]) 
+						{
+							this.dispatchEvent(new OutputEvent(child.longDesc + "\n", OutputEvent.OUTPUT));
+							return true;
+						}
 					}
 				}
 			}
