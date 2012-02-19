@@ -70,8 +70,8 @@ package parser
 					checkLookCommand(splitSpaces);
 					break;
 				case "go":
-					if (!checkDirectionCommand(splitSpaces, true))
-						this.dispatchEvent(new OutputEvent("I don't see any " + command[1] + " exit.\n", OutputEvent.OUTPUT));
+					if (!checkDirectionCommand(splitSpaces[1]))
+						this.dispatchEvent(new OutputEvent("I don't see any " + splitSpaces[1] + " exit.\n", OutputEvent.OUTPUT));
 					break;
 				case "inventory":case "i":case "inv":
 					var tr:String = roomHandler.gettableHandler.currentInventory(); 
@@ -84,7 +84,7 @@ package parser
 					checkDropCommand(splitSpaces);
 					break;
 				default:
-					if (checkDirectionCommand(splitSpaces,false))
+					if (checkDirectionCommand(splitSpaces[0]))
 						return;
 					checkDynamicCommands(splitSpaces);
 					break;
@@ -92,161 +92,113 @@ package parser
 			
 		}
 		
+// Get and drop items		
 		private function checkDropCommand(command:Array):void
 		{
 			var object:* = roomHandler.gettableHandler.gettableArray;
-			for (var i:* in object)
-			{
-				if (object[i].location == "handler::InventoryHandler")  // Can only drop stuff in inventory
-				{
-					var gettableObj:Class = getDefinitionByName(object[i].gettable) as Class;
-					var child:* = new gettableObj;
-					for (var j:* in child.alias)  // Then iterate all the aliases for that object
-					{
-						if (command[1] == child.alias[j])  // If matching, change the object's location to inventory
-						{
-							object[i].location = roomHandler.room;
-							this.dispatchEvent(new OutputEvent("You drop a " + child.shortDesc + ".\n", OutputEvent.OUTPUT));
-							return;
-						}
-					}
-				}
-			}
-			this.dispatchEvent(new OutputEvent("I don't have any " + command[1] + " to drop.\n", OutputEvent.OUTPUT));
+			var pickedObject:String = inventoryHandler.moveItem(object, command[1], "handler::InventoryHandler", roomHandler.room);
+			if (pickedObject != null)
+				this.dispatchEvent(new OutputEvent("You drop a " + pickedObject + ".\n", OutputEvent.OUTPUT));
+			else
+				this.dispatchEvent(new OutputEvent("I don't have any " + command[1] + " to drop.\n", OutputEvent.OUTPUT));
 		}
-		
 		
 		private function checkGetCommand(command:Array):void
 		{
 			var object:* = roomHandler.gettableHandler.gettableArray;
-			for (var i:* in object) // Iterate through all the objects in existance
-			{
-				if (object[i].location == roomHandler.room)  // Find all objects that are in this current room
-				{
-					var gettableObj:Class = getDefinitionByName(object[i].gettable) as Class;
-					var child:* = new gettableObj;
-					for (var j:* in child.alias)  // Then iterate all the aliases for that object
-					{
-						if (command[1] == child.alias[j])  // If matching, change the object's location to inventory
-						{
-							object[i].location = "handler::InventoryHandler";
-							this.dispatchEvent(new OutputEvent("You get a " + child.shortDesc + ".\n", OutputEvent.OUTPUT));
-							return;
-						}
-					}
-				}
-			}
-			this.dispatchEvent(new OutputEvent("I don't see any " + command[1] + " here to get.\n", OutputEvent.OUTPUT));
+			var pickedObject:String = inventoryHandler.moveItem(object, command[1], roomHandler.room, "handler::InventoryHandler");
+			if (pickedObject != null)
+				this.dispatchEvent(new OutputEvent("You get a " + pickedObject + ".\n", OutputEvent.OUTPUT));
+			else
+				this.dispatchEvent(new OutputEvent("I don't see any " + command[1] + " here to get.\n", OutputEvent.OUTPUT));
 		}
 		
-		
+// Look (at the room, or at objects)		
 		private function checkLookCommand(command:Array):void
 		{
 			if (command.length == 1) // If not looking at an object, just return room description
 			{
-					var longStr:String = roomHandler.getDescription();
-					this.dispatchEvent(new OutputEvent(longStr, OutputEvent.OUTPUT));
-					return;
+				var longStr:String = roomHandler.getDescription();
+				this.dispatchEvent(new OutputEvent(longStr, OutputEvent.OUTPUT));
+				return;
 			}
-				
-			if (checkInventory(command[1])) return; 
 			
-			if (checkForNpcs(command[1])) return;   // If the player is looking at NPCs, will return true. Halt this conditional
-			
-			if (checkForGettables(command[1])) return;  // Same deal as above with gettable items
-
-			var itemObject:* = roomHandler.items; // Check if the second word matches the room's items 
-			for (var i:* in itemObject) 
-			{
-				if (command[1] == i) 
-				{
-					this.dispatchEvent(new OutputEvent(itemObject[i] + "\n", OutputEvent.OUTPUT));
-					return;
-				}
-			}
+			if (checkInventory(command[1])) 
+				return; 
+			if (checkForNpcs(command[1]))  // If the player is looking at NPCs, will return true. Halt this conditional
+				return;
+			if (checkForGettables(command[1]))  // Same deal as above, but with gettable items
+				return; 
+			if (checkForRoomItems(command[1])) 
+				return; 
 			
 			this.dispatchEvent(new OutputEvent("I don't see any " + command[1] + ".\n", OutputEvent.OUTPUT));
 			return;
 		}
 		
-		
 		private function checkInventory(command:String):Boolean
 		{
 			var object:* = roomHandler.gettableHandler.gettableArray; // Look for gettable objects with a location of 'inventory'
-			for (var i:* in object) 
+			var pickedObject:String = inventoryHandler.checkItemExists(object, command, "handler::InventoryHandler");;
+			if (pickedObject != null)
 			{
-				if (object[i].location == "handler::InventoryHandler") 
-				{
-					var gettableObj:Class = getDefinitionByName(object[i].gettable) as Class;
-					var child:* = new gettableObj;
-					for (var j:* in child.alias)
-					{
-						if (command == child.alias[j])
-						{
-							this.dispatchEvent(new OutputEvent("INVENTORY: \n"+child.longDesc + "\n", OutputEvent.OUTPUT));
-							return true;
-						}
-					}
-				}
+				this.dispatchEvent(new OutputEvent(pickedObject + "\n", OutputEvent.OUTPUT));
+				return true;
 			}
-			
-			return false;
-		}
-		
-		private function checkForGettables(command:String):Boolean
-		{
-			var object:* = roomHandler.gettableHandler.gettableArray;
-			for (var i:* in object) // Iterate through all the objects in existance
+			else
 			{
-				if (object[i].location == roomHandler.room)  // Find all objects that are in this current room
-				{
-					var gettableObj:Class = getDefinitionByName(object[i].gettable) as Class;
-					var child:* = new gettableObj;
-					for (var j:* in child.alias)  // Then iterate all the aliases for that object
-					{
-						if (command == child.alias[j])  // If matching, return description
-						{
-							this.dispatchEvent(new OutputEvent(child.longDesc + "\n", OutputEvent.OUTPUT));
-							return true;
-						}
-					}
-				}
+				return false;
 			}
-			
-			return false;
 		}
 		
 		private function checkForNpcs(command:String):Boolean
 		{
-			var object:* = roomHandler.personHandler.personArray;
-			for (var i:* in object)
+			var object:* = roomHandler.personHandler.personArray; // Look for npc objects with a location of this room
+			var pickedObject:String = inventoryHandler.checkItemExists(object, command, roomHandler.room);;
+			if (pickedObject != null)
 			{
-				if (object[i].location == roomHandler.room)
+				this.dispatchEvent(new OutputEvent(pickedObject + "\n", OutputEvent.OUTPUT));
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
+		
+		private function checkForGettables(command:String):Boolean
+		{
+			var object:* = roomHandler.gettableHandler.gettableArray; // Look for gettable objects with a location of this room
+			var pickedObject:String = inventoryHandler.checkItemExists(object, command, roomHandler.room);;
+			if (pickedObject != null)
+			{
+				this.dispatchEvent(new OutputEvent(pickedObject + "\n", OutputEvent.OUTPUT));
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}	
+		
+		private function checkForRoomItems(command:String):Boolean
+		{
+			var itemObject:* = roomHandler.items; // Check if the second word matches the room's items 
+			for (var i:* in itemObject) 
+			{
+				if (command == i) 
 				{
-					var personObj:Class = getDefinitionByName(object[i].person) as Class;
-					var child:* = new personObj;
-					for (var j:* in child.alias)  
-					{
-						if (command == child.alias[j]) 
-						{
-							this.dispatchEvent(new OutputEvent(child.longDesc + "\n", OutputEvent.OUTPUT));
-							return true;
-						}
-					}
+					this.dispatchEvent(new OutputEvent(itemObject[i] + "\n", OutputEvent.OUTPUT));
+					return true;
 				}
 			}
 			
 			return false;
 		}
 		
-		private function checkDirectionCommand(command:Array, isLong:Boolean):Boolean
-		{
-			var newCommand:String = "";
-			if (isLong)
-				newCommand = command[1];
-			else
-				newCommand = command[0];
-			
+// Move between rooms
+		private function checkDirectionCommand(newCommand:String):Boolean
+		{			
 			var obj:* = roomHandler.exits; // Check if the command matches the exits of the room.
 			for (var i:* in obj) 
 			{
@@ -260,19 +212,16 @@ package parser
 					return true;
 				}
 			}
+			
 			return false;
 		}
 		
+// Dynamic commands (action commands attached to either npcs in the room or items in the inventory) 
 		private function checkDynamicCommands(command:Array):void
 		{
 			var errorMsg:String = "I don't know how to " + inputCommand + ".\n";
 			this.dispatchEvent(new OutputEvent(errorMsg, OutputEvent.OUTPUT));
 		}
-		
-		
-		
-		
-
 		
 	}
 	

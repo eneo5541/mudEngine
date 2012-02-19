@@ -23,8 +23,6 @@ package handler
 		public var longDesc:String;
 		public var exits:*;
 		public var items:*;
-		public var npcs:Array;
-		public var gettables:Array;
 		
 		//private var _butler:Butler;
 		//private var _dog:Dog;
@@ -38,8 +36,6 @@ package handler
 		{	
 			this.room = getQualifiedClassName(room);
 			
-			//this.npcs = loadNpcs(room.npcs)
-			//this.gettables = loadGettables(room.gettables);
 			loadNpcs(room.npcs);
 			loadGettables(room.gettables);
 			
@@ -47,13 +43,6 @@ package handler
 			this.items = room.items;
 			this.shortDesc = room.shortDesc;
 			this.longDesc = room.longDesc;
-			
-			//var child:Array = gettableHandler.gettableArray;
-			//trace(child.length);
-			//for (var i:* in child)
-			//{
-			//	trace(child[i].gettable + " : " + child[i].location);
-			//}
 		}
 		
 		

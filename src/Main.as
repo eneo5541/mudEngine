@@ -10,6 +10,7 @@ package
 	import parser.TextParser;
 /*
  * TODO
+ * Combine the functions where possible
  * Handling interaction with NPC, interaction with objects, and NPC random dialogue
  */
 
@@ -66,10 +67,7 @@ package
 			if (event.keyCode == 13)
 			{
 				userOutputField.appendText(">" + userInputField.text + "\n");
-				// Pass the user's input to the textParser to look for commands
-				//var str:String = parse.parseCommand(userInputField.text);
-				//userOutputField.appendText(str);
-				
+				// Pass the user's input to the textParser to look for commands			
 				parse.parseCommand(userInputField.text);
 				
 				userInputField.text = "";

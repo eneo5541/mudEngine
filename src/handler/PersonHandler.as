@@ -16,11 +16,11 @@ package handler
 		{
 			for (var i:* in personArray)
 			{
-				if (personArray[i].person == personObj) 
+				if (personArray[i].object == personObj) 
 					return;
 			}
 			
-			personArray.push({ person:personObj, location:loc });
+			personArray.push({ object:personObj, location:loc });
 		}
 		
 		public function personsThisRoom(room:String):Array
@@ -31,7 +31,7 @@ package handler
 			{
 				if (personArray[i].location == room) 
 				{
-					var personClass:Class = getDefinitionByName(personArray[i].person) as Class;
+					var personClass:Class = getDefinitionByName(personArray[i].object) as Class;
 					personsInRoom.push((new personClass).shortDesc);
 				}
 			}	

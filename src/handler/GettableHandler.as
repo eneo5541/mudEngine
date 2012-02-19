@@ -27,11 +27,11 @@ package handler
 		{
 			for (var i:* in gettableArray)
 			{
-				if (gettableArray[i].gettable == getObj)  // If the object is already in the array, do not add it.
+				if (gettableArray[i].object == getObj)  // If the object is already in the array, do not add it.
 					return;
 			}
 			
-			gettableArray.push({ gettable:getObj, location:loc });
+			gettableArray.push({ object:getObj, location:loc });
 		}
 		
 		public function gettablesThisRoom(room:String):Array
@@ -42,7 +42,7 @@ package handler
 			{
 				if (gettableArray[i].location == room)  // If the object is in the given room, return it.
 				{
-					var gettableClass:Class = getDefinitionByName(gettableArray[i].gettable) as Class;
+					var gettableClass:Class = getDefinitionByName(gettableArray[i].object) as Class;
 					gettablesInRoom.push((new gettableClass).shortDesc);
 				}
 			}	
