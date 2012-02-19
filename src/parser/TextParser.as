@@ -66,7 +66,7 @@ package parser
 			var splitSpaces:Array = command.split(" ");
 			switch (splitSpaces[0])
 			{
-				case "look":case "l":
+				case "look":case "l": // look at
 					checkLookCommand(splitSpaces);
 					break;
 				case "go":
@@ -123,16 +123,20 @@ package parser
 				return;
 			}
 			
-			if (checkInventory(command[1])) 
+			var newCommand:String = command[1]
+			if (command[1] == "at")   // Accomodate for 'look <object>' and 'look at <object>'
+				newCommand = command[2];
+			
+			if (checkInventory(newCommand)) 
 				return; 
-			if (checkForNpcs(command[1]))  // If the player is looking at NPCs, will return true. Halt this conditional
+			if (checkForNpcs(newCommand))  // If the player is looking at NPCs, will return true. Halt this conditional
 				return;
-			if (checkForGettables(command[1]))  // Same deal as above, but with gettable items
+			if (checkForGettables(newCommand))  // Same deal as above, but with gettable items
 				return; 
-			if (checkForRoomItems(command[1])) 
+			if (checkForRoomItems(newCommand)) 
 				return; 
 			
-			this.dispatchEvent(new OutputEvent("I don't see any " + command[1] + ".\n", OutputEvent.OUTPUT));
+			this.dispatchEvent(new OutputEvent("I don't see any " + newCommand + ".\n", OutputEvent.OUTPUT));
 			return;
 		}
 		
