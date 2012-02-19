@@ -66,7 +66,7 @@ package parser
 			var splitSpaces:Array = command.split(" ");
 			switch (splitSpaces[0])
 			{
-				case "look":case "l": // look at
+				case "look":case "l":
 					checkLookCommand(splitSpaces);
 					break;
 				case "go":
@@ -136,7 +136,7 @@ package parser
 			if (checkForRoomItems(newCommand)) 
 				return; 
 			
-			this.dispatchEvent(new OutputEvent("I don't see any " + newCommand + ".\n", OutputEvent.OUTPUT));
+			this.dispatchEvent(new OutputEvent("I don't see any " + newCommand + " here.\n", OutputEvent.OUTPUT));
 			return;
 		}
 		
