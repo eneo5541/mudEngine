@@ -21,7 +21,7 @@ package objects.gettables
 		
 		override public function setLongDesc():void
 		{
-			longDesc = "A silver watch. The casing is scratched and the watch face it chipped, but is still does the job.";
+			longDesc = "A silver watch. The casing is scratched and the watch face is chipped, but is still does the job.";
 		}
 		
 	}

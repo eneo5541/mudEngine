@@ -25,6 +25,18 @@ package objects.rooms
 			exits = { south:"objects.rooms.JunctionRoom" };
 		}
 		
+		override public function setItems():void
+		{
+			items = { 
+				stairs:"A narrow stairway leads back down into the house.",
+				balcony:"The balcony is a small platform protruding from the roof of the house. A shingled roof " +
+				"protects you from the worse effects of the sun.",
+				fields:"Rich green fields extend further than the eye can see.",
+				mountains:"The mountains frame the horizons around you. You can see that snow caps the peaks of some of the taller ones.",
+				birds:"You can't see any birds, but the air is filled with their music."
+			};
+		}
+		
 		override public function setGettables():void
 		{
 			gettables = ["objects.gettables.Binoculars"];

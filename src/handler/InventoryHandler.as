@@ -37,21 +37,18 @@ package handler
 			return null;
 		}
 		
-		public function checkItemExists(object:*, command:String, location:String ):String
+		public function checkItemExists(object:*, command:String, location:String ):String  // Use for looking at objects
 		{
 			for (var i:* in object) 
 			{
-				if (object[i].location == location) 
+				if (object[i].location == location) // Check if the object is at the location
 				{
 					var tempObj:Class = getDefinitionByName(object[i].object) as Class;
 					var child:* = new tempObj;
-					for (var j:* in child.alias)
+					for (var j:* in child.alias)  // Check if the command entered matches the object's aliases
 					{
 						if (command == child.alias[j])
-						{
-							//this.dispatchEvent(new OutputEvent(child.longDesc + "\n", OutputEvent.OUTPUT));
 							return child.longDesc;
-						}
 					}
 				}
 			}

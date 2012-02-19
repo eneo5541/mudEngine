@@ -20,6 +20,15 @@ package objects.rooms
 			"east and west. ";
 		}
 		
+		override public function setItems():void
+		{
+			items = { 
+				door:"A plain, non-descript door leads through the northern wall.",
+				wall:"The walls are covered in a light, orange wallpaper.",
+				corridor:"The corridor seems to have no beginning and no end."
+			};
+		}
+		
 		override public function setExits():void
 		{
 			exits = { 

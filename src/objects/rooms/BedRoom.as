@@ -28,7 +28,7 @@ package objects.rooms
 		override public function setItems():void
 		{
 			items = { 
-				bed:"A neatly made bed with taupe sheets and a pillow",
+				bed:"A neatly made bed with taupe sheets and a pillow.",
 				table:"A small, lacquered wood table sits next to the bed.",
 				door:"A white, wooden door. It must lead outside.",
 				wall:"The walls are a soft peach colour."

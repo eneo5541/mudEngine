@@ -25,6 +25,16 @@ package objects.rooms
 			exits = { east:"objects.rooms.JunctionRoom" };
 		}
 		
+		override public function setItems():void
+		{
+			items = { 
+				marble:"The marble construction of the room seems very solid. You take care not to slip on polished surface.",
+				bathroom:"It contains the basic amenities, hewn from marble.",
+				door:"The marble door must be for show, as it is far too heavy to close.",
+				wall:"Soft grey lines criss-cross the white marble of the walls."
+			};
+		}
+		
 		override public function setGettables():void
 		{
 			gettables = ["objects.gettables.Towel"];

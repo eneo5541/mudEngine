@@ -29,6 +29,15 @@ package objects.rooms
 			};
 		}
 		
+		override public function setItems():void
+		{
+			items = { 
+				corridor:"The corridor seems to go on forever in both directions.",
+				door:"A simple, functional door. It leads back into the bedroom.",
+				darkness:"The darkness consumes everything outside of the light of this room."
+			};
+		}
+		
 		override public function setNpcs():void
 		{
 			npcs = ["objects.npcs.Butler"];

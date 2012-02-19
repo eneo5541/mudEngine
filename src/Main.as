@@ -6,18 +6,18 @@ package
 	import flash.events.TextEvent;
 	import flash.text.TextField;
 	import flash.text.TextFieldType;
+	import flash.text.TextFormat;
 	import parser.OutputEvent;
 	import parser.TextParser;
 /*
  * TODO
- * Combine the functions where possible
  * Handling interaction with NPC, interaction with objects, and NPC random dialogue
  */
 
 	public class Main extends Sprite 
 	{
-		private var userInputField:TextField = new TextField(); 
-		private var userOutputField:TextField = new TextField();
+		private var userInputField:TextField;
+		private var userOutputField:TextField;
 		private var parse:TextParser = new TextParser();
 		
 		public function Main():void 
@@ -25,37 +25,40 @@ package
 			if (stage) init();
 			else addEventListener(Event.ADDED_TO_STAGE, init);
 			
-			this.graphics.beginFill(0xFFCC00);
-            this.graphics.drawRect(0, 0, 400, 300);
-            this.graphics.endFill();
+/*			this.graphics.beginFill(0xffffff);
+            this.graphics.drawRect(0, 0, 640, 480);
+            this.graphics.endFill();*/
 			
-			userInputField.type = TextFieldType.INPUT;
-			userInputField.x = 0; 
-			userInputField.y = 270;
-            userInputField.width = 400; 
-			userInputField.height = 30;
-			userInputField.border = true;
-			userInputField.borderColor = 0xff0000;
-			userInputField.text = "";
-			addChild(userInputField); 
-			
-			userOutputField = new TextField();
+			userOutputField = createCustomTextField(0, 0, 640, 430);
 			userOutputField.multiline = true; 
 			userOutputField.wordWrap = true;
-			userOutputField.x = 0; 
-			userOutputField.y = 00;
-            userOutputField.width = 400;
-			userOutputField.height = 270;
-			userOutputField.border = true;
-			userOutputField.borderColor = 0x0000ff;
-			userOutputField.text = "";
-			this.addChild(userOutputField);
+			userInputField = createCustomTextField(0,430,640,50);
+			userInputField.type = TextFieldType.INPUT
 			
 			stage.addEventListener(KeyboardEvent.KEY_DOWN, detectKey);
 			parse.addEventListener(OutputEvent.OUTPUT, outputHandler);
 			
 			parse.parseCommand("look");
-		}
+        }
+		
+        private function createCustomTextField(x:int,y:int,width:int,height:int):TextField 
+        {
+			var format1:TextFormat = new TextFormat();
+			format1.size = 16;
+			
+            var result:TextField = new TextField();
+            result.x = x;
+            result.y = y;
+			result.width = width;
+			result.height = height;
+			result.border = true;
+			result.borderColor = 0x000000;
+			result.textColor = 0x000000;
+			result.defaultTextFormat = format1;
+			result.text = "";
+            addChild(result);
+            return result;
+        }
 		
 		public function outputHandler(e:OutputEvent):void
 		{

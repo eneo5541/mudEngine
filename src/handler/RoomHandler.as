@@ -24,9 +24,6 @@ package handler
 		public var exits:*;
 		public var items:*;
 		
-		//private var _butler:Butler;
-		//private var _dog:Dog;
-		//private var npcObjects:Array = new Array();
 		
 		function RoomHandler()
 		{
@@ -45,40 +42,6 @@ package handler
 			this.longDesc = room.longDesc;
 		}
 		
-		
-		/*public function deleteGettable(target:int):void 
-		{
-			//trace(gettables[target].longDesc);
-			var splitSpaces:Array = getQualifiedClassName(gettables[target]).split("::");
-			var command:String = splitSpaces[0] + "." + splitSpaces[1];
-			// Need to delete the object from the room data object, then reload the this.gettables.
-			var gettableObject:* = room.gettables;
-			var gettableArray:Array = [];
-			for (var i:* in gettableObject) 
-			{
-				if (command == gettableObject[i]) {
-					trace("Deleting " + command);
-					trace(BedRoom.gettables.length);
-					room.gettables.splice(i, 1);
-					this.gettables = loadGettables(room.gettables);
-					return;
-				}
-			}
-		}*/
-		
-		/*private function loadNpcs(target:*):Array
-		{
-			var npcObject:* = target;
-			var npcArray:Array = [];
-			for (var i:* in npcObject) 
-			{ 
-				var personClass:Class = getDefinitionByName(npcObject[i]) as Class;
-				npcArray.push(new personClass as Person);
-				//personHandler.loadPerson(new personClass as Person);
-			}
-			return npcArray;
-		}*/
-		
 		private function loadNpcs(target:*):void
 		{
 			var npcObject:* = target;
@@ -92,7 +55,6 @@ package handler
 			for (var i:* in gettableObject)// The handler stores each object, so that it can be manipulated independently of the room				   
 				gettableHandler.addGettable(gettableObject[i], room);
 		}
-		
 		
 		public function getDescription():String 
 		{
