@@ -3,7 +3,7 @@ package objects.rooms
 	import objects.Room;
 
 	public class BedRoom extends Room
-	{		
+	{	
 		public function BedRoom() 
 		{
 			super();
@@ -38,6 +38,17 @@ package objects.rooms
 		override public function setGettables():void
 		{
 			gettables = ["objects.gettables.Watch"];
+		}
+		
+		override public function setAction():void
+		{
+			action = { 
+				action:"search table", 
+				response:function(target:*):String {
+							target.gettableHandler.addGettable("objects.gettables.Knife", new BedRoom);
+							return "You search the table and find a pen knife.";
+						}
+			};
 		}
 		
 	}

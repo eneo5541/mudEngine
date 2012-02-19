@@ -23,6 +23,7 @@ package handler
 		public var longDesc:String;
 		public var exits:*;
 		public var items:*;
+		public var action:*;
 		
 		
 		function RoomHandler()
@@ -40,6 +41,7 @@ package handler
 			this.items = room.items;
 			this.shortDesc = room.shortDesc;
 			this.longDesc = room.longDesc;
+			this.action = room.action
 		}
 		
 		private function loadNpcs(target:*):void
@@ -88,6 +90,13 @@ package handler
 			return tr;
 		}
 		
+		
+		public function getResponse():String
+		{
+			return action.response(this); // The 'this' parameter allows the response function to be called from the roomHandler, instead of the room
+		}
+
 	}
+
 	
 }

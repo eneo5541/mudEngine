@@ -8,6 +8,7 @@ package parser
 	import handler.RoomHandler;
 	import objects.Gettable;
 	import objects.gettables.Binoculars;
+	import objects.gettables.Knife;
 	import objects.gettables.Towel;
 	import objects.gettables.Watch;
 	import objects.npcs.Butler;
@@ -44,6 +45,7 @@ package parser
 		private var _watch:Watch;
 		private var _towel:Towel;
 		private var _binoculars:Binoculars;
+		private var _knife:Knife;
 		
 		
 		function TextParser()
@@ -223,6 +225,15 @@ package parser
 // Dynamic commands (action commands attached to either npcs in the room or items in the inventory) 
 		private function checkDynamicCommands(command:Array):void
 		{
+			if (roomHandler.action != null)
+			{
+				if (inputCommand == roomHandler.action.action)  // If the command matches the action attached to this room
+				{
+					this.dispatchEvent(new OutputEvent(roomHandler.getResponse() + "\n", OutputEvent.OUTPUT));
+					return;
+				}
+			}
+			
 			var errorMsg:String = "I don't know how to " + inputCommand + ".\n";
 			this.dispatchEvent(new OutputEvent(errorMsg, OutputEvent.OUTPUT));
 		}

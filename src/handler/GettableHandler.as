@@ -1,6 +1,7 @@
 package handler 
 {
 	import flash.utils.getDefinitionByName;
+	import flash.utils.getQualifiedClassName;
 	import objects.Gettable;
 	import objects.Person;
 
@@ -23,15 +24,19 @@ package handler
 			return "You are carrying:" + tr + "\n";
 		}
 		
-		public function addGettable(getObj:String, loc:String):void
+		public function addGettable(getObj:String, loc:*):void
 		{
 			for (var i:* in gettableArray)
 			{
 				if (gettableArray[i].object == getObj)  // If the object is already in the array, do not add it.
-					return;
+					return;  // This is necessary, or existing objects could be duplicated by moving rooms back and forth
 			}
 			
-			gettableArray.push({ object:getObj, location:loc });
+			var td:String = loc;
+			if (!(loc is String))   // Convert the location to a string for storage
+				td = getQualifiedClassName(loc);
+			
+			gettableArray.push( { object:getObj, location:td } );
 		}
 		
 		public function gettablesThisRoom(room:String):Array
@@ -45,7 +50,7 @@ package handler
 					var gettableClass:Class = getDefinitionByName(gettableArray[i].object) as Class;
 					gettablesInRoom.push((new gettableClass).shortDesc);
 				}
-			}	
+			}
 			
 			return gettablesInRoom;
 		}

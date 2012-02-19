@@ -15,7 +15,7 @@ package objects
 		//public var exit:Array<Exits>;
 		//public var cloneObject:Array<Objects>;
 		// This would look for a specific action (eg: search rock) and then execute the function attached
-		//public var action:Function;
+		public var action:*;
  
 		function Room()
 		{			
@@ -25,6 +25,7 @@ package objects
 			setItems();
 			setShortDesc();
 			setLongDesc();
+			setAction();
 		}
 		// Extend the room object, then override these functions
 		public function setExits():void
@@ -55,6 +56,11 @@ package objects
 		public function setLongDesc():void
 		{
 			//longDesc = "This is a long description";
+		}
+		
+		public function setAction():void
+		{
+			//action = { action:"search table", response:function():void { trace("You search the table"); } };
 		}
 		
 	}
