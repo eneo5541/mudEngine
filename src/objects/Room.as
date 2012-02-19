@@ -1,6 +1,5 @@
 package objects 
 {
-	import handler.ListHandler;
 
 	public class Room 
 	{
@@ -11,7 +10,6 @@ package objects
 		public var npcs:*;
 		public var gettables:*;
 		
-		private var listHandler:ListHandler;
 		// These should be arrays, item would refer only to items in the description, not items in the room
 		//public var item:Array<Items>;
 		//public var exit:Array<Exits>;
@@ -20,19 +18,13 @@ package objects
 		//public var action:Function;
  
 		function Room()
-		{
-			listHandler = new ListHandler();
-			
+		{			
 			setExits();	
 			setNpcs();
 			setGettables();
 			setItems();
 			setShortDesc();
 			setLongDesc();
-			
-			addExits();
-			addNpcs();
-			addGettables();
 		}
 		// Extend the room object, then override these functions
 		public function setExits():void
@@ -63,49 +55,6 @@ package objects
 		public function setLongDesc():void
 		{
 			//longDesc = "This is a long description";
-			// Must manually add this to each class that overrides setLongDesc()
-		}
-		
-		public function addExits():void
-		{
-			if (exits == null) return;
-			// This adds a list of the values in the exit object to the description. 			
-			var obj:* = exits;
-			var objectList:Array = [];
-			
-			for (var i:* in obj) 
-				objectList.push(i);
-			
-			var tr:String = listHandler.listExits(objectList);
-			longDesc += "\nThere are exits to the " + tr;
-		}
-		
-		public function addNpcs():void
-		{
-			if (npcs == null) return;
-			
-			var obj:* = npcs;
-			var objectList:Array = [];
-			
-			for (var i:* in obj) 
-				objectList.push(i);
-			
-			var tr:String = listHandler.listNpcs(objectList);
-			longDesc += "\n" + tr;
-		}
-		
-		public function addGettables():void
-		{
-			if (gettables == null) return;	
-			
-			var obj:* = gettables;
-			var objectList:Array = [];
-			
-			for (var i:* in obj) 
-				objectList.push(i);
-			
-			var tr:String = listHandler.listGettables(objectList);
-			longDesc += "\n" + tr;
 		}
 		
 	}

@@ -25,7 +25,7 @@ package parser
 	public class TextParser extends EventDispatcher
 	{
 		private var inputCommand:String;
-		private var roomHandler:RoomHandler;
+		public var roomHandler:RoomHandler;
 		private var personHandler:PersonHandler;
 		private var gettableHandler:GettableHandler;
 		// Need to find out how to get getDefinitionByName to work without creating these
@@ -53,34 +53,42 @@ package parser
 			gettableHandler = new GettableHandler;
 		}
 		 
-		public function parseCommand(command:String):String
+		public function parseCommand(command:String)
 		{
 			inputCommand = command;
 			if (command == null || command.length == 0)
-				return "\n";
+			{
+				this.dispatchEvent(new OutputEvent("", OutputEvent.OUTPUT));
+				return;
+			}
 			var splitSpaces:Array = command.split(" ");
 			
 			if (splitSpaces[0] == "look" || splitSpaces[0] == "l")
 			{
-				this.dispatchEvent(new OutputEvent(99,OutputEvent.OUTPUT));
-				return checkLookCommand(splitSpaces);
+				checkLookCommand(splitSpaces);
+			}
+			else if (splitSpaces[0] == "go" || splitSpaces[0] == "g")
+			{
+				checkDirectionCommand(splitSpaces);
 			}
 			else
 			{
-				return checkDynamicCommands(splitSpaces);
+				checkDynamicCommands(splitSpaces);
 			}
 			
-			return "Error occurred, must not have caught " + splitSpaces[0] + ".\n";
+			trace "Error occurred, must not have caught " + splitSpaces[0] + ".\n";
 		}
 		
 		
-		public function checkLookCommand(command:Array):String
+		public function checkLookCommand(command:Array)//:String
 		{
-			if (command.length == 1) {// If not looking at an object, just return room description
-					var longStr:String = roomHandler.longDesc;
-					return longStr + "\n";
-				}
-				
+			if (command.length == 1) // If not looking at an object, just return room description
+			{
+					var longStr:String = roomHandler.getDescription();
+					this.dispatchEvent(new OutputEvent(longStr, OutputEvent.OUTPUT));
+					return;
+			}
+			/*	
 				var npcObject:* = roomHandler.npcs;
 				for (var i:* in npcObject) 
 				{ // Need to make this non-case sensitive. By converting the name to all lower case? 
@@ -109,25 +117,38 @@ package parser
 				{
 					if (command[1] == i) 
 						return itemObject[i] + "\n";
-				}
-					
-				return "I don't see any " + command[1] + ".\n";// If not found, user is trying to look at an item that does not exist.
+				}*/
+				
+			this.dispatchEvent(new OutputEvent("I don't see any " + command[1] + ".\n", OutputEvent.OUTPUT));
+			return;
 		}
 		
-		public function checkDynamicCommands(command:Array):String 
+		
+		public function checkDirectionCommand(command:Array):void
 		{
-			var obj:* = roomHandler.exits; // Check if the command matches the exits of the room. If so, change the current room to the class in the exit's value.
+			var obj:* = roomHandler.exits; // Check if the command matches the exits of the room.
 			for (var i:* in obj) 
 			{
-				if (command[0] == i)
+				if (command[1] == i)
 				{
-					var mainClass:Class = getDefinitionByName(obj[i]) as Class;
+					var mainClass:Class = getDefinitionByName(obj[i]) as Class; // Change the room to the one matching the exit
 					roomHandler.loadRoom(new mainClass as Room);
-					return "You leave out the " + command[0] + " exit. \n" + roomHandler.longDesc + "\n";
+					
+					var longStr:String = "You leave out the " + command[1] + " exit. \n" + roomHandler.getDescription(); // Then fetch the new description
+					this.dispatchEvent(new OutputEvent(longStr, OutputEvent.OUTPUT));
+					return;
 				}
 			}
 			
-			return "I don't know how to " + inputCommand + ".\n";// If the command is not an exit, its unknown
+			this.dispatchEvent(new OutputEvent("I don't see any " + command[1] + " exit.\n", OutputEvent.OUTPUT));
+			return;
+		}
+		
+		
+		public function checkDynamicCommands(command:Array) 
+		{
+			var errorMsg:String = "I don't know how to " + inputCommand + ".\n";
+			this.dispatchEvent(new OutputEvent(errorMsg, OutputEvent.OUTPUT));
 		}
 		
 	}

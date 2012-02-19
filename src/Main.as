@@ -54,16 +54,15 @@ package
 			userOutputField.text = "";
 			this.addChild(userOutputField);
 			
-			var str:String = parse.parseCommand("look");
-			userOutputField.appendText(str);
-			
 			stage.addEventListener(KeyboardEvent.KEY_DOWN, detectKey);
-			parse.addEventListener(OutputEvent.LOOK, lookHandler);
+			parse.addEventListener(OutputEvent.OUTPUT, outputHandler);
+			
+			parse.parseCommand("look");
 		}
 		
-		public function lookHandler(e:OutputEvent):void
+		public function outputHandler(e:OutputEvent):void
 		{
-			trace("caught look, "+e.values);
+			userOutputField.appendText(e.value);
 		}
 		
 		private function detectKey(event:KeyboardEvent):void
@@ -72,8 +71,11 @@ package
 			{
 				userOutputField.appendText(">" + userInputField.text + "\n");
 				// Pass the user's input to the textParser to look for commands
-				var str:String = parse.parseCommand(userInputField.text);
-				userOutputField.appendText(str);
+				//var str:String = parse.parseCommand(userInputField.text);
+				//userOutputField.appendText(str);
+				
+				parse.parseCommand(userInputField.text);
+				
 				userInputField.text = "";
 				// Scroll to the bottom of the text field
 				userOutputField.scrollV = userOutputField.bottomScrollV;

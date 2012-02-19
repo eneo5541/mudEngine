@@ -6,16 +6,16 @@ package parser
 	public class OutputEvent extends Event
 	{
 		public static const OUTPUT:String = "output";
-		public var values:int;
-		public function OutputEvent(values:int, type:String, bubbles:Boolean = false, cancelable:Boolean = false)
+		public var value:String;
+		public function OutputEvent(value:String, type:String, bubbles:Boolean = true, cancelable:Boolean = false)
 		{
 			super(type, bubbles, cancelable);
-			this.values = values;  
+			this.value = value;  
 		}
 		
 		public override function clone():Event
 		{
-			return new OutputEvent(values, type, bubbles, cancelable);
+			return new OutputEvent(value, type, bubbles, cancelable);
 		}
 	}
 }

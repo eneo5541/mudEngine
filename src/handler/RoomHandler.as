@@ -1,13 +1,17 @@
 package handler 
 {
+	import flash.events.EventDispatcher;
 	import flash.utils.getDefinitionByName;
 	import objects.npcs.Butler;
 	import objects.npcs.Dog;
 	import objects.Person;
 	import objects.Room;
+	import parser.OutputEvent;
 
-	public class RoomHandler
+	public class RoomHandler extends EventDispatcher
 	{
+		private var listHandler:ListHandler = new ListHandler();
+		
 		public var shortDesc:String;
 		public var longDesc:String;
 		public var exits:*;
@@ -31,22 +35,50 @@ package handler
 			this.longDesc = room.longDesc;
 			this.npcs = room.npcs;
 			this.gettables = room.gettables;
-		
-		//	npcObjects = [];	
-		//	loadNpcs();  // No need to load the rooms NPCs for the moment, but this will be used later to randomly print NPC dialogue to the screen
+	
+			//this.dispatchEvent(new OutputEvent(this.longDesc,OutputEvent.OUTPUT));
 		}
 		
-		/*public function loadNpcs():void
+		public function getDescription():String 
 		{
-			if (npcs == null) return;
+			return longDesc + addExits() + addNpcs() + addGettables() + "\n";
+		}
+		
+		public function addExits():String
+		{
+			var objectList:Array = addToRoom(exits);
+			var tr:String = listHandler.listExits(objectList);
+			return tr;
+		}
+		
+		public function addNpcs():String
+		{
+			var objectList:Array = addToRoom(npcs);
+			var tr:String = listHandler.listNpcs(objectList);
+			return tr;
+		}
+		
+		public function addGettables():String
+		{
+			var objectList:Array = addToRoom(gettables);
+			var tr:String = listHandler.listGettables(objectList);
+			return tr;
+		}
+		
+		
+		public function addToRoom(target:*):Array
+		{
+			if (target == null) return [];
+			// Converts all of the anonymous objects into an array		
+			var obj:* = target;
+			var objectList:Array = [];
 			
-			var obj:* = npcs;
 			for (var i:* in obj) 
-			{
-				var mainClass:Class = getDefinitionByName(obj[i]) as Class;
-				npcObjects.push(new mainClass as Person);
-			}
-		}*/
+				objectList.push(i);
+			
+			return objectList;
+		}
+		
 	}
 	
 }
