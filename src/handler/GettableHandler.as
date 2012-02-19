@@ -7,9 +7,20 @@ package handler
 	public class GettableHandler
 	{
 		public var gettableArray:Array = [];
+		private var listHandler:ListHandler = new ListHandler();
 		
 		function GettableHandler()
 		{
+		}
+		
+		public function currentInventory():String
+		{
+			var td:Array = gettablesThisRoom("handler::InventoryHandler");
+			if (td.length == 0) 
+				return "You are not carrying anything. \n";
+				
+			var tr:String = listHandler.listGettables(td);
+			return "You are carrying:" + tr + "\n";
 		}
 		
 		public function addGettable(getObj:String, loc:String):void

@@ -64,22 +64,29 @@ package parser
 				return;
 			}
 			var splitSpaces:Array = command.split(" ");
-			
-			if (splitSpaces[0] == "look" || splitSpaces[0] == "l")
+			switch (splitSpaces[0])
 			{
-				checkLookCommand(splitSpaces);
-			}
-			else if (splitSpaces[0] == "go" || splitSpaces[0] == "g")
-			{
-				checkDirectionCommand(splitSpaces);
-			}
-			else if (splitSpaces[0] == "get")
-			{
-				checkGetCommand(splitSpaces);
-			}
-			else
-			{
-				checkDynamicCommands(splitSpaces);
+				case "look":case "l":
+					checkLookCommand(splitSpaces);
+					break;
+				case "go":
+					if (!checkDirectionCommand(splitSpaces, true))
+						this.dispatchEvent(new OutputEvent("I don't see any " + command[1] + " exit.\n", OutputEvent.OUTPUT));
+					break;
+				case "inventory":case "i":case "inv":
+					var tr:String = roomHandler.gettableHandler.currentInventory(); 
+					this.dispatchEvent(new OutputEvent(tr, OutputEvent.OUTPUT));
+					break;
+				case "get":case "g":
+					checkGetCommand(splitSpaces);
+					break;
+				case "drop":case "d":
+					break;
+				default:
+					if (checkDirectionCommand(splitSpaces,false))
+						return;
+					checkDynamicCommands(splitSpaces);
+					break;
 			}
 			
 		}
@@ -118,9 +125,11 @@ package parser
 					return;
 			}
 				
-			if (checkForObjects(roomHandler.npcs, command[1])) return;   // If the player is looking at NPCs, will return true. Halt this conditional
+			if (checkInventory(command[1])) return; 
 			
-			if (checkForGettables(roomHandler.gettables, command[1])) return;  // Same deal as above with gettable items
+			if (checkForNpcs(command[1])) return;   // If the player is looking at NPCs, will return true. Halt this conditional
+			
+			if (checkForGettables(command[1])) return;  // Same deal as above with gettable items
 
 			var itemObject:* = roomHandler.items; // Check if the second word matches the room's items 
 			for (var i:* in itemObject) 
@@ -137,7 +146,30 @@ package parser
 		}
 		
 		
-		private function checkForGettables(target:*, command:String):Boolean
+		private function checkInventory(command:String):Boolean
+		{
+			var object:* = roomHandler.gettableHandler.gettableArray; // Look for gettable objects with a location of 'inventory'
+			for (var i:* in object) 
+			{
+				if (object[i].location == "handler::InventoryHandler") 
+				{
+					var gettableObj:Class = getDefinitionByName(object[i].gettable) as Class;
+					var child:* = new gettableObj;
+					for (var j:* in child.alias)
+					{
+						if (command == child.alias[j])
+						{
+							this.dispatchEvent(new OutputEvent("INVENTORY: \n"+child.longDesc + "\n", OutputEvent.OUTPUT));
+							return true;
+						}
+					}
+				}
+			}
+			
+			return false;
+		}
+		
+		private function checkForGettables(command:String):Boolean
 		{
 			var object:* = roomHandler.gettableHandler.gettableArray;
 			for (var i:* in object) // Iterate through all the objects in existance
@@ -160,8 +192,7 @@ package parser
 			return false;
 		}
 		
-		
-		private function checkForObjects(target:*, command:String):Boolean
+		private function checkForNpcs(command:String):Boolean
 		{
 			var object:* = roomHandler.personHandler.personArray;
 			for (var i:* in object)
@@ -184,33 +215,40 @@ package parser
 			return false;
 		}
 		
-		
-		private function checkDirectionCommand(command:Array):void
+		private function checkDirectionCommand(command:Array, isLong:Boolean):Boolean
 		{
+			var newCommand:String = "";
+			if (isLong)
+				newCommand = command[1];
+			else
+				newCommand = command[0];
+			
 			var obj:* = roomHandler.exits; // Check if the command matches the exits of the room.
 			for (var i:* in obj) 
 			{
-				if (command[1] == i)
+				if (newCommand == i)
 				{
 					var mainClass:Class = getDefinitionByName(obj[i]) as Class; // Change the room to the one matching the exit
 					roomHandler.loadRoom(new mainClass as Room);
 					
-					var longStr:String = "You leave out the " + command[1] + " exit. \n" + roomHandler.getDescription(); // Then fetch the new description
+					var longStr:String = "You leave out the " + newCommand + " exit. \n" + roomHandler.getDescription(); // Then fetch the new description
 					this.dispatchEvent(new OutputEvent(longStr, OutputEvent.OUTPUT));
-					return;
+					return true;
 				}
 			}
-			
-			this.dispatchEvent(new OutputEvent("I don't see any " + command[1] + " exit.\n", OutputEvent.OUTPUT));
-			return;
+			return false;
 		}
-		
 		
 		private function checkDynamicCommands(command:Array):void
 		{
 			var errorMsg:String = "I don't know how to " + inputCommand + ".\n";
 			this.dispatchEvent(new OutputEvent(errorMsg, OutputEvent.OUTPUT));
 		}
+		
+		
+		
+		
+
 		
 	}
 	
