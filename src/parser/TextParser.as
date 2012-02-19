@@ -87,24 +87,25 @@ package parser
 		
 		private function checkGetCommand(command:Array):void
 		{
-			trace(command[1]);
 			var object:* = roomHandler.gettableHandler.gettableArray;
-			for (var i:* in object) // Iterate through all the objects in the room (either items or npcs)
+			for (var i:* in object) // Iterate through all the objects in existance
 			{
-				//trace(object[i].gettable);
-				/*if(
-				var gettableObj:Class = getDefinitionByName(object[i].gettable) as Class;
-				var child = new gettableObj;
-				
-				for (var j:* in child.alias)  // Then iterate all the aliases for that object
+				if (object[i].location == roomHandler.room)  // Find all objects that are in this current room
 				{
-					if (command[1] == child.alias[j])  // If matching, return description
+					var gettableObj:Class = getDefinitionByName(object[i].gettable) as Class;
+					var child = new gettableObj;
+					for (var j:* in child.alias)  // Then iterate all the aliases for that object
 					{
-						trace(child.longDesc);
-						//roomHandler.deleteGettable(i);
+						if (command[1] == child.alias[j])  // If matching, change the object's location to inventory
+						{
+							object[i].location = "handler::InventoryHandler";
+							this.dispatchEvent(new OutputEvent("You get a " + child.shortDesc + ".\n", OutputEvent.OUTPUT));
+							return;
+						}
 					}
-				}*/
+				}
 			}
+			this.dispatchEvent(new OutputEvent("I don't see any " + command[1] + " here to get.\n", OutputEvent.OUTPUT));
 		}
 		
 		
@@ -139,8 +140,7 @@ package parser
 		private function checkForGettables(target:*, command:String):Boolean
 		{
 			var object:* = roomHandler.gettableHandler.gettableArray;
-			trace(object.length);
-			for (var i:* in object) // Iterate through all the objects in the room (either items or npcs)
+			for (var i:* in object) // Iterate through all the objects in existance
 			{
 				if (object[i].location == roomHandler.room)  // Find all objects that are in this current room
 				{

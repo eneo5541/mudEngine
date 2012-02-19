@@ -11,7 +11,7 @@ package objects.gettables
 		
 		override public function setShortDesc():void
 		{
-			shortDesc = "A watch";
+			shortDesc = "Watch";
 		}
 		
 		override public function setAlias():void
