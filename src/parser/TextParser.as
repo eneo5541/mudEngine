@@ -53,7 +53,7 @@ package parser
 			gettableHandler = new GettableHandler;
 		}
 		 
-		public function parseCommand(command:String)
+		public function parseCommand(command:String):void
 		{
 			inputCommand = command;
 			if (command == null || command.length == 0)
@@ -76,11 +76,10 @@ package parser
 				checkDynamicCommands(splitSpaces);
 			}
 			
-			trace "Error occurred, must not have caught " + splitSpaces[0] + ".\n";
 		}
 		
 		
-		public function checkLookCommand(command:Array)//:String
+		private function checkLookCommand(command:Array):void
 		{
 			if (command.length == 1) // If not looking at an object, just return room description
 			{
@@ -88,43 +87,47 @@ package parser
 					this.dispatchEvent(new OutputEvent(longStr, OutputEvent.OUTPUT));
 					return;
 			}
-			/*	
-				var npcObject:* = roomHandler.npcs;
-				for (var i:* in npcObject) 
-				{ // Need to make this non-case sensitive. By converting the name to all lower case? 
-					if (command[1] == i) 
-					{
-						var personClass:Class = getDefinitionByName(npcObject[i]) as Class;
-						personHandler.loadPerson(new personClass as Person);
-						return personHandler.longDesc + "\n";
-					}
-				}	
 				
-				var gettableObject:* = roomHandler.gettables;
-				for (var i:* in gettableObject) 
+			if (checkForObjects(roomHandler.npcs, command[1])) return;   // If the player is looking at NPCs, will return true. Halt this conditional
+			
+			if (checkForObjects(roomHandler.gettables, command[1])) return;  // Same deal as above with gettable items
+
+			var itemObject:* = roomHandler.items; // Check if the second word matches the room's items 
+			for (var i:* in itemObject) 
+			{
+				if (command[1] == i) 
 				{
-					if (command[1] == i) 
-					{
-						var gettableClass:Class = getDefinitionByName(gettableObject[i]) as Class;
-						gettableHandler.loadGettable(new gettableClass as Gettable);
-						return gettableHandler.longDesc + "\n";
-					}
-				}	
-				
-				
-				var itemObject:* = roomHandler.items;// Check if the second word after look matches any of the rooms items
-				for (var i:* in itemObject) 
-				{
-					if (command[1] == i) 
-						return itemObject[i] + "\n";
-				}*/
-				
+					this.dispatchEvent(new OutputEvent(itemObject[i] + "\n", OutputEvent.OUTPUT));
+					return;
+				}
+			}
+			
 			this.dispatchEvent(new OutputEvent("I don't see any " + command[1] + ".\n", OutputEvent.OUTPUT));
 			return;
 		}
 		
 		
-		public function checkDirectionCommand(command:Array):void
+		private function checkForObjects(target:*, command:String):Boolean
+		{
+			var npcObject:* = target;
+			for (var i:* in npcObject) // Iterate through all the objects in the room (either items or npcs)
+			{
+				var child:*= npcObject[i];
+				for (var j:* in child.alias)  // Then iterate all the aliases for that object
+				{
+					if (command == child.alias[j])  // If matching, return description
+					{
+						this.dispatchEvent(new OutputEvent(child.longDesc + "\n", OutputEvent.OUTPUT));
+						return true;
+					}
+				}
+			}
+			
+			return false;
+		}
+		
+		
+		private function checkDirectionCommand(command:Array):void
 		{
 			var obj:* = roomHandler.exits; // Check if the command matches the exits of the room.
 			for (var i:* in obj) 
@@ -145,7 +148,7 @@ package parser
 		}
 		
 		
-		public function checkDynamicCommands(command:Array) 
+		private function checkDynamicCommands(command:Array):void
 		{
 			var errorMsg:String = "I don't know how to " + inputCommand + ".\n";
 			this.dispatchEvent(new OutputEvent(errorMsg, OutputEvent.OUTPUT));

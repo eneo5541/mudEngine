@@ -28,7 +28,7 @@ package objects.rooms
 		
 		override public function setNpcs():void
 		{
-			npcs = { Dog:"objects.npcs.Dog"};
+			npcs = ["objects.npcs.Dog"];
 		}
 	}
 

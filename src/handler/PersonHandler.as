@@ -8,6 +8,7 @@ package handler
 		public var shortDesc:String;
 		public var longDesc:String;
 		public var dialogue:Array;
+		public var alias:Array;
 		
 		function PersonHandler()
 		{
@@ -18,6 +19,7 @@ package handler
 			this.shortDesc = person.shortDesc;
 			this.longDesc = person.longDesc;
 			this.dialogue = person.dialogue;
+			this.alias = person.alias;
 		}
 		
 	}

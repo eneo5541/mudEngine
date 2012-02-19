@@ -7,8 +7,8 @@ package objects
 		public var longDesc:String;
 		public var exits:*;
 		public var items:*;
-		public var npcs:*;
-		public var gettables:*;
+		public var npcs:Array;
+		public var gettables:Array;
 		
 		// These should be arrays, item would refer only to items in the description, not items in the room
 		//public var item:Array<Items>;

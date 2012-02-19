@@ -11,7 +11,12 @@ package objects.gettables
 		
 		override public function setShortDesc():void
 		{
-			shortDesc = "Watch";
+			shortDesc = "A watch";
+		}
+		
+		override public function setAlias():void
+		{
+			alias = ["watch"];
 		}
 		
 		override public function setLongDesc():void

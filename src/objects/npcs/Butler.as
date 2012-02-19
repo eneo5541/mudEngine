@@ -14,6 +14,11 @@ package objects.npcs
 			shortDesc = "Butler";
 		}
 		
+		override public function setAlias():void
+		{
+			alias = ["Butler", "butler", "servant", "man"];
+		}
+		
 		override public function setLongDesc():void
 		{
 			longDesc = "The butler is a tall, gaunt man wearing a stylish black-tie suit. " +

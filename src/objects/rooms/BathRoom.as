@@ -27,7 +27,7 @@ package objects.rooms
 		
 		override public function setGettables():void
 		{
-			gettables = { Towel:"objects.gettables.Towel" };
+			gettables = ["objects.gettables.Towel"];
 		}
 	}
 

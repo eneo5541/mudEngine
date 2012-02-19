@@ -31,7 +31,7 @@ package objects.rooms
 		
 		override public function setNpcs():void
 		{
-			npcs = { Butler:"objects.npcs.Butler" };
+			npcs = ["objects.npcs.Butler"];
 		}
 		
 	}

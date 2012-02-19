@@ -14,6 +14,11 @@ package objects.gettables
 			shortDesc = "Towel";
 		}
 		
+		override public function setAlias():void
+		{
+			alias = ["Towel", "towel"];
+		}
+		
 		override public function setLongDesc():void
 		{
 			longDesc = "A fluffy pink towel. You decide that it goes wonderfully with your clothes.";

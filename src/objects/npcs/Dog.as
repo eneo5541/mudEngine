@@ -11,7 +11,12 @@ package objects.npcs
 		
 		override public function setShortDesc():void
 		{
-			shortDesc = "Dog";
+			shortDesc = "Corgi";
+		}
+		
+		override public function setAlias():void
+		{
+			alias = ["Corgi", "corgi", "dog", "twinkie"];
 		}
 		
 		override public function setLongDesc():void

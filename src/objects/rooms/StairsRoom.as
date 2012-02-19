@@ -27,7 +27,7 @@ package objects.rooms
 		
 		override public function setGettables():void
 		{
-			gettables = { Binoculars:"objects.gettables.Binoculars" };
+			gettables = ["objects.gettables.Binoculars"];
 		}
 	}
 

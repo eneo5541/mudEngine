@@ -5,6 +5,7 @@ package objects
 	{
 		public var shortDesc:String;
 		public var longDesc:String;
+		public var alias:Array;
 		public var dialogue:Array;
  
 		function Person()
@@ -12,6 +13,7 @@ package objects
 			setShortDesc();
 			setLongDesc();
 			setDialogue();
+			setAlias();
 		}
 		
 		public function setShortDesc():void
@@ -27,6 +29,11 @@ package objects
 		public function setDialogue():void
 		{
 			//dialogue = ["A bit of dialogue"];
+		}
+		
+		public function setAlias():void
+		{
+			//alias = ["human", "man", "person"];
 		}
 		
 	}
