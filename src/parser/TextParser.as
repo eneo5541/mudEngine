@@ -5,48 +5,25 @@ package parser
 	import handler.GettableHandler;
 	import handler.InventoryHandler;
 	import handler.PersonHandler;
+	import objects.npcs.Parrot;
+	import objects.rooms.BedRoom;
+	
 	import handler.RoomHandler;
 	import objects.Gettable;
-	import objects.gettables.Binoculars;
-	import objects.gettables.Knife;
-	import objects.gettables.Towel;
-	import objects.gettables.Watch;
-	import objects.npcs.Butler;
-	import objects.npcs.Dog;
 	import objects.Person;
 	import objects.Room;
-	import objects.rooms.BathRoom;
-	import objects.rooms.BedRoom;
-	import objects.rooms.Corridor2Room;
-	import objects.rooms.CorridorRoom;
-	import objects.rooms.DeadEndRoom;
-	import objects.rooms.JunctionRoom;
-	import objects.rooms.OutdoorsRoom;
-	import objects.rooms.StairsRoom;
+
 	
 	public class TextParser extends EventDispatcher
 	{
 		private var inputCommand:String;
 		public var roomHandler:RoomHandler;
 		public var inventoryHandler:InventoryHandler;
-		//private var personHandler:PersonHandler;
+		//private var personHandler:PersonHandler;  Room handler handles npcs
 		private var gettableHandler:GettableHandler;
-		// Need to find out how to get getDefinitionByName to work without creating these
-		private var _bathroom:BathRoom;
-		private var _bedRoom:BedRoom;
-		private var _corridorRoom:CorridorRoom;
-		private var _corridor2Room:Corridor2Room;
-		private var _deadEndRoom:DeadEndRoom;
-		private var _junctionRoom:JunctionRoom;
-		private var _outdoorsRoom:OutdoorsRoom;
-		private var _stairsRoom:StairsRoom;
-		private var _butler:Butler;
-		private var _dog:Dog;
-		private var _watch:Watch;
-		private var _towel:Towel;
-		private var _binoculars:Binoculars;
-		private var _knife:Knife;
 		
+		private var objectLibrary:ObjectLibrary = new ObjectLibrary();
+		private var _parrot:Parrot;
 		
 		function TextParser()
 		{
@@ -225,17 +202,50 @@ package parser
 // Dynamic commands (action commands attached to either npcs in the room or items in the inventory) 
 		private function checkDynamicCommands(command:Array):void
 		{
-			if (roomHandler.action != null)
-			{
-				if (inputCommand == roomHandler.action.action)  // If the command matches the action attached to this room
-				{
-					this.dispatchEvent(new OutputEvent(roomHandler.getResponse() + "\n", OutputEvent.OUTPUT));
-					return;
-				}
-			}
+			if (checkRoomActions()) 
+				return;
+			if (checkNpcActions())
+				return;			
+			
+			
 			
 			var errorMsg:String = "I don't know how to " + inputCommand + ".\n";
 			this.dispatchEvent(new OutputEvent(errorMsg, OutputEvent.OUTPUT));
+		}
+		
+		
+		private function checkRoomActions():Boolean
+		{
+			if (roomHandler.action != null)
+			{
+				if (inputCommand == roomHandler.action.action)  // If the command matches the action attached to this room
+				{// We can handle it this way since we can only ever be in a single room at a single time
+					this.dispatchEvent(new OutputEvent(roomHandler.getResponse(roomHandler.action.response) + "\n", OutputEvent.OUTPUT));
+					//this.dispatchEvent(new OutputEvent(roomHandler.getResponse() + "\n", OutputEvent.OUTPUT));
+					return true;
+				}
+			}
+			return false;
+		}
+		
+		private function checkNpcActions():Boolean 
+		{
+			if (roomHandler.npcsThisRoom.length > 0) // If there is an NPC in the room
+			{
+				for (var i:* in roomHandler.npcsThisRoom)
+				{
+					if (roomHandler.npcsThisRoom[i].action != null) // Check if any of the NPCs in the room have an action
+					{
+						var npcAction:* = roomHandler.npcsThisRoom[i].action;
+						if (inputCommand == npcAction.action) // Have to pass through the desired function since there can be multiple NPCs in a room
+						{ 
+							this.dispatchEvent(new OutputEvent(roomHandler.getResponse(npcAction.response) + "\n", OutputEvent.OUTPUT));
+							return true;
+						}
+					}
+				}
+			}
+			return false;
 		}
 		
 	}

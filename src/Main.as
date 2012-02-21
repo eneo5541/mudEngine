@@ -11,7 +11,9 @@ package
 	import parser.TextParser;
 /*
  * TODO
- * Handling interaction with rooms, interaction with NPC, interaction with objects and NPC random dialogue
+ * Tnteraction with objects
+ * Deleting objects, be they npcs or gettables
+ * NPC random dialogue
  */
 
 	public class Main extends Sprite 

@@ -35,6 +35,16 @@ package objects.rooms
 			};
 		}
 		
+		override public function setAction():void
+		{
+			action = { 
+				action:"close door", 
+				response:function(target:*):String {
+							return "You strain against the door, but it is far too heavy to move.";
+						}
+			};
+		}
+		
 		override public function setGettables():void
 		{
 			gettables = ["objects.gettables.Towel"];

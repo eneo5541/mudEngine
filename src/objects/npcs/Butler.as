@@ -1,6 +1,7 @@
 package objects.npcs 
 {
 	import objects.Person;
+	import objects.rooms.CorridorRoom;
 
 	public class Butler extends Person
 	{		
@@ -34,6 +35,19 @@ package objects.npcs
 				"The butler wipes a speck of dust off of is suit."
 			];
 		}
+		
+		override public function setAction():void
+		{
+			action = { 
+				action:"salute butler", 
+				parameter:new CorridorRoom,
+				response:function(target:*):String {
+							target.personHandler.addPerson("objects.npcs.Parrot", new CorridorRoom);
+							return "As you salute the Butler, a parrot swoops into the room, perching on his shoulder.";
+						}
+			};
+		}
+		
 	}
 
 

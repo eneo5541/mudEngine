@@ -6,12 +6,14 @@ package objects
 		public var shortDesc:String;
 		public var longDesc:String;
 		public var alias:Array;
+		public var action:*;
  
 		function Gettable()
 		{
 			setShortDesc();
 			setLongDesc();
 			setAlias();
+			setAction();
 		}
 		
 		public function setShortDesc():void
@@ -27,6 +29,11 @@ package objects
 		public function setAlias():void
 		{
 			//alias = ["rock", "pebble", "stone"];
+		}
+		
+		public function setAction():void
+		{
+			//action = { action:"search table", response:function():void { trace("You search the table"); } };
 		}
 		
 	}

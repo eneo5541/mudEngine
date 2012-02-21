@@ -24,6 +24,7 @@ package handler
 		public var exits:*;
 		public var items:*;
 		public var action:*;
+		public var npcsThisRoom:Array;
 		
 		
 		function RoomHandler()
@@ -78,8 +79,13 @@ package handler
 		
 		private function addNpcs():String
 		{
-			var td:Array = personHandler.personsThisRoom(room);
-			var tr:String = listHandler.listNpcs(td);
+			npcsThisRoom = personHandler.personsThisRoom(room);
+			
+			var toString:Array = [];
+			for (var i:* in npcsThisRoom)
+				toString.push(npcsThisRoom[i].shortDesc);	
+			var tr:String = listHandler.listNpcs(toString);
+			
 			return tr;
 		}
 		
@@ -90,10 +96,9 @@ package handler
 			return tr;
 		}
 		
-		
-		public function getResponse():String
+		public function getResponse(f:Function):String
 		{
-			return action.response(this); // The 'this' parameter allows the response function to be called from the roomHandler, instead of the room
+			return f(this); // The 'this' parameter allows the response function to be called from the roomHandler, instead of the room
 		}
 
 	}

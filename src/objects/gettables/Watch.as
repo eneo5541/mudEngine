@@ -16,7 +16,7 @@ package objects.gettables
 		
 		override public function setAlias():void
 		{
-			alias = ["watch"];
+			alias = ["watch", "Watch"];
 		}
 		
 		override public function setLongDesc():void

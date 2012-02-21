@@ -37,7 +37,7 @@ package objects.rooms
 		
 		override public function setGettables():void
 		{
-			gettables = ["objects.gettables.Watch"];
+			gettables = ["objects.gettables.Watch", "objects.gettables.Biscuit"];
 		}
 		
 		override public function setAction():void

@@ -1,6 +1,7 @@
 package handler 
 {
 	import flash.utils.getDefinitionByName;
+	import flash.utils.getQualifiedClassName;
 	import objects.Gettable;
 	import objects.Person;
 
@@ -12,7 +13,7 @@ package handler
 		{
 		}
 		
-		public function addPerson(personObj:String, loc:String):void  // See gettableHandler for how this works
+		public function addPerson(personObj:String, loc:*):void  // See gettableHandler for how this works
 		{
 			for (var i:* in personArray)
 			{
@@ -20,7 +21,11 @@ package handler
 					return;
 			}
 			
-			personArray.push({ object:personObj, location:loc });
+			var td:String = loc;
+			if (!(loc is String))   // Convert the location to a string for storage
+				td = getQualifiedClassName(loc);
+			
+			personArray.push( { object:personObj, location:td } );
 		}
 		
 		public function personsThisRoom(room:String):Array
@@ -32,7 +37,7 @@ package handler
 				if (personArray[i].location == room) 
 				{
 					var personClass:Class = getDefinitionByName(personArray[i].object) as Class;
-					personsInRoom.push((new personClass).shortDesc);
+					personsInRoom.push(new personClass as Person);
 				}
 			}	
 			

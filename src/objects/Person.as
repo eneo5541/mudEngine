@@ -7,6 +7,7 @@ package objects
 		public var longDesc:String;
 		public var alias:Array;
 		public var dialogue:Array;
+		public var action:*;
  
 		function Person()
 		{
@@ -14,6 +15,7 @@ package objects
 			setLongDesc();
 			setDialogue();
 			setAlias();
+			setAction();
 		}
 		
 		public function setShortDesc():void
@@ -34,6 +36,11 @@ package objects
 		public function setAlias():void
 		{
 			//alias = ["human", "man", "person"];
+		}
+		
+		public function setAction():void
+		{
+			//action = { action:"smile", parameter:new Room, response:function(){} };
 		}
 		
 	}

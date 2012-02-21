@@ -35,6 +35,16 @@ package objects.rooms
 			};
 		}
 		
+		override public function setAction():void
+		{
+			action = { 
+				action:"open mailbox", 
+				response:function(target:*):String {
+							return "You open the mailbox, but there is nothing inside.";
+						}
+			};
+		}
+		
 		override public function setNpcs():void
 		{
 			npcs = ["objects.npcs.Dog"];
