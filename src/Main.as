@@ -1,9 +1,12 @@
 package 
 {
+	import fl.controls.UIScrollBar;
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.KeyboardEvent;
 	import flash.events.TextEvent;
+	import flash.net.URLLoader;
+	import flash.net.URLRequest;
 	import flash.text.TextField;
 	import flash.text.TextFieldType;
 	import flash.text.TextFormat;
@@ -21,6 +24,7 @@ package
 		private var userInputField:TextField;
 		private var userOutputField:TextField;
 		private var parse:TextParser = new TextParser();
+		private var outputScroll:UIScrollBar = new UIScrollBar(); 
 		
 		public function Main():void 
 		{						
@@ -36,6 +40,12 @@ package
 			userOutputField.wordWrap = true;
 			userInputField = createCustomTextField(0,430,640,50);
 			userInputField.type = TextFieldType.INPUT
+			
+			outputScroll.direction = "vertical"; 
+			outputScroll.setSize(userOutputField.width, userOutputField.height);  
+			outputScroll.move(625,0); 
+			addChild(outputScroll); 
+			
 			
 			stage.addEventListener(KeyboardEvent.KEY_DOWN, detectKey);
 			parse.addEventListener(OutputEvent.OUTPUT, outputHandler);
@@ -65,6 +75,19 @@ package
 		public function outputHandler(e:OutputEvent):void
 		{
 			userOutputField.appendText(e.value);
+			// Truncate the text field if it is too long (to save memory)
+			if (userOutputField.numLines > 200)
+				truncateOutput(userOutputField.numLines, 200);
+		}
+		
+		
+		private function truncateOutput(textLines:int, targetLines:int):void
+		{
+			var str:String = userOutputField.text;
+			var minCharacterIndex:int = userOutputField.getLineOffset(textLines - targetLines);
+			var maxCharacterIndex:int = userOutputField.length;
+			
+			userOutputField.text = str.substr(minCharacterIndex, maxCharacterIndex);
 		}
 		
 		private function detectKey(event:KeyboardEvent):void
@@ -78,6 +101,7 @@ package
 				userInputField.text = "";
 				// Scroll to the bottom of the text field
 				userOutputField.scrollV = userOutputField.bottomScrollV;
+				outputScroll.scrollTarget = userOutputField; 
 			}
 		}
 		
