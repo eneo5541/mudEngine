@@ -37,6 +37,7 @@ package parser
 		 
 		public function parseCommand(command:String):void
 		{
+			command = command.toLowerCase();
 			inputCommand = command;
 			if (command == null || command.length == 0)
 			{
