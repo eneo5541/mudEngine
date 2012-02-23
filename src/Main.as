@@ -14,7 +14,7 @@ package
 	import parser.TextParser;
 /*
  * TODO
- * Tnteraction with objects
+ * Interaction with objects. Commands matched. Just need to check parameters and run functions
  * Deleting objects, be they npcs or gettables
  * NPC random dialogue
  */
@@ -25,6 +25,8 @@ package
 		private var userOutputField:TextField;
 		private var parse:TextParser = new TextParser();
 		private var outputScroll:UIScrollBar = new UIScrollBar(); 
+		
+		private var pastCommand:String = "";
 		
 		public function Main():void 
 		{						
@@ -94,6 +96,7 @@ package
 		{
 			if (event.keyCode == 13)
 			{
+				pastCommand = userInputField.text;
 				userOutputField.appendText(">" + userInputField.text + "\n");
 				// Pass the user's input to the textParser to look for commands			
 				parse.parseCommand(userInputField.text);
@@ -102,6 +105,14 @@ package
 				// Scroll to the bottom of the text field
 				userOutputField.scrollV = userOutputField.bottomScrollV;
 				outputScroll.scrollTarget = userOutputField; 
+			}
+			else if (event.keyCode == 38)  // If up key is pressed, put the last command into the input field
+			{
+				userInputField.text = pastCommand;
+			}
+			else if (event.keyCode == 40)  // If down is pressed, clear the input
+			{
+				userInputField.text = "";
 			}
 		}
 		

@@ -16,7 +16,7 @@ package handler
 		
 		public function currentInventory():String
 		{
-			var td:Array = gettablesThisRoom("handler::InventoryHandler");
+			var td:Array = gettablesThisRoom(new InventoryHandler);
 			if (td.length == 0) 
 				return "You are not carrying anything. \n";
 				
@@ -39,8 +39,11 @@ package handler
 			gettableArray.push( { object:getObj, location:td } );
 		}
 		
-		public function gettablesThisRoom(room:String):Array
+		public function gettablesThisRoom(room:*):Array
 		{
+			if (!(room is String))
+				room = getQualifiedClassName(room);
+				
 			var gettablesInRoom:Array = [];
 			
 			for (var i:* in gettableArray)

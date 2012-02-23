@@ -2,6 +2,7 @@ package parser
 {
 	import flash.events.EventDispatcher;
 	import flash.utils.getDefinitionByName;
+	import flash.utils.getQualifiedClassName;
 	import handler.GettableHandler;
 	import handler.InventoryHandler;
 	import handler.PersonHandler;
@@ -68,14 +69,15 @@ package parser
 					checkDynamicCommands(splitSpaces);
 					break;
 			}
-			
+			// Refreshes the rooms, npcs and gettables
+			var refreshScreen:String = roomHandler.getDescription();
 		}
 		
 // Get and drop items		
 		private function checkDropCommand(command:Array):void
 		{
 			var object:* = roomHandler.gettableHandler.gettableArray;
-			var pickedObject:String = inventoryHandler.moveItem(object, command[1], "handler::InventoryHandler", roomHandler.room);
+			var pickedObject:String = inventoryHandler.moveItem(object, command[1], new InventoryHandler, roomHandler.room);
 			if (pickedObject != null)
 				this.dispatchEvent(new OutputEvent("You drop a " + pickedObject + ".\n", OutputEvent.OUTPUT));
 			else
@@ -85,7 +87,7 @@ package parser
 		private function checkGetCommand(command:Array):void
 		{
 			var object:* = roomHandler.gettableHandler.gettableArray;
-			var pickedObject:String = inventoryHandler.moveItem(object, command[1], roomHandler.room, "handler::InventoryHandler");
+			var pickedObject:String = inventoryHandler.moveItem(object, command[1], roomHandler.room, new InventoryHandler);
 			if (pickedObject != null)
 				this.dispatchEvent(new OutputEvent("You get a " + pickedObject + ".\n", OutputEvent.OUTPUT));
 			else
@@ -121,8 +123,8 @@ package parser
 		
 		private function checkInventory(command:String):Boolean
 		{
-			var object:* = roomHandler.gettableHandler.gettableArray; // Look for gettable objects with a location of 'inventory'
-			var pickedObject:String = inventoryHandler.checkItemExists(object, command, "handler::InventoryHandler");;
+			var object:* = inventoryHandler.inventory; // Look for gettable objects with a location of 'inventory'
+			var pickedObject:String = inventoryHandler.checkItemExists(object, command, new InventoryHandler);;
 			if (pickedObject != null)
 			{
 				this.dispatchEvent(new OutputEvent(pickedObject + "\n", OutputEvent.OUTPUT));
@@ -205,12 +207,29 @@ package parser
 			if (checkRoomActions()) 
 				return;
 			if (checkNpcActions())
-				return;			
-			
-			
-			
+				return;		
+			if (checkGettableActions())
+				return;	
+				
 			var errorMsg:String = "I don't know how to " + inputCommand + ".\n";
 			this.dispatchEvent(new OutputEvent(errorMsg, OutputEvent.OUTPUT));
+		}
+		
+		private function checkGettableActions():Boolean
+		{
+			var parent:* = inventoryHandler.inventory;
+			
+			for (var i:* in parent)
+			{
+				var mainClass:Class = getDefinitionByName(parent[i].object) as Class; // Change the room to the one matching the exit
+				var child:* = (new mainClass as Gettable);
+				if (inputCommand == child.action.action)
+				{
+					this.dispatchEvent(new OutputEvent("Action matches that of an inventory item. \n", OutputEvent.OUTPUT));
+					return true;
+				}
+			}
+			return false;
 		}
 		
 		
@@ -221,7 +240,6 @@ package parser
 				if (inputCommand == roomHandler.action.action)  // If the command matches the action attached to this room
 				{// We can handle it this way since we can only ever be in a single room at a single time
 					this.dispatchEvent(new OutputEvent(roomHandler.getResponse(roomHandler.action.response) + "\n", OutputEvent.OUTPUT));
-					//this.dispatchEvent(new OutputEvent(roomHandler.getResponse() + "\n", OutputEvent.OUTPUT));
 					return true;
 				}
 			}
