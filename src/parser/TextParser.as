@@ -225,7 +225,6 @@ package parser
 				if (inputCommand == child.action.action)
 				{
 					this.dispatchEvent(new OutputEvent(roomHandler.getResponse(child.action.response) + "\n", OutputEvent.OUTPUT));
-					//this.dispatchEvent(new OutputEvent("Action matches that of an inventory item. \n", OutputEvent.OUTPUT));
 					return true;
 				}
 			}
