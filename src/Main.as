@@ -15,7 +15,6 @@ package
 /*
  * TODO
  * Interaction with objects. Just need to check parameters
- * Deleting objects, be they npcs or gettables
  * NPC random dialogue
  */
 

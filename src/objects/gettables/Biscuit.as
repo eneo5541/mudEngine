@@ -34,7 +34,6 @@ package objects.gettables
 				//parameter:new Parrot,
 				response:function(target:*):String {
 							target.gettableHandler.removeGettable("objects.gettables.Biscuit");
-							//target.personHandler.addPerson("objects.npcs.Parrot", new CorridorRoom);
 							return "You feed the biscuit to the parrot.";
 						}
 			};

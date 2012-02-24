@@ -1,6 +1,7 @@
 package objects.npcs 
 {
 	import objects.Person;
+	import objects.rooms.BathRoom;
 	import objects.rooms.CorridorRoom;
 
 	public class Parrot extends Person
@@ -39,6 +40,7 @@ package objects.npcs
 			action = { 
 				action:"coo",
 				response:function(target:*):String {
+							target.loadRoom(new BathRoom);
 							return "Who's a pretty boy now? Pretty boy, pretty boy!";
 						}
 			};
