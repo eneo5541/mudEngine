@@ -14,7 +14,7 @@ package
 	import parser.TextParser;
 /*
  * TODO
- * Interaction with objects. Commands matched. Just need to check parameters and run functions
+ * Interaction with objects. Just need to check parameters
  * Deleting objects, be they npcs or gettables
  * NPC random dialogue
  */

@@ -39,6 +39,19 @@ package handler
 			gettableArray.push( { object:getObj, location:td } );
 		}
 		
+		public function removeGettable(getObj:String):void  // Similar to add command, but removes item from existance anywhere. 
+		{
+			for (var i:* in gettableArray)
+			{
+				if (gettableArray[i].object == getObj)  // If the object exists, delete it.
+				{
+					gettableArray.splice(i, 1);   // This deletes the item and allows it to reappear by visiting the room or executing the requisite creation command
+					//gettableArray[i].location = "DUMMY";  // This will make the object never reappear. It will not be readded, since it exists, and is bound to a dummy location
+					return; 
+				}
+			}	
+		}
+		
 		public function gettablesThisRoom(room:*):Array
 		{
 			if (!(room is String))

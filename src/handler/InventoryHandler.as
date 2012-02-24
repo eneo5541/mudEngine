@@ -60,7 +60,24 @@ package handler
 			return null;
 		}
 		
-		public function updateInventory(object:*, location:String):void 
+		public function refreshInventory(object:*):void  // Doesn't work. This should be rechecking the gettable lists and updating. Deleting item in gettable list does not delete from inventory
+		{
+			var tempInventory:Array = [];
+			
+			for (var i:* in object) // Iterate through all the objects in existance
+			{
+				//trace(" rhrh  " + i);
+				if (object[i].location == getQualifiedClassName(this))
+				{
+					//trace("     pushing "+ object[i].object + " : " +object[i].location);
+					tempInventory.push(object[i]);
+				}
+			}
+			
+			inventory = tempInventory;
+		}
+		
+		private function updateInventory(object:*, location:String):void 
 		{
 			if (location == getQualifiedClassName(this))  // If the item is being moved to the inventory, pop it into here
 			{

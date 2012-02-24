@@ -28,6 +28,19 @@ package handler
 			personArray.push( { object:personObj, location:td } );
 		}
 		
+		public function removePerson(personObj:String):void  // As above, see gettableHandler
+		{
+			for (var i:* in personArray)
+			{
+				if (personArray[i].object == personObj) 
+				{
+					personArray.splice(i, 1); 
+					//gettableArray[i].location = "DUMMY";  
+					return; 
+				}
+			}	
+		}
+		
 		public function personsThisRoom(room:String):Array
 		{
 			var personsInRoom:Array = [];

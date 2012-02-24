@@ -65,13 +65,11 @@ package parser
 					checkDropCommand(splitSpaces);
 					break;
 				default:
-					if (checkDirectionCommand(splitSpaces[0]))
-						return;
-					checkDynamicCommands(splitSpaces);
+					if (!checkDirectionCommand(splitSpaces[0]))   // Check if command is a direction command
+						checkDynamicCommands(splitSpaces);  // If not, check if it is a dynamic command
 					break;
 			}
-			// Refreshes the rooms, npcs and gettables
-			var refreshScreen:String = roomHandler.getDescription();
+			refreshAllObjects();
 		}
 		
 // Get and drop items		
@@ -211,7 +209,7 @@ package parser
 				return;		
 			if (checkGettableActions())
 				return;	
-				
+			
 			var errorMsg:String = "I don't know how to " + inputCommand + ".\n";
 			this.dispatchEvent(new OutputEvent(errorMsg, OutputEvent.OUTPUT));
 		}
@@ -226,7 +224,8 @@ package parser
 				var child:* = (new mainClass as Gettable);
 				if (inputCommand == child.action.action)
 				{
-					this.dispatchEvent(new OutputEvent("Action matches that of an inventory item. \n", OutputEvent.OUTPUT));
+					this.dispatchEvent(new OutputEvent(roomHandler.getResponse(child.action.response) + "\n", OutputEvent.OUTPUT));
+					//this.dispatchEvent(new OutputEvent("Action matches that of an inventory item. \n", OutputEvent.OUTPUT));
 					return true;
 				}
 			}
@@ -265,6 +264,15 @@ package parser
 				}
 			}
 			return false;
+		}
+		
+		
+		private function refreshAllObjects():void
+		{
+			// Refreshes the rooms, npcs and gettables
+			var refreshScreen:String = roomHandler.getDescription(); // This refreshes objects, rooms and NPCs, since the room handler handles all of those
+			var child:* = roomHandler.gettableHandler.gettableArray;
+			inventoryHandler.refreshInventory(child); // Refresh the inventory, since inventory is the only thing not handled by the room handler
 		}
 		
 	}
