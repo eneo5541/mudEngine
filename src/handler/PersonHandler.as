@@ -35,7 +35,7 @@ package handler
 				if (personArray[i].object == personObj) 
 				{
 					personArray.splice(i, 1); 
-					//gettableArray[i].location = "DUMMY";  
+					//personArray[i].location = "DUMMY";  
 					return; 
 				}
 			}	
