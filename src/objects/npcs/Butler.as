@@ -1,5 +1,6 @@
 package objects.npcs 
 {
+	import objects.gettables.Watch;
 	import objects.Person;
 	import objects.rooms.CorridorRoom;
 
@@ -40,7 +41,7 @@ package objects.npcs
 		{
 			action = { 
 				action:"salute butler", 
-				//parameter:{ room:new CorridorRoom },
+				parameter:{ gettable:new Watch, error:"You need a watch to salute the butler." },
 				response:function(target:*):String {
 							target.personHandler.addPerson("objects.npcs.Parrot", new CorridorRoom);
 							return "As you salute the Butler, a parrot swoops into the room, perching on his shoulder.";

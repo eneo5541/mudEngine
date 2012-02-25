@@ -98,10 +98,10 @@ package handler
 		
 		public function getResponse(action:*):String
 		{
-			if (action.parameter != null)   // Only items have parameters. Could apply this to NPCs too though? Do it.
+			if (action.parameter != null)
 			{
 				if (!checkParametersMet(action.parameter))  // If the parameters are not met, do not continue
-					return "Parameter is not met";
+					return action.parameter.error;
 			}
 			var f:Function = action.response;
 			return f(this); // The 'this' parameter allows the response function to be called from the roomHandler, instead of the room

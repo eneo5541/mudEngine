@@ -48,18 +48,3 @@ package objects.npcs
 	}
 
 }
-
-
-/*
-PARAMETERS
-	parameter:{ room:new DeadEndRoom },
-	parameter:{ npc:new Parrot },
-	parameter:{ gettable:new Watch },
-
-RESPONSES
-	target.loadRoom(new BathRoom);
-	target.personHandler.addPerson("objects.npcs.Parrot", new CorridorRoom);
-	target.personHandler.removePerson("objects.npcs.Parrot");
-	target.gettableHandler.addGettable("objects.gettables.Knife", new BedRoom);
-	target.gettableHandler.removeGettable("objects.gettables.Biscuit");
-*/

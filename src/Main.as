@@ -122,3 +122,19 @@ package
 	}
 	
 }
+
+
+
+/*
+PARAMETERS
+	parameter:{ room:new DeadEndRoom, error:"You are not in the dead end room" },
+	parameter:{ npc:new Parrot, error:"You don't see any parrot here." },
+	parameter:{ gettable:new Watch, error:"You need a watch to salute the butler" },
+
+RESPONSES
+	target.loadRoom(new BathRoom);
+	target.personHandler.addPerson("objects.npcs.Parrot", new CorridorRoom);
+	target.personHandler.removePerson("objects.npcs.Parrot");
+	target.gettableHandler.addGettable("objects.gettables.Knife", new BedRoom);
+	target.gettableHandler.removeGettable("objects.gettables.Biscuit");
+*/
