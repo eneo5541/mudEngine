@@ -20,8 +20,6 @@ package parser
 		private var inputCommand:String;
 		public var roomHandler:RoomHandler;
 		public var inventoryHandler:InventoryHandler;
-		//private var personHandler:PersonHandler;  Room handler handles npcs
-		private var gettableHandler:GettableHandler;
 		
 		private var objectLibrary:ObjectLibrary = new ObjectLibrary();
 		private var _parrot:Parrot;
@@ -31,10 +29,15 @@ package parser
 			roomHandler = new RoomHandler();
 			roomHandler.loadRoom(new BedRoom);
 			inventoryHandler = new InventoryHandler();
-			//personHandler = new PersonHandler;
-			//gettableHandler = new GettableHandler;
+			
+			roomHandler.addEventListener(DialogueEvent.DIALOGUE, dialogueHandler);
 		}
-		 
+		
+		private function dialogueHandler(e:DialogueEvent):void
+		{
+			this.dispatchEvent(new OutputEvent(e.value + "\n", OutputEvent.OUTPUT));
+		}
+		
 		public function parseCommand(command:String):void
 		{
 			command = command.toLowerCase();

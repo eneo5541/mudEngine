@@ -33,7 +33,7 @@ package objects.npcs
 			dialogue = [
 				"The butler says 'There's always something to clean.'",
 				"The butler asks 'Do you need something?'",
-				"The butler wipes a speck of dust off of is suit."
+				"The butler wipes a speck of dust off of his suit."
 			];
 		}
 		

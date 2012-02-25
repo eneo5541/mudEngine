@@ -72,7 +72,7 @@ package
             return result;
         }
 		
-		public function outputHandler(e:OutputEvent):void
+		private function outputHandler(e:OutputEvent):void
 		{
 			userOutputField.appendText(e.value);
 			// Truncate the text field if it is too long (to save memory)

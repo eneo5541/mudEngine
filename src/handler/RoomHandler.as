@@ -2,15 +2,19 @@ package handler
 {
 	import flash.display.InteractiveObject;
 	import flash.events.EventDispatcher;
+	import flash.events.TimerEvent;
 	import flash.utils.getDefinitionByName;
 	import flash.utils.getQualifiedClassName;
+	import flash.utils.Timer;
 	import objects.Gettable;
 	import objects.npcs.Butler;
 	import objects.npcs.Dog;
 	import objects.Person;
 	import objects.Room;
 	import objects.rooms.BedRoom;
+	import parser.DialogueEvent;
 	import parser.OutputEvent;
+	import parser.RandomRange;
 
 	public class RoomHandler extends EventDispatcher
 	{
@@ -26,13 +30,33 @@ package handler
 		public var action:*;
 		public var npcsThisRoom:Array;
 		
+		private var dialogueTimer:Timer;
 		
 		function RoomHandler()
 		{
+			dialogueTimer = new Timer(5000); // 1 second
+			dialogueTimer.addEventListener(TimerEvent.TIMER, getDialogue);
+			dialogueTimer.start();
+		}
+		
+		private function getDialogue(event:TimerEvent):void
+		{
+			if (npcsThisRoom.length > 0)  // If there are NPCs in the room
+			{
+				var randomId:int = RandomRange.generate(0, npcsThisRoom.length);  // Randomly select one NPC
+				var randomNpc:* = npcsThisRoom[randomId];
+				if (randomNpc.dialogue != null)  // Check if the NPC has dialogue
+				{
+					var randomDialogue:int = RandomRange.generate(0, randomNpc.dialogue.length); // Send the dialogue up to the text parser, which will output it to screen
+					this.dispatchEvent(new DialogueEvent(randomNpc.dialogue[randomDialogue], DialogueEvent.DIALOGUE)); 
+				}
+			}
 		}
 		
 		public function loadRoom(room:Room):void
 		{	
+			dialogueTimer.stop();
+			
 			this.room = getQualifiedClassName(room);
 			
 			loadNpcs(room.npcs);
@@ -43,6 +67,8 @@ package handler
 			this.shortDesc = room.shortDesc;
 			this.longDesc = room.longDesc;
 			this.action = room.action
+			
+			dialogueTimer.start();
 		}
 		
 		private function loadNpcs(target:*):void
