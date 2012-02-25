@@ -96,10 +96,58 @@ package handler
 			return tr;
 		}
 		
-		public function getResponse(f:Function):String
+		public function getResponse(action:*):String
 		{
+			if (action.parameter != null)   // Only items have parameters. Could apply this to NPCs too though? Do it.
+			{
+				if (!checkParametersMet(action.parameter))  // If the parameters are not met, do not continue
+					return "Parameter is not met";
+			}
+			var f:Function = action.response;
 			return f(this); // The 'this' parameter allows the response function to be called from the roomHandler, instead of the room
 		}
+		
+		
+		private function checkParametersMet(parameter:*):Boolean 
+		{
+			var parameterType:String = "";
+			var parameterObj:String = "";
+			for (var i:* in parameter) 
+			{
+				parameterType = i;
+				parameterObj = getQualifiedClassName(parameter[i]);
+			}
+			
+			switch (parameterType)
+			{
+				case "npc":
+					for (var j:* in npcsThisRoom)
+					{
+						if (parameterObj == getQualifiedClassName(npcsThisRoom[j]))  // If the parameter npc is currently in the room
+							return true;
+					}
+					break;
+				case "room":
+					if (parameterObj == room)   // If the current room is the parameter room
+						return true;
+					break;
+				case "gettable":
+					var inventory:Array = gettableHandler.checkGettableLocation(new InventoryHandler);
+					
+					for (var k:* in inventory)
+					{
+						if (parameterObj == inventory[k])
+							return true;
+					}
+					break;
+				default:
+					break;
+			}
+			
+			return false;
+		}
+		
+		
 
 		
 		

@@ -14,7 +14,6 @@ package
 	import parser.TextParser;
 /*
  * TODO
- * Interaction with objects. Just need to check parameters
  * NPC random dialogue
  */
 

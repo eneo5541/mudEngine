@@ -4,6 +4,7 @@ package objects.gettables
 	import objects.Gettable;
 	import objects.npcs.Parrot;
 	import objects.rooms.BedRoom;
+	import objects.rooms.DeadEndRoom;
 
 	public class Biscuit extends Gettable
 	{		
@@ -31,7 +32,7 @@ package objects.gettables
 		{
 			action = { 
 				action:"feed biscuit to parrot", 
-				//parameter:new Parrot,
+				parameter:{ npc:new Parrot },
 				response:function(target:*):String {
 							target.gettableHandler.removeGettable("objects.gettables.Biscuit");
 							return "You feed the biscuit to the parrot.";

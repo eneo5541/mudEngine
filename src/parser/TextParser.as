@@ -214,6 +214,7 @@ package parser
 			this.dispatchEvent(new OutputEvent(errorMsg, OutputEvent.OUTPUT));
 		}
 		
+		
 		private function checkGettableActions():Boolean
 		{
 			var parent:* = inventoryHandler.inventory;
@@ -222,15 +223,17 @@ package parser
 			{
 				var mainClass:Class = getDefinitionByName(parent[i].object) as Class; // Change the room to the one matching the exit
 				var child:* = (new mainClass as Gettable);
-				if (inputCommand == child.action.action)
+				if (child.action != null) 
 				{
-					this.dispatchEvent(new OutputEvent(roomHandler.getResponse(child.action.response) + "\n", OutputEvent.OUTPUT));
-					return true;
+					if (inputCommand == child.action.action)
+					{
+						this.dispatchEvent(new OutputEvent(roomHandler.getResponse(child.action) + "\n", OutputEvent.OUTPUT));
+						return true;
+					}
 				}
 			}
 			return false;
 		}
-		
 		
 		private function checkRoomActions():Boolean
 		{
@@ -238,7 +241,7 @@ package parser
 			{
 				if (inputCommand == roomHandler.action.action)  // If the command matches the action attached to this room
 				{// We can handle it this way since we can only ever be in a single room at a single time
-					this.dispatchEvent(new OutputEvent(roomHandler.getResponse(roomHandler.action.response) + "\n", OutputEvent.OUTPUT));
+					this.dispatchEvent(new OutputEvent(roomHandler.getResponse(roomHandler.action) + "\n", OutputEvent.OUTPUT));
 					return true;
 				}
 			}
@@ -247,18 +250,15 @@ package parser
 		
 		private function checkNpcActions():Boolean 
 		{
-			if (roomHandler.npcsThisRoom.length > 0) // If there is an NPC in the room
+			for (var i:* in roomHandler.npcsThisRoom) // If there is an NPC in the room
 			{
-				for (var i:* in roomHandler.npcsThisRoom)
+				if (roomHandler.npcsThisRoom[i].action != null) // Check if any of the NPCs in the room have an action
 				{
-					if (roomHandler.npcsThisRoom[i].action != null) // Check if any of the NPCs in the room have an action
-					{
-						var npcAction:* = roomHandler.npcsThisRoom[i].action;
-						if (inputCommand == npcAction.action) // Have to pass through the desired function since there can be multiple NPCs in a room
-						{ 
-							this.dispatchEvent(new OutputEvent(roomHandler.getResponse(npcAction.response) + "\n", OutputEvent.OUTPUT));
-							return true;
-						}
+					var npcAction:* = roomHandler.npcsThisRoom[i].action;
+					if (inputCommand == npcAction.action) // Have to pass through the desired function since there can be multiple NPCs in a room
+					{ 
+						this.dispatchEvent(new OutputEvent(roomHandler.getResponse(npcAction) + "\n", OutputEvent.OUTPUT));
+						return true;
 					}
 				}
 			}

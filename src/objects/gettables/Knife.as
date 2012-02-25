@@ -24,6 +24,16 @@ package objects.gettables
 			longDesc = "A red, folding pen knife. It includes a blade, corkscrew, can opener and screw driver.";
 		}
 		
+		override public function setAction():void
+		{
+			action = { 
+				action:"open knife", 
+				response:function(target:*):String {
+							return "You flick the blade of the penknife open.";
+						}
+			};
+		}
+		
 	}
 
 

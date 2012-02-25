@@ -24,7 +24,8 @@ package handler
 			return "You are carrying:" + tr + "\n";
 		}
 		
-		public function addGettable(getObj:String, loc:*):void
+		// This pushes an item to the gettableArray that holds ALL gettables in the game and their location
+		public function addGettable(getObj:String, loc:*):void // Gettables can exist but not necessarily be placed in the game yet
 		{
 			for (var i:* in gettableArray)
 			{
@@ -54,21 +55,34 @@ package handler
 		
 		public function gettablesThisRoom(room:*):Array
 		{
-			if (!(room is String))
-				room = getQualifiedClassName(room);
+			var gettablesInRoom:Array = checkGettableLocation(room);  // Return gettables in the room
+			var shortDescripts:Array = [];
+			
+			for (var i:* in gettablesInRoom)
+			{
+				var gettableClass:Class = getDefinitionByName(gettablesInRoom[i]) as Class;  // Then convert them to classes and get the short desc for them
+				shortDescripts.push((new gettableClass).shortDesc);
+			}
+			return shortDescripts;
+		}
+		
+		public function checkGettableLocation(loc:*):Array
+		{
+			if (!(loc is String))
+				loc = getQualifiedClassName(loc);
 				
-			var gettablesInRoom:Array = [];
+			var gettablesInLoc:Array = [];
 			
 			for (var i:* in gettableArray)
 			{
-				if (gettableArray[i].location == room)  // If the object is in the given room, return it.
+				if (gettableArray[i].location == loc)  // Return gettables that have the same location
 				{
 					var gettableClass:Class = getDefinitionByName(gettableArray[i].object) as Class;
-					gettablesInRoom.push((new gettableClass).shortDesc);
+					gettablesInLoc.push(getQualifiedClassName(gettableClass));
 				}
 			}
 			
-			return gettablesInRoom;
+			return gettablesInLoc;
 		}
 		
 	}
