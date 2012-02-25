@@ -1,4 +1,6 @@
-- Main.as captures input and displays output
-- On enter, pass text to TextParser
-- RoomHandler should accept Room objects
-- Return description and use room exits to move by loading the class linked to each exit.
+- look to look at the room
+- look <object> to look at an object
+- go <direction> or simply <direction> to exit a room
+- pick <object> and drop <object> to move objects
+- Custom actions can be added to items, npcs and rooms
+- Custom actions can create or delete npcs or items, or move the player to a different room
