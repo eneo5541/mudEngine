@@ -36,10 +36,10 @@ package objects.rooms
 		override public function setExits():void
 		{
 			exits = { 
-				south:"objects.rooms.Corridor2Room",
-				west:"objects.rooms.BathRoom",
-				east:"objects.rooms.OutdoorsRoom",
-				north:"objects.rooms.StairsRoom"
+				south:Corridor2Room,
+				west:BathRoom,
+				east:OutdoorsRoom,
+				north:StairsRoom
 			};
 		}
 	}

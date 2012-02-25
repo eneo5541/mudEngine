@@ -8,6 +8,7 @@ package parser
 	import handler.PersonHandler;
 	import objects.npcs.Parrot;
 	import objects.rooms.BedRoom;
+	import objects.rooms.OriginRoom;
 	
 	import handler.RoomHandler;
 	import objects.Gettable;
@@ -27,7 +28,7 @@ package parser
 		function TextParser()
 		{
 			roomHandler = new RoomHandler();
-			roomHandler.loadRoom(new BedRoom);
+			roomHandler.loadRoom(new OriginRoom);
 			inventoryHandler = new InventoryHandler();
 			
 			roomHandler.addEventListener(DialogueEvent.DIALOGUE, dialogueHandler);
@@ -191,7 +192,12 @@ package parser
 			{
 				if (newCommand == i)
 				{
-					var mainClass:Class = getDefinitionByName(obj[i]) as Class; // Change the room to the one matching the exit
+					//var mainClass:Class = getDefinitionByName(obj[i]) as Class; // Change the room to the one matching the exit
+					//var gettableClass:Class = getDefinitionByName(obj[i]) as Class;
+					var className:String = getQualifiedClassName(obj[i]);
+					var mainClass:Class = getDefinitionByName(className) as Class; // Change the room to the one matching the exit
+					//gettablesInLoc.push(getQualifiedClassName(gettableClass));
+					//var mainClass:Class = new obj[i] as Class; // Change the room to the one matching the exit
 					roomHandler.loadRoom(new mainClass as Room);
 					
 					var longStr:String = "You leave out the " + newCommand + " exit. \n" + roomHandler.getDescription(); // Then fetch the new description

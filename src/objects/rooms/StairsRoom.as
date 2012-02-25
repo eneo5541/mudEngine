@@ -22,7 +22,7 @@ package objects.rooms
 		
 		override public function setExits():void
 		{
-			exits = { south:"objects.rooms.JunctionRoom" };
+			exits = { south:JunctionRoom };
 		}
 		
 		override public function setItems():void

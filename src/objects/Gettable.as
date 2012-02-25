@@ -3,10 +3,10 @@ package objects
 
 	public class Gettable 
 	{
-		public var shortDesc:String;
-		public var longDesc:String;
-		public var alias:Array;
-		public var action:*;
+		public var shortDesc:String = "";
+		public var longDesc:String = "";
+		public var alias:Array = [];
+		public var action:* = null;
  
 		function Gettable()
 		{

@@ -41,9 +41,9 @@ package objects.npcs
 		{
 			action = { 
 				action:"salute butler", 
-				parameter:{ gettable:new Watch, error:"You need a watch to salute the butler." },
+				parameter:{ gettable:Watch, error:"You need a watch to salute the butler." },
 				response:function(target:*):String {
-							target.personHandler.addPerson("objects.npcs.Parrot", new CorridorRoom);
+							target.personHandler.addPerson("objects.npcs.Parrot", CorridorRoom);
 							return "As you salute the Butler, a parrot swoops into the room, perching on his shoulder.";
 						}
 			};

@@ -3,11 +3,11 @@ package objects
 
 	public class Person 
 	{
-		public var shortDesc:String;
-		public var longDesc:String;
-		public var alias:Array;
-		public var dialogue:Array;
-		public var action:*;
+		public var shortDesc:String = "";
+		public var longDesc:String = "";
+		public var alias:Array = [];
+		public var dialogue:Array = [];
+		public var action:* = null;
  
 		function Person()
 		{
@@ -40,7 +40,7 @@ package objects
 		
 		public function setAction():void
 		{
-			//action = { action:"smile", parameter:new Room, response:function(){} };
+			//action = { action:"smile", parameter:Room, response:function(){} };
 		}
 		
 	}

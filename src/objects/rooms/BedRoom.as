@@ -22,7 +22,7 @@ package objects.rooms
 		
 		override public function setExits():void
 		{
-			exits = { north:"objects.rooms.CorridorRoom" };
+			exits = { north:CorridorRoom };
 		}
 		
 		override public function setItems():void
@@ -45,7 +45,7 @@ package objects.rooms
 			action = { 
 				action:"search table", 
 				response:function(target:*):String {
-							target.gettableHandler.addGettable("objects.gettables.Knife", new BedRoom);
+							target.gettableHandler.addGettable("objects.gettables.Knife", BedRoom);
 							return "You search the table and find a pen knife.";
 						}
 			};

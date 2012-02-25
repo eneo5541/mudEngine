@@ -30,7 +30,7 @@ package objects.rooms
 		
 		override public function setExits():void
 		{
-			exits = { west:"objects.rooms.CorridorRoom" };
+			exits = { west:CorridorRoom };
 		}
 	}
 

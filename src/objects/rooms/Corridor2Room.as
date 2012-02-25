@@ -32,8 +32,8 @@ package objects.rooms
 		override public function setExits():void
 		{
 			exits = { 
-				east:"objects.rooms.CorridorRoom", 
-				north:"objects.rooms.JunctionRoom"
+				east:CorridorRoom, 
+				north:JunctionRoom
 			};
 		}
 	}

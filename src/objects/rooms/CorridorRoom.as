@@ -23,9 +23,9 @@ package objects.rooms
 		override public function setExits():void
 		{
 			exits = { 
-				south:"objects.rooms.BedRoom",
-				east:"objects.rooms.DeadEndRoom",
-				west:"objects.rooms.Corridor2Room"
+				south:BedRoom,
+				east:DeadEndRoom,
+				west:Corridor2Room
 			};
 		}
 		

@@ -34,7 +34,7 @@ package handler
 		
 		function RoomHandler()
 		{
-			dialogueTimer = new Timer(5000); // 1 second
+			dialogueTimer = new Timer(3000); // 1 second
 			dialogueTimer.addEventListener(TimerEvent.TIMER, getDialogue);
 			dialogueTimer.start();
 		}
@@ -46,9 +46,10 @@ package handler
 				var randomId:int = RandomRange.generate(0, npcsThisRoom.length);  // Randomly select one NPC
 				var randomNpc:* = npcsThisRoom[randomId];
 				if (randomNpc.dialogue != null)  // Check if the NPC has dialogue
-				{
-					var randomDialogue:int = RandomRange.generate(0, randomNpc.dialogue.length); // Send the dialogue up to the text parser, which will output it to screen
-					this.dispatchEvent(new DialogueEvent(randomNpc.dialogue[randomDialogue], DialogueEvent.DIALOGUE)); 
+				{ 
+					var randomDialogue:int = RandomRange.generate(0, (randomNpc.dialogue.length * 2)); // This makes sure that dialogue will not always be displayed
+					if(randomDialogue < randomNpc.dialogue.length)        // Send the dialogue up to the text parser, which will output it to screen
+						this.dispatchEvent(new DialogueEvent(randomNpc.dialogue[randomDialogue], DialogueEvent.DIALOGUE)); 
 				}
 			}
 		}

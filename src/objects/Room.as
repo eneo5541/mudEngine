@@ -3,13 +3,13 @@ package objects
 
 	public class Room 
 	{
-		public var shortDesc:String;
-		public var longDesc:String;
-		public var exits:*;
-		public var items:*;
-		public var npcs:Array;
-		public var gettables:Array;
-		public var action:*;
+		public var shortDesc:String = "";
+		public var longDesc:String = "";
+		public var exits:* = null;
+		public var items:* = null;
+		public var npcs:Array = [];
+		public var gettables:Array = [];
+		public var action:* = null;
  
 		function Room()
 		{			

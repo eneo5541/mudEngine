@@ -12,10 +12,7 @@ package
 	import flash.text.TextFormat;
 	import parser.OutputEvent;
 	import parser.TextParser;
-/*
- * TODO
- * NPC random dialogue
- */
+	
 
 	public class Main extends Sprite 
 	{
@@ -78,6 +75,10 @@ package
 			// Truncate the text field if it is too long (to save memory)
 			if (userOutputField.numLines > 200)
 				truncateOutput(userOutputField.numLines, 200);
+				
+			// Scroll to the bottom of the text field
+			userOutputField.scrollV = userOutputField.bottomScrollV;
+			outputScroll.scrollTarget = userOutputField; 
 		}
 		
 		

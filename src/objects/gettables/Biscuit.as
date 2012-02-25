@@ -32,7 +32,7 @@ package objects.gettables
 		{
 			action = { 
 				action:"feed biscuit to parrot", 
-				parameter:{ npc:new Parrot, error:"You don't see any parrot here." },
+				parameter:{ npc:Parrot, error:"You don't see any parrot here." },
 				response:function(target:*):String {
 							target.gettableHandler.removeGettable("objects.gettables.Biscuit");
 							return "You feed the biscuit to the parrot.";
