@@ -7,7 +7,7 @@ package parser
 	import handler.InventoryHandler;
 	import handler.PersonHandler;
 	import objects.npcs.Parrot;
-	import objects.rooms.market.Market2;
+	import objects.rooms.BedRoom;
 	import handler.RoomHandler;
 	import objects.Gettable;
 	import objects.Person;
@@ -27,7 +27,7 @@ package parser
 		function TextParser()
 		{
 			roomHandler = new RoomHandler();
-			roomHandler.loadRoom(new Market2);
+			roomHandler.loadRoom(new BedRoom);
 			inventoryHandler = new InventoryHandler();
 			
 			roomHandler.addEventListener(DialogueEvent.OUTPUT, dialogueHandler);
