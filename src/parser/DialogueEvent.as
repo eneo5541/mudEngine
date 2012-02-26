@@ -5,12 +5,12 @@ package parser
    
 	public class DialogueEvent extends Event
 	{
-		public static const DIALOGUE:String = "dialogue";
+		public static const OUTPUT:String = "dialogue";
 		public var value:String;
 		public function DialogueEvent(value:String, type:String, bubbles:Boolean = true, cancelable:Boolean = false)
 		{
 			super(type, bubbles, cancelable);
-			this.value = value;  
+			this.value = "<p>" + value + "</p>";  
 		}
 		
 		public override function clone():Event

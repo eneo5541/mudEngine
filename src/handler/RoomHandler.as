@@ -11,7 +11,6 @@ package handler
 	import objects.npcs.Dog;
 	import objects.Person;
 	import objects.Room;
-	import objects.rooms.BedRoom;
 	import parser.DialogueEvent;
 	import parser.OutputEvent;
 	import parser.RandomRange;
@@ -34,7 +33,7 @@ package handler
 		
 		function RoomHandler()
 		{
-			dialogueTimer = new Timer(3000); // 1 second
+			dialogueTimer = new Timer(3500);
 			dialogueTimer.addEventListener(TimerEvent.TIMER, getDialogue);
 			dialogueTimer.start();
 		}
@@ -49,7 +48,7 @@ package handler
 				{ 
 					var randomDialogue:int = RandomRange.generate(0, (randomNpc.dialogue.length * 2)); // This makes sure that dialogue will not always be displayed
 					if(randomDialogue < randomNpc.dialogue.length)        // Send the dialogue up to the text parser, which will output it to screen
-						this.dispatchEvent(new DialogueEvent(randomNpc.dialogue[randomDialogue], DialogueEvent.DIALOGUE)); 
+						this.dispatchEvent(new DialogueEvent(randomNpc.dialogue[randomDialogue], DialogueEvent.OUTPUT)); 
 				}
 			}
 		}
@@ -88,7 +87,7 @@ package handler
 		
 		public function getDescription():String 
 		{
-			return longDesc + addExits() + addNpcs() + addGettables() + "\n";
+			return "<p class='title'>" + shortDesc + "</p><p>\n" + longDesc + "</p><p class='exits'>" + addExits() + "</p><p>" + addNpcs() + addGettables() + "</p>";
 		}
 		
 		private function addExits():String

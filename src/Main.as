@@ -7,13 +7,14 @@ package
 	import flash.events.TextEvent;
 	import flash.net.URLLoader;
 	import flash.net.URLRequest;
+	import flash.text.StyleSheet;
 	import flash.text.TextField;
 	import flash.text.TextFieldType;
 	import flash.text.TextFormat;
 	import parser.OutputEvent;
 	import parser.TextParser;
 	
-
+	[Frame(factoryClass="Preloader")]
 	public class Main extends Sprite 
 	{
 		private var userInputField:TextField;
@@ -21,20 +22,24 @@ package
 		private var parse:TextParser = new TextParser();
 		private var outputScroll:UIScrollBar = new UIScrollBar(); 
 		
+		private var my_css:StyleSheet = new StyleSheet();
+		
 		private var pastCommand:String = "";
 		
 		public function Main():void 
 		{						
 			if (stage) init();
-			else addEventListener(Event.ADDED_TO_STAGE, init);
+			else addEventListener(Event.ADDED_TO_STAGE, init);			
+        }
+		
+		private function init(e:Event = null):void 
+		{
+			removeEventListener(Event.ADDED_TO_STAGE, init);
 			
-/*			this.graphics.beginFill(0xffffff);
-            this.graphics.drawRect(0, 0, 640, 480);
-            this.graphics.endFill();*/
-			
-			userOutputField = createCustomTextField(0, 0, 640, 430);
+			userOutputField = createCustomTextField(0, 0, 625, 430);
 			userOutputField.multiline = true; 
 			userOutputField.wordWrap = true;
+			
 			userInputField = createCustomTextField(0,430,640,50);
 			userInputField.type = TextFieldType.INPUT
 			
@@ -43,27 +48,31 @@ package
 			outputScroll.move(625,0); 
 			addChild(outputScroll); 
 			
+			var td:String = "p { font-family: Verdana; font-size: 12px;text-align:left;color:#ffffff; }.title { color:#00ff00; }.exits { color:#00ffff; } ";
+			my_css.parseCSS(td);
+			userOutputField.styleSheet = my_css;
+			
+			var format1:TextFormat = new TextFormat();
+			format1.size = 12;
+			format1.color = 0xffffff;
+			format1.font = "Verdana";
+			userInputField.defaultTextFormat = format1;
 			
 			stage.addEventListener(KeyboardEvent.KEY_DOWN, detectKey);
 			parse.addEventListener(OutputEvent.OUTPUT, outputHandler);
 			
 			parse.parseCommand("look");
-        }
+		}
 		
         private function createCustomTextField(x:int,y:int,width:int,height:int):TextField 
-        {
-			var format1:TextFormat = new TextFormat();
-			format1.size = 16;
-			
+        {			
             var result:TextField = new TextField();
             result.x = x;
             result.y = y;
 			result.width = width;
 			result.height = height;
 			result.border = true;
-			result.borderColor = 0x000000;
-			result.textColor = 0x000000;
-			result.defaultTextFormat = format1;
+			result.borderColor = 0xffffff;
 			result.text = "";
             addChild(result);
             return result;
@@ -71,24 +80,24 @@ package
 		
 		private function outputHandler(e:OutputEvent):void
 		{
-			userOutputField.appendText(e.value);
+			userOutputField.htmlText += "<div>" + e.value + "</div>";  // Using div tags allows the truncate function to remove specific blocks of text.
 			// Truncate the text field if it is too long (to save memory)
 			if (userOutputField.numLines > 200)
-				truncateOutput(userOutputField.numLines, 200);
-				
+				truncateOutput(userOutputField.numLines, 200); 
+			
 			// Scroll to the bottom of the text field
 			userOutputField.scrollV = userOutputField.bottomScrollV;
 			outputScroll.scrollTarget = userOutputField; 
 		}
 		
-		
 		private function truncateOutput(textLines:int, targetLines:int):void
 		{
-			var str:String = userOutputField.text;
-			var minCharacterIndex:int = userOutputField.getLineOffset(textLines - targetLines);
-			var maxCharacterIndex:int = userOutputField.length;
+			var str:String = userOutputField.htmlText;
 			
-			userOutputField.text = str.substr(minCharacterIndex, maxCharacterIndex);
+			var minCharacterIndex:int = userOutputField.getLineOffset(textLines - targetLines);
+			var maxCharacterIndex:int = userOutputField.htmlText.length;
+			var offsetIndex:int = str.indexOf("</div>", minCharacterIndex) + 6;   // Using htmlText, we have to remove the excess text in chunks of divs, as set by the outputHandler. 
+			userOutputField.htmlText = str.substr(offsetIndex, maxCharacterIndex); 
 		}
 		
 		private function detectKey(event:KeyboardEvent):void
@@ -96,8 +105,10 @@ package
 			if (event.keyCode == 13)
 			{
 				pastCommand = userInputField.text;
-				userOutputField.appendText(">" + userInputField.text + "\n");
-				// Pass the user's input to the textParser to look for commands			
+				
+				userOutputField.htmlText += "<div><p>>" + userInputField.text + "</p></div>";
+				
+				// Pass the user's input to the textParser to look for commands
 				parse.parseCommand(userInputField.text);
 				
 				userInputField.text = "";
@@ -115,11 +126,6 @@ package
 			}
 		}
 		
-		private function init(e:Event = null):void 
-		{
-			removeEventListener(Event.ADDED_TO_STAGE, init);
-			// entry point
-		}
 	}
 	
 }

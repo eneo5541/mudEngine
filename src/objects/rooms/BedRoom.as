@@ -11,7 +11,7 @@ package objects.rooms
 		
 		override public function setShortDesc():void
 		{
-			shortDesc = "Bedroom.";
+			shortDesc = "Bedroom";
 		}
 		
 		override public function setLongDesc():void

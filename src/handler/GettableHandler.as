@@ -18,10 +18,10 @@ package handler
 		{
 			var td:Array = gettablesThisRoom(new InventoryHandler);
 			if (td.length == 0) 
-				return "You are not carrying anything. \n";
+				return "You are not carrying anything.";
 				
 			var tr:String = listHandler.listGettables(td);
-			return "You are carrying:" + tr + "\n";
+			return "You are carrying:" + tr;
 		}
 		
 		// This pushes an item to the gettableArray that holds ALL gettables in the game and their location

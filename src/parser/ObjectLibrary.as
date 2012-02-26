@@ -18,14 +18,12 @@ package parser
 	import objects.rooms.CorridorRoom;
 	import objects.rooms.DeadEndRoom;
 	import objects.rooms.JunctionRoom;
-	import objects.rooms.OriginRoom;
 	import objects.rooms.OutdoorsRoom;
 	import objects.rooms.StairsRoom;
 	
 	public class ObjectLibrary
 	{
 		// Rooms
-		private var _originRoom:OriginRoom;
 		private var _bathroom:BathRoom;
 		private var _bedRoom:BedRoom;
 		private var _corridorRoom:CorridorRoom;

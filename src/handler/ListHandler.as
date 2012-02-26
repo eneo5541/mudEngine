@@ -36,7 +36,7 @@ package handler
 			listString = list[0];
 			
 			if (list.length == 1)
-				return "\n" + listString + " is here.";
+				return listString + " is here.";
 			
 			for (var i:int = 1; i < list.length; i++)
 			{
@@ -45,7 +45,7 @@ package handler
 				else
 					listString += " and " + list[i];
 			}
-			return "\n" + listString + " are here.";
+			return listString + " are here.";
 		}
 		
 		public function listGettables(list:Array):String
@@ -61,7 +61,7 @@ package handler
 				else
 					listString += list[i] + ".";
 			}
-			return "\n" + listString;
+			return listString;
 		}
 		
 	}

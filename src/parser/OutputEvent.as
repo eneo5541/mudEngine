@@ -10,7 +10,7 @@ package parser
 		public function OutputEvent(value:String, type:String, bubbles:Boolean = true, cancelable:Boolean = false)
 		{
 			super(type, bubbles, cancelable);
-			this.value = value;  
+			this.value = "<p>" + value + "</p>";  
 		}
 		
 		public override function clone():Event
