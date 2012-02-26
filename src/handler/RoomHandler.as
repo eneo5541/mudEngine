@@ -87,7 +87,16 @@ package handler
 		
 		public function getDescription():String 
 		{
-			return "<p class='title'>" + shortDesc + "</p><p>\n" + longDesc + "</p><p class='exits'>" + addExits() + "</p><p>" + addNpcs() + addGettables() + "</p>";
+			var required:String = "<p class='title'>" + shortDesc + "</p><p>\n" + longDesc + "</p><p class='exits'>" + addExits() + "</p>";
+			var npcString:String = addNpcs();
+			var gettableString:String = addGettables(); 
+			
+			if (npcString.length > 0)    // Only add when npc and gettable arrays are not empty
+				required += "<p>" + npcString + "</p>"
+			if (gettableString.length > 0)
+				required += "<p>" + gettableString + "</p>";
+			
+			return required;
 		}
 		
 		private function addExits():String

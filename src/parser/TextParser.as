@@ -7,7 +7,7 @@ package parser
 	import handler.InventoryHandler;
 	import handler.PersonHandler;
 	import objects.npcs.Parrot;
-	import objects.rooms.BedRoom;
+	import objects.rooms.market.Market2;
 	import handler.RoomHandler;
 	import objects.Gettable;
 	import objects.Person;
@@ -27,7 +27,7 @@ package parser
 		function TextParser()
 		{
 			roomHandler = new RoomHandler();
-			roomHandler.loadRoom(new BedRoom);
+			roomHandler.loadRoom(new Market2);
 			inventoryHandler = new InventoryHandler();
 			
 			roomHandler.addEventListener(DialogueEvent.OUTPUT, dialogueHandler);
@@ -102,7 +102,9 @@ package parser
 			if (command.length == 1) // If not looking at an object, just return room description
 			{
 				//var td:String = "You look around.";
+				//this.dispatchEvent(new OutputEvent(td, OutputEvent.OUTPUT));
 				var longStr:String = roomHandler.getDescription();
+				//this.dispatchEvent(new DialogueEvent("hrhr", DialogueEvent.OUTPUT));
 				this.dispatchEvent(new OutputEvent(longStr, OutputEvent.OUTPUT));  // Special signal that does not added HTML tags (since room already adds HTML tags)
 				return;
 			}
@@ -205,7 +207,7 @@ package parser
 					var mainClass:Class = getDefinitionByName(className) as Class; // Change the room to the one matching the exit
 					roomHandler.loadRoom(new mainClass as Room);
 					
-					var longStr:String = "You leave out the " + newCommand + " exit.\n"; // Then fetch the new description
+					var longStr:String = "You leave out the " + newCommand + " exit."; // Then fetch the new description
 					this.dispatchEvent(new OutputEvent(longStr, OutputEvent.OUTPUT));
 					var roomStr:String = roomHandler.getDescription();  
 					this.dispatchEvent(new OutputEvent(roomStr, OutputEvent.OUTPUT));
