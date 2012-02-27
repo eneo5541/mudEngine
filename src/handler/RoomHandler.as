@@ -7,8 +7,6 @@ package handler
 	import flash.utils.getQualifiedClassName;
 	import flash.utils.Timer;
 	import objects.Gettable;
-	import objects.npcs.Butler;
-	import objects.npcs.Dog;
 	import objects.Person;
 	import objects.Room;
 	import parser.DialogueEvent;

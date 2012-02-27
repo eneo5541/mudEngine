@@ -13,23 +13,28 @@ package handler
 		{
 		}
 		
-		public function addPerson(personObj:String, loc:*):void  // See gettableHandler for how this works
+		public function addPerson(personObj:*, loc:*):void  // See gettableHandler for how this works
 		{
+			if (!(personObj is String)) 
+				personObj = getQualifiedClassName(personObj);
+			
 			for (var i:* in personArray)
 			{
 				if (personArray[i].object == personObj) 
 					return;
 			}
 			
-			var td:String = loc;
 			if (!(loc is String))   // Convert the location to a string for storage
-				td = getQualifiedClassName(loc);
+				loc = getQualifiedClassName(loc);
 			
-			personArray.push( { object:personObj, location:td } );
+			personArray.push( { object:personObj, location:loc } );
 		}
 		
-		public function removePerson(personObj:String):void  // As above, see gettableHandler
+		public function removePerson(personObj:*):void  // As above, see gettableHandler
 		{
+			if (!(personObj is String)) 
+				personObj = getQualifiedClassName(personObj);
+			
 			for (var i:* in personArray)
 			{
 				if (personArray[i].object == personObj) 

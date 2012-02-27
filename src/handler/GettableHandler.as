@@ -21,27 +21,32 @@ package handler
 				return "You are not carrying anything.";
 				
 			var tr:String = listHandler.listGettables(td);
-			return "You are carrying:" + tr;
+			return "You are carrying: \n" + tr;
 		}
 		
 		// This pushes an item to the gettableArray that holds ALL gettables in the game and their location
-		public function addGettable(getObj:String, loc:*):void // Gettables can exist but not necessarily be placed in the game yet
+		public function addGettable(getObj:*, loc:*):void // Gettables can exist but not necessarily be placed in the game yet
 		{
+			if (!(getObj is String)) 
+				getObj = getQualifiedClassName(getObj);
+				
 			for (var i:* in gettableArray)
 			{
 				if (gettableArray[i].object == getObj)  // If the object is already in the array, do not add it.
 					return;  // This is necessary, or existing objects could be duplicated by moving rooms back and forth
 			}
 			
-			var td:String = loc;
 			if (!(loc is String))   // Convert the location to a string for storage
-				td = getQualifiedClassName(loc);
+				loc = getQualifiedClassName(loc);
 			
-			gettableArray.push( { object:getObj, location:td } );
+			gettableArray.push( { object:getObj, location:loc } );
 		}
 		
-		public function removeGettable(getObj:String):void  // Similar to add command, but removes item from existance anywhere. 
+		public function removeGettable(getObj:*):void  // Similar to add command, but removes item from existance anywhere. 
 		{
+			if (!(getObj is String))   // Convert the location to a string for storage
+				getObj = getQualifiedClassName(getObj);
+				
 			for (var i:* in gettableArray)
 			{
 				if (gettableArray[i].object == getObj)  // If the object exists, delete it.
