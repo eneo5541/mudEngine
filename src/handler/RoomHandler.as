@@ -99,9 +99,10 @@ package handler
 			return required;
 		}
 		
-		private function addExits():String
+		private function addExits():String // Converts all of the anonymous objects into an array	
 		{	
-			if (this.exits == null) return ""; // Converts all of the anonymous objects into an array		
+			if (this.exits == null) 
+				return "\nThere are no visible exits.";
 			
 			var obj:* = this.exits;
 			var objectList:Array = [];

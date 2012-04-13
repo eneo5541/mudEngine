@@ -13,14 +13,6 @@ package parser
 			 return int(Math.random() * (max - min) + min);
 		}
 		
-		public static function changeCSSTextSize(css:String, size:Number):String
-		{
-			var temp:Array = css.split('font-size: ');
-			var temp2:Array = temp[1].split('px;text-align:');
-			
-			return temp[0] + 'font-size: ' + size + 'px;text-align:' + temp2[1];
-		}
-		
 		public static function createTextField(x:int,y:int,width:int,height:int):TextField 
         {
             var result:TextField = new TextField();
@@ -33,9 +25,7 @@ package parser
         }
 		
 		public static function listExits(list:Array):String
-		{		
-			if (list == null || list.length == 0) return "\nThere are no visible exits.";
-			
+		{	
 			var listString:String = "";
 			listString = list[0];
 			if (list.length == 1)

@@ -23,7 +23,7 @@ package objects.rooms.house
 		
 		override public function setExits():void
 		{
-			exits = { west:Hallway };
+			//exits = { west:Hallway };
 		}
 		
 		override public function setNpcs():void
