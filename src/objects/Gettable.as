@@ -18,22 +18,18 @@ package objects
 		
 		public function setShortDesc():void
 		{
-			//shortDesc = "Short.";
 		}
 		
 		public function setLongDesc():void
 		{
-			//longDesc = "This is a long description";
 		}
 		
 		public function setAlias():void
 		{
-			//alias = ["rock", "pebble", "stone"];
 		}
 		
 		public function setAction():void
 		{
-			//action = { action:"search table", response:function():void { trace("You search the table"); } };
 		}
 		
 	}

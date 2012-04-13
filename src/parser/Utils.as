@@ -1,14 +1,38 @@
-package handler 
+package parser 
 {
-
-	public class ListHandler
+	import flash.text.TextField;
+	public class Utils 
 	{
 		
-		function ListHandler()
+		public function Utils() 
 		{
 		}
 		
-		public function listExits(list:Array):String
+		public static function generateRandom(max:Number, min:Number = 0):Number
+		{
+			 return int(Math.random() * (max - min) + min);
+		}
+		
+		public static function changeCSSTextSize(css:String, size:Number):String
+		{
+			var temp:Array = css.split('font-size: ');
+			var temp2:Array = temp[1].split('px;text-align:');
+			
+			return temp[0] + 'font-size: ' + size + 'px;text-align:' + temp2[1];
+		}
+		
+		public static function createTextField(x:int,y:int,width:int,height:int):TextField 
+        {
+            var result:TextField = new TextField();
+            result.x = x;
+            result.y = y;
+			result.width = width;
+			result.height = height;
+			result.text = "";
+            return result;
+        }
+		
+		public static function listExits(list:Array):String
 		{		
 			if (list == null || list.length == 0) return "\nThere are no visible exits.";
 			
@@ -28,7 +52,7 @@ package handler
 			return "\nThere are exits to the " + listString + ".";
 		}
 		
-		public function listNpcs(list:Array):String
+		public static function listNpcs(list:Array):String
 		{
 			if (list == null || list.length == 0) return "";
 			
@@ -45,10 +69,11 @@ package handler
 				else
 					listString += " and " + list[i];
 			}
+			
 			return listString + " are here.";
 		}
 		
-		public function listGettables(list:Array):String
+		public static function listGettables(list:Array):String
 		{		
 			if (list == null || list.length == 0) return "";
 			
@@ -61,6 +86,7 @@ package handler
 				else
 					listString += list[i] + ".";
 			}
+			
 			return listString;
 		}
 		

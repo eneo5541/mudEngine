@@ -1,4 +1,4 @@
-package parser 
+package signals 
 {
    
 	import flash.events.Event;
@@ -10,7 +10,7 @@ package parser
 		public function DialogueEvent(value:String, type:String, bubbles:Boolean = true, cancelable:Boolean = false)
 		{
 			super(type, bubbles, cancelable);
-			this.value = "<p>" + value + "</p>";  
+			this.value = value;  
 		}
 		
 		public override function clone():Event

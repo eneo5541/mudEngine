@@ -1,4 +1,4 @@
-package objects.npcs 
+package objects.npcs.house 
 {
 	import objects.Person;
 
@@ -11,25 +11,25 @@ package objects.npcs
 		
 		override public function setShortDesc():void
 		{
-			shortDesc = "Corgi";
+			shortDesc = "Dog";
 		}
 		
 		override public function setAlias():void
 		{
-			alias = ["Corgi", "corgi", "dog", "twinkie"];
+			alias = ["dog"];
 		}
 		
 		override public function setLongDesc():void
 		{
-			longDesc = "A cute corgi. He looks like a twinkie with feets. \n" +
+			longDesc = "A cute dog. He sits around the room, wagging his tail and looking around with a huge grin on his face. \n" +
 			"He is in excellent condition.";
 		}
 		
 		override public function setDialogue():void
 		{
 			dialogue = [
-				"The dog barks at you.",
-				"The dog hops around happily.",
+				"The dog barks at the walls.",
+				"The scuttles about while sniffing the floor."
 			];
 		}
 	}

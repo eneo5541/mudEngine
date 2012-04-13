@@ -1,0 +1,54 @@
+package objects.npcs.house 
+{
+	import handler.NPCHolder;
+	import objects.Person;
+	import objects.rooms.house.Outdoors;
+
+	public class Cat extends Person
+	{		
+		public function Cat() 
+		{
+			super();
+		}
+		
+		override public function setShortDesc():void
+		{
+			shortDesc = "Cat";
+		}
+		
+		override public function setAlias():void
+		{
+			alias = ["cat"];
+		}
+		
+		override public function setLongDesc():void
+		{
+			longDesc = "The cat meows as it slinks around your feet, before padding over to the door. She places her paws on the door and purrs at you. You should probably let her out. \n" +
+			"She is in excellent condition.";
+		}
+		
+		override public function setDialogue():void
+		{
+			dialogue = [
+				"The cat weaves between your feet.",
+				"The scratches at the door impatiently."
+			];
+		}
+		
+		override public function setAction():void
+		{
+			action = { 
+				action:["let cat out", "let cat out the door", "let cat out door"],
+				response:function(target:*):void {
+						var text:String = 'The cat scampers outside as you hold the door open.';
+						target.outputText(text);
+						target.movePerson(Cat, NPCHolder);
+						target.addPerson(CatOutdoors, Outdoors)
+						}
+			};
+		}
+		
+	}
+
+
+}

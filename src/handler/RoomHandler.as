@@ -6,16 +6,17 @@ package handler
 	import flash.utils.getDefinitionByName;
 	import flash.utils.getQualifiedClassName;
 	import flash.utils.Timer;
+	
 	import objects.Gettable;
 	import objects.Person;
 	import objects.Room;
-	import parser.DialogueEvent;
-	import parser.OutputEvent;
-	import parser.RandomRange;
+	
+	import signals.DialogueEvent;
+	import signals.OutputEvent;
+	import parser.Utils;
 
 	public class RoomHandler extends EventDispatcher
 	{
-		private var listHandler:ListHandler = new ListHandler();
 		public var gettableHandler:GettableHandler = new GettableHandler();
 		public var personHandler:PersonHandler = new PersonHandler();
 		
@@ -27,11 +28,13 @@ package handler
 		public var action:*;
 		public var npcsThisRoom:Array;
 		
-		private var dialogueTimer:Timer;
+		public var dialogueTimer:Timer;
 		
 		function RoomHandler()
 		{
-			dialogueTimer = new Timer(3500);
+			gettableHandler.addEventListener(DialogueEvent.OUTPUT, gettableDialogue);
+			
+			dialogueTimer = new Timer(15000);
 			dialogueTimer.addEventListener(TimerEvent.TIMER, getDialogue);
 			dialogueTimer.start();
 		}
@@ -40,11 +43,11 @@ package handler
 		{
 			if (npcsThisRoom.length > 0)  // If there are NPCs in the room
 			{
-				var randomId:int = RandomRange.generate(0, npcsThisRoom.length);  // Randomly select one NPC
+				var randomId:int = Utils.generateRandom(0, npcsThisRoom.length);  // Randomly select one NPC
 				var randomNpc:* = npcsThisRoom[randomId];
 				if (randomNpc.dialogue != null)  // Check if the NPC has dialogue
 				{ 
-					var randomDialogue:int = RandomRange.generate(0, (randomNpc.dialogue.length * 2)); // This makes sure that dialogue will not always be displayed
+					var randomDialogue:int = Utils.generateRandom(0, (randomNpc.dialogue.length * 3)); // This makes sure that dialogue will not always be displayed
 					if(randomDialogue < randomNpc.dialogue.length)        // Send the dialogue up to the text parser, which will output it to screen
 						this.dispatchEvent(new DialogueEvent(randomNpc.dialogue[randomDialogue], DialogueEvent.OUTPUT)); 
 				}
@@ -85,14 +88,14 @@ package handler
 		
 		public function getDescription():String 
 		{
-			var required:String = "<p class='title'>" + shortDesc + "</p><p>\n" + longDesc + "</p><p class='exits'>" + addExits() + "</p>";
+			var required:String = shortDesc + "\n" + longDesc + "\n<span class='cyan'>" + addExits() + "</span>";
 			var npcString:String = addNpcs();
 			var gettableString:String = addGettables(); 
 			
 			if (npcString.length > 0)    // Only add when npc and gettable arrays are not empty
-				required += "<p>" + npcString + "</p>"
+				required += '\n' + npcString;
 			if (gettableString.length > 0)
-				required += "<p>" + gettableString + "</p>";
+				required += '\n' + gettableString;
 			
 			return required;
 		}
@@ -106,7 +109,7 @@ package handler
 			for (var i:* in obj) 
 				objectList.push(i);
 			
-			var tr:String = listHandler.listExits(objectList);
+			var tr:String = Utils.listExits(objectList);
 			return tr;
 		}
 		
@@ -117,7 +120,7 @@ package handler
 			var toString:Array = [];
 			for (var i:* in npcsThisRoom)
 				toString.push(npcsThisRoom[i].shortDesc);	
-			var tr:String = listHandler.listNpcs(toString);
+			var tr:String = Utils.listNpcs(toString);
 			
 			return tr;
 		}
@@ -125,30 +128,72 @@ package handler
 		private function addGettables():String
 		{
 			var td:Array = gettableHandler.gettablesThisRoom(room);
-			var tr:String = listHandler.listGettables(td);
+			var tr:String = Utils.listGettables(td);
 			return tr;
 		}
 		
-		public function getResponse(action:*):String
+		public function getResponse(action:*):void
 		{
 			if (action.parameter != null)
 			{
-				if (!checkParametersMet(action.parameter))  // If the parameters are not met, do not continue
-					return action.parameter.error;
+				if (!checkParametersMet(action.parameter)) { // If the parameter is NOT met, do not continue
+					outputText(action.parameter.error);
+					return;
+				}
+			}
+			if (action.restart != null)
+			{
+				if (checkAlreadyStarted(action.restart)) {  // If the parameter IS met, than the quest has already been started - do not continue
+					outputText(action.restart.error);
+					return;
+				}
 			}
 			var f:Function = action.response;
-			return f(this); // The 'this' parameter allows the response function to be called from the roomHandler, instead of the room
+			f(this);  // The 'this' parameter allows the response function to be called from the roomHandler, instead of the room
 		}
 		
-		
-		private function checkParametersMet(parameter:*):Boolean 
+		private function checkAlreadyStarted(parameter:*):Boolean // This allows the action to proceed if the item/npc DOES NOT exist
 		{
 			var parameterType:String = "";
 			var parameterObj:String = "";
 			for (var i:* in parameter) 
 			{
-				parameterType = i;
-				parameterObj = getQualifiedClassName(parameter[i]);
+				if(i != "error") {    // Do not pick up error parameter, only targetted parameter
+					parameterType = i;
+					parameterObj = getQualifiedClassName(parameter[i]);
+				}
+			}
+			
+			switch (parameterType)
+			{
+				case "npc":  // check if an NPC or gettable exists
+					if (personHandler.searchPersons(parameterObj))
+						return true;
+					break;
+				case "gettable":
+					if (gettableHandler.searchGettables(parameterObj))
+						return true;
+					break;
+				default:
+					break;
+			}
+			
+			return false;
+		}
+		
+		private function checkParametersMet(parameter:*):Boolean // This allows the action to proceed ONLY if the item/npc DOES exist
+		{
+			var parameterType:String = "";
+			var parameterObj:String = "";
+			for (var i:* in parameter) 
+			{
+				if(i != "error") {    // Do not pick up error parameter, only targetted parameter
+					parameterType = i;
+					if (getQualifiedClassName(parameter[i]) == 'int')
+						parameterObj = parameter[i] + "";
+					else
+						parameterObj = getQualifiedClassName(parameter[i]);
+				}
 			}
 			
 			switch (parameterType)
@@ -165,7 +210,7 @@ package handler
 						return true;
 					break;
 				case "gettable":
-					var inventory:Array = gettableHandler.checkGettableLocation(new InventoryHandler);
+					var inventory:Array = gettableHandler.checkGettableLocation(InventoryHolder);
 					
 					for (var k:* in inventory)
 					{
@@ -180,10 +225,45 @@ package handler
 			return false;
 		}
 		
+		public function addPerson(object:*, location:*):void
+		{
+			personHandler.addPerson(object, location);
+		}
 		
-
+		public function removePerson(object:*):void
+		{
+			personHandler.removePerson(object);
+		}
 		
+		public function movePerson(object:*, location:*):void
+		{
+			personHandler.movePerson(object, location);
+		}
 		
+		public function addGettable(object:*, location:*):void
+		{
+			gettableHandler.addGettable(object, location);
+		}
+		
+		public function removeGettable(object:*):void
+		{
+			gettableHandler.removeGettable(object);
+		}
+		
+		public function moveGettable(object:*, oldLocation:*, newLocation:*):void
+		{
+			gettableHandler.moveGettable(object, oldLocation, newLocation);
+		}
+		
+		private function gettableDialogue(e:DialogueEvent):void
+		{
+			outputText(e.value);
+		}
+		
+		public function outputText(newText:String):void
+		{
+			this.dispatchEvent(new DialogueEvent(newText, DialogueEvent.OUTPUT)); 
+		}		
 		
 	}
 

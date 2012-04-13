@@ -3,32 +3,33 @@ package parser
 	import flash.events.EventDispatcher;
 	import flash.utils.getDefinitionByName;
 	import flash.utils.getQualifiedClassName;
+	
 	import handler.GettableHandler;
-	import handler.InventoryHandler;
+	import handler.InventoryHolder;
 	import handler.PersonHandler;
-	import objects.npcs.Parrot;
-	import objects.rooms.BedRoom;
 	import handler.RoomHandler;
+	
 	import objects.Gettable;
 	import objects.Person;
 	import objects.Room;
-	import parser.OutputEvent;
+	
+	import signals.ColourEvent;
+	import signals.DialogueEvent;
+	import signals.OutputEvent;
 
 	
 	public class TextParser extends EventDispatcher
 	{
-		private var inputCommand:String;
 		public var roomHandler:RoomHandler;
-		public var inventoryHandler:InventoryHandler;
+		private var inputCommand:String;
+		private var isWhiteText:Boolean = true;
 		
-		private var objectLibrary:ObjectLibrary = new ObjectLibrary();
-		private var _parrot:Parrot;
-		
-		function TextParser()
+		function TextParser(targetRoom:String)
 		{
 			roomHandler = new RoomHandler();
-			roomHandler.loadRoom(new BedRoom);
-			inventoryHandler = new InventoryHandler();
+			
+			var tempRoom:Class = getDefinitionByName(targetRoom) as Class;
+			roomHandler.loadRoom(new tempRoom);
 			
 			roomHandler.addEventListener(DialogueEvent.OUTPUT, dialogueHandler);
 		}
@@ -40,20 +41,18 @@ package parser
 		
 		public function parseCommand(command:String):void
 		{
-			command = command.toLowerCase();
-			inputCommand = command;
 			if (command == null || command.length == 0)
-			{
-				this.dispatchEvent(new OutputEvent("", OutputEvent.OUTPUT));
 				return;
-			}
+				
+			inputCommand = command = command.toLowerCase();
+			
 			var splitSpaces:Array = command.split(" ");
 			switch (splitSpaces[0])
 			{
 				case "look":case "l":
 					checkLookCommand(splitSpaces);
 					break;
-				case "go":
+				case "go":case "walk":
 					if (!checkDirectionCommand(splitSpaces[1]))
 						this.dispatchEvent(new OutputEvent("I don't see any " + splitSpaces[1] + " exit.", OutputEvent.OUTPUT));
 					break;
@@ -64,7 +63,7 @@ package parser
 				case "get":case "g":case "take":
 					checkGetCommand(splitSpaces);
 					break;
-				case "drop":case "d":
+				case "drop":case "d":case "throw":
 					checkDropCommand(splitSpaces);
 					break;
 				default:
@@ -72,28 +71,42 @@ package parser
 						checkDynamicCommands(splitSpaces);  // If not, check if it is a dynamic command
 					break;
 			}
-			refreshAllObjects();
 		}
 		
 // Get and drop items		
 		private function checkDropCommand(command:Array):void
 		{
-			var object:* = roomHandler.gettableHandler.gettableArray;
-			var pickedObject:String = inventoryHandler.moveItem(object, command[1], new InventoryHandler, roomHandler.room);
-			if (pickedObject != null)
-				this.dispatchEvent(new OutputEvent("You drop a " + pickedObject + ".", OutputEvent.OUTPUT));
+			var objectExists:String = roomHandler.gettableHandler.checkItemExists(command[1], InventoryHolder); // Check if there is an item of the same input command in the inventory
+			if (objectExists != null)
+			{
+				roomHandler.gettableHandler.moveGettable(objectExists, InventoryHolder, roomHandler.room);
+				this.dispatchEvent(new OutputEvent("You drop a " + roomHandler.gettableHandler.getObjectName(objectExists) + ".", OutputEvent.OUTPUT));
+			}
 			else
+			{
 				this.dispatchEvent(new OutputEvent("I don't have any " + command[1] + " to drop.", OutputEvent.OUTPUT));
+			}
 		}
 		
 		private function checkGetCommand(command:Array):void
 		{
-			var object:* = roomHandler.gettableHandler.gettableArray;
-			var pickedObject:String = inventoryHandler.moveItem(object, command[1], roomHandler.room, new InventoryHandler);
-			if (pickedObject != null)
-				this.dispatchEvent(new OutputEvent("You get a " + pickedObject + ".", OutputEvent.OUTPUT));
+			var objectExists:String = roomHandler.gettableHandler.checkItemExists(command[1], roomHandler.room); // Check if there is an item of the same input command in the room
+			if (objectExists != null)
+			{
+				if (roomHandler.gettableHandler.checkGettableLocation(InventoryHolder).length > 4) 
+				{
+					this.dispatchEvent(new OutputEvent("You are carrying too many things. Drop something to free up inventory space.", OutputEvent.OUTPUT));
+				}
+				else
+				{
+					roomHandler.gettableHandler.moveGettable(objectExists, roomHandler.room, InventoryHolder);
+					this.dispatchEvent(new OutputEvent("You get a " + roomHandler.gettableHandler.getObjectName(objectExists) + ".", OutputEvent.OUTPUT));
+				}
+			}
 			else
+			{
 				this.dispatchEvent(new OutputEvent("I don't see any " + command[1] + " here to get.", OutputEvent.OUTPUT));
+			}
 		}
 		
 // Look (at the room, or at objects)		
@@ -101,10 +114,7 @@ package parser
 		{
 			if (command.length == 1) // If not looking at an object, just return room description
 			{
-				//var td:String = "You look around.";
-				//this.dispatchEvent(new OutputEvent(td, OutputEvent.OUTPUT));
 				var longStr:String = roomHandler.getDescription();
-				//this.dispatchEvent(new DialogueEvent("hrhr", DialogueEvent.OUTPUT));
 				this.dispatchEvent(new OutputEvent(longStr, OutputEvent.OUTPUT));  // Special signal that does not added HTML tags (since room already adds HTML tags)
 				return;
 			}
@@ -128,11 +138,10 @@ package parser
 		
 		private function checkInventory(command:String):Boolean
 		{
-			var object:* = inventoryHandler.inventory; // Look for gettable objects with a location of 'inventory'
-			var pickedObject:String = inventoryHandler.checkItemExists(object, command, new InventoryHandler);;
-			if (pickedObject != null)
+			var objectExists:String = roomHandler.gettableHandler.checkItemExists(command, InventoryHolder);
+			if (objectExists != null)
 			{
-				this.dispatchEvent(new OutputEvent(pickedObject, OutputEvent.OUTPUT));
+				this.dispatchEvent(new OutputEvent(roomHandler.gettableHandler.getObjectDescript(objectExists), OutputEvent.OUTPUT));
 				return true;
 			}
 			else
@@ -143,11 +152,10 @@ package parser
 		
 		private function checkForNpcs(command:String):Boolean
 		{
-			var object:* = roomHandler.personHandler.personArray; // Look for npc objects with a location of this room
-			var pickedObject:String = inventoryHandler.checkItemExists(object, command, roomHandler.room);;
-			if (pickedObject != null)
+			var objectExists:String = roomHandler.personHandler.checkNPCExists(command, roomHandler.room);
+			if (objectExists != null)
 			{
-				this.dispatchEvent(new OutputEvent(pickedObject, OutputEvent.OUTPUT));
+				this.dispatchEvent(new OutputEvent(roomHandler.personHandler.getNPCDescript(objectExists), OutputEvent.OUTPUT));
 				return true;
 			}
 			else
@@ -158,11 +166,10 @@ package parser
 		
 		private function checkForGettables(command:String):Boolean
 		{
-			var object:* = roomHandler.gettableHandler.gettableArray; // Look for gettable objects with a location of this room
-			var pickedObject:String = inventoryHandler.checkItemExists(object, command, roomHandler.room);;
-			if (pickedObject != null)
+			var objectExists:String = roomHandler.gettableHandler.checkItemExists(command, roomHandler.room);
+			if (objectExists != null)
 			{
-				this.dispatchEvent(new OutputEvent(pickedObject, OutputEvent.OUTPUT));
+				this.dispatchEvent(new OutputEvent(roomHandler.gettableHandler.getObjectDescript(objectExists), OutputEvent.OUTPUT));
 				return true;
 			}
 			else
@@ -227,7 +234,8 @@ package parser
 				return;		
 			if (checkGettableActions())
 				return;	
-			
+			if (checkColours())
+				return;
 			var errorMsg:String = "I don't know how to " + inputCommand + ".";
 			this.dispatchEvent(new OutputEvent(errorMsg, OutputEvent.OUTPUT));
 		}
@@ -235,18 +243,21 @@ package parser
 		
 		private function checkGettableActions():Boolean
 		{
-			var parent:* = inventoryHandler.inventory;
+			var parent:* = roomHandler.gettableHandler.checkGettableLocation(InventoryHolder);
 			
 			for (var i:* in parent)
 			{
-				var mainClass:Class = getDefinitionByName(parent[i].object) as Class; // Change the room to the one matching the exit
+				var mainClass:Class = getDefinitionByName(parent[i]) as Class; 
 				var child:* = (new mainClass as Gettable);
 				if (child.action != null) 
 				{
-					if (inputCommand == child.action.action)
+					for (var j:* in child.action.action)  
 					{
-						this.dispatchEvent(new OutputEvent(roomHandler.getResponse(child.action), OutputEvent.OUTPUT));
-						return true;
+						if (inputCommand == child.action.action[j])
+						{
+							roomHandler.getResponse(child.action);
+							return true;
+						}
 					}
 				}
 			}
@@ -257,10 +268,13 @@ package parser
 		{
 			if (roomHandler.action != null)
 			{
-				if (inputCommand == roomHandler.action.action)  // If the command matches the action attached to this room
-				{// We can handle it this way since we can only ever be in a single room at a single time
-					this.dispatchEvent(new OutputEvent(roomHandler.getResponse(roomHandler.action), OutputEvent.OUTPUT));
-					return true;
+				for (var i:* in roomHandler.action.action)  // Checks for all alternative action commands for each particular action
+				{
+					if (inputCommand == roomHandler.action.action[i])  // If the command matches the action attached to this room
+					{// We can handle it this way since we can only ever be in a single room at a single time
+						roomHandler.getResponse(roomHandler.action);
+						return true;
+					}
 				}
 			}
 			return false;
@@ -272,25 +286,45 @@ package parser
 			{
 				if (roomHandler.npcsThisRoom[i].action != null) // Check if any of the NPCs in the room have an action
 				{
-					var npcAction:* = roomHandler.npcsThisRoom[i].action;
-					if (inputCommand == npcAction.action) // Have to pass through the desired function since there can be multiple NPCs in a room
-					{ 
-						this.dispatchEvent(new OutputEvent(roomHandler.getResponse(npcAction), OutputEvent.OUTPUT));
-						return true;
+					for (var j:* in roomHandler.npcsThisRoom[i].action.action)
+					{
+						var npcAction:* = roomHandler.npcsThisRoom[i].action;
+						if (inputCommand == npcAction.action[j]) // Have to pass through the desired function since there can be multiple NPCs in a room
+						{ 
+							roomHandler.getResponse(npcAction);
+							return true;
+						}
 					}
 				}
 			}
 			return false;
 		}
 		
-		
-		private function refreshAllObjects():void
+		private function checkColours():Boolean 
 		{
-			// Refreshes the rooms, npcs and gettables
-			var refreshScreen:String = roomHandler.getDescription(); // This refreshes objects, rooms and NPCs, since the room handler handles all of those
-			var child:* = roomHandler.gettableHandler.gettableArray;
-			inventoryHandler.refreshInventory(child); // Refresh the inventory, since inventory is the only thing not handled by the room handler
+			if (inputCommand == "switch colours")
+			{
+				var textColour:String;
+				var textMsg:String;
+				if (isWhiteText)
+				{
+					isWhiteText = false;
+					textColour = 'black';
+					textMsg = 'Switching to black text, white background.';
+				}
+				else
+				{
+					isWhiteText = true;
+					textColour = 'white';
+					textMsg = 'Switching to white text, black background.';
+				}
+				this.dispatchEvent(new OutputEvent(textMsg, OutputEvent.OUTPUT));
+				this.dispatchEvent(new ColourEvent(textColour, ColourEvent.OUTPUT));
+				return true;
+			}
+			return false;
 		}
+		
 		
 	}
 	

@@ -1,4 +1,4 @@
-package objects.gettables 
+package objects.gettables.house 
 {
 	import objects.Gettable;
 
@@ -11,17 +11,17 @@ package objects.gettables
 		
 		override public function setShortDesc():void
 		{
-			shortDesc = "Towel";
+			shortDesc = "Hand towel";
 		}
 		
 		override public function setAlias():void
 		{
-			alias = ["Towel", "towel"];
+			alias = ["towel"];
 		}
 		
 		override public function setLongDesc():void
 		{
-			longDesc = "A fluffy pink towel. You decide that it goes wonderfully with your clothes.";
+			longDesc = "A fluffy white towel. It feels nice and plush to the touch.";
 		}
 		
 	}

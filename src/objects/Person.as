@@ -20,27 +20,22 @@ package objects
 		
 		public function setShortDesc():void
 		{
-			//shortDesc = "Short.";
 		}
 		
 		public function setLongDesc():void
 		{
-			//longDesc = "This is a long description";
 		}
 		
 		public function setDialogue():void
 		{
-			//dialogue = ["A bit of dialogue"];
 		}
 		
 		public function setAlias():void
 		{
-			//alias = ["human", "man", "person"];
 		}
 		
 		public function setAction():void
 		{
-			//action = { action:"smile", parameter:Room, response:function(){} };
 		}
 		
 	}

@@ -21,40 +21,33 @@ package objects
 			setLongDesc();
 			setAction();
 		}
-		// Extend the room object, then override these functions
+		
 		public function setExits():void
 		{
-			//exits = { exit:"objects.Room" };
 		}
 		
 		public function setItems():void
 		{
-			//items = { item:"A non-descript item." };
 		}
 		
 		public function setGettables():void
 		{
-			//gettables = { Gettable:"objects.Gettable" };
 		}
 		
 		public function setShortDesc():void
 		{
-			//shortDesc = "Short.";
 		}
 		
 		public function setNpcs():void
 		{
-			//npcs = { Person:"objects.Person" };
 		}
 		
 		public function setLongDesc():void
 		{
-			//longDesc = "This is a long description";
 		}
 		
 		public function setAction():void
 		{
-			//action = { action:"search table", response:function():void { trace("You search the table"); } };
 		}
 		
 	}
