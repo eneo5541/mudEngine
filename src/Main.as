@@ -2,16 +2,12 @@ package
 {
 	import fl.controls.UIScrollBar;
 	
-	import flash.display.DisplayObject;
-	import flash.display.Shape;
 	import flash.display.Sprite;
 	import flash.display.StageAlign;
 	import flash.display.StageScaleMode;
 	import flash.events.Event;
 	import flash.events.KeyboardEvent;
 	import flash.events.TextEvent;
-	import flash.geom.ColorTransform;
-	import flash.geom.Matrix;
 	import flash.text.StyleSheet;
 	import flash.text.TextField;
 	import flash.text.TextFieldType;
@@ -20,7 +16,6 @@ package
 	import flash.ui.ContextMenuItem;
 	import flash.utils.getQualifiedClassName;
 	
-	import handler.InventoryHolder;
 	import objects.rooms.house.Bedroom;
 	import parser.Utils;
 	import signals.ColourEvent;

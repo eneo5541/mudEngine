@@ -1,6 +1,5 @@
 package handler 
 {
-	import flash.display.InteractiveObject;
 	import flash.events.EventDispatcher;
 	import flash.events.TimerEvent;
 	import flash.utils.getDefinitionByName;

@@ -3,6 +3,7 @@ package handler
 	import flash.events.EventDispatcher;
 	import flash.utils.getDefinitionByName;
 	import flash.utils.getQualifiedClassName;
+	
 	import objects.Gettable;
 	import objects.Person;
 	import parser.Utils;
