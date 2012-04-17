@@ -1,7 +1,7 @@
 package objects.rooms.house 
 {
-	import objects.npcs.house.Cat;
 	import objects.Room;
+	import objects.npcs.house.Cat;
 
 	public class Kitchen extends Room
 	{	
@@ -35,8 +35,8 @@ package objects.rooms.house
 		{
 			items = {
 				stovetop:"A stovetop with four heating elements. A pot of soup is cooking on one of them.",
-				pot:"A large pot of delicious smelling soup. It smells like... bacon.",
-				soup:"A large pot of delicious smelling soup. It smells like... bacon.",
+				pot:"A large pot of delicious smelling soup. It smells like... bacon. If only you had some parsley to add to this.",
+				soup:"A large pot of delicious smelling soup. It smells like... bacon. If only you had some parsley to add to this.",
 				sink:"The sink has several dirty dishes in it, awaiting a good washing.",
 				dishes:"Three dirty looking plates sit in the sink.",
 				door:"This door leads outside. It is closed."

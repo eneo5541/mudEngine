@@ -1,8 +1,8 @@
 package objects.rooms.house 
 {
+	import objects.Room;
 	import objects.gettables.house.Hat;
 	import objects.npcs.house.Dog;
-	import objects.Room;
 
 	public class Bedroom extends Room
 	{	

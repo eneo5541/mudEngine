@@ -1,8 +1,7 @@
 package objects.rooms.house 
 {
-	import objects.gettables.house.Hat;
-	import objects.npcs.house.Dog;
 	import objects.Room;
+	import objects.gettables.house.Herbs;
 
 	public class Outdoors extends Room
 	{	
@@ -27,9 +26,9 @@ package objects.rooms.house
 			exits = { inside:Kitchen };
 		}
 		
-		override public function setNpcs():void
+		override public function setGettables():void
 		{
-			npcs = [ Dog ];
+			gettables = [ Herbs ];
 		}
 		
 		override public function setItems():void

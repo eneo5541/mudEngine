@@ -18,7 +18,6 @@ package
 	
 	import objects.rooms.house.Bedroom;
 	import parser.Utils;
-	import signals.ColourEvent;
 	import signals.OutputEvent;
 	import parser.TextParser;
 	
@@ -33,7 +32,6 @@ package
 		
 		private var outputScroll:UIScrollBar = new UIScrollBar(); 
 		private var outputCSS:StyleSheet = new StyleSheet();
-		private var blackText:String = ".main { font-family: Verdana;font-size: 12px;text-align:left;color:#000000; } .black { color:#000000; } .red { color:#800000; } .green { color:#008000; } .yellow { color:#808000; } .blue { color:#000080; } .magenta { color:#800080; } .cyan { color:#008080; } .white { color:#c0c0c0; }";
 		private var whiteText:String = ".main { font-family: Verdana;font-size: 12px;text-align:left;color:#ffffff; } .black { color:#808080; } .red { color:#ff0000; } .green { color:#00ff00; } .yellow { color:#ffff00; } .blue { color:#0000ff; } .magenta { color:#ff00ff; } .cyan { color:#00ffff; } .white { color:#ffffff; }";
 		private var formatText:TextFormat = new TextFormat();
 		private var isTextBlack:Boolean = true;
@@ -96,8 +94,7 @@ package
 			addChild(outputScroll); 
 			
 			stage.addEventListener(KeyboardEvent.KEY_DOWN, detectKey);
-			
-			
+				
 			createParser(Bedroom); // This makes all the objects compile into the .swf, as they are all strongly referenced, branching out from the starting room
 		}
 	
@@ -108,19 +105,17 @@ package
 				
 			parse = new TextParser(startRoom);
 			parse.addEventListener(OutputEvent.OUTPUT, outputHandler);
-			parse.addEventListener(ColourEvent.OUTPUT, changeColour);
 			parse.parseCommand("look");
 		}
 		
 		private function outputHandler(e:OutputEvent):void
 		{			
 			userOutputField.htmlText += "<div><span class='main'>\n" + e.value + "</span></div>";  // Using div tags allows the truncate function to remove specific blocks of text.
-			// Truncate the text field if it is too long (to save memory)
-			if (userOutputField.numLines > maxTextLines)
+			
+			if (userOutputField.numLines > maxTextLines)   // Truncate the text field if it is too long (to save memory)
 				truncateOutput(userOutputField.numLines, maxTextLines); 
 			
-			// Scroll to the bottom of the text field
-			userOutputField.scrollV = userOutputField.bottomScrollV;
+			userOutputField.scrollV = userOutputField.bottomScrollV;  // Scroll to the bottom of the text field
 			outputScroll.scrollTarget = userOutputField; 
 		}
 		
@@ -145,8 +140,8 @@ package
 				parse.parseCommand(userInputField.text);   // Pass the user's input to the textParser to look for commands
 				
 				userInputField.text = "";
-				// Scroll to the bottom of the text field
-				userOutputField.scrollV = userOutputField.bottomScrollV;
+				
+				userOutputField.scrollV = userOutputField.bottomScrollV;  // Scroll to the bottom of the text field
 				outputScroll.scrollTarget = userOutputField; 
 			}
 			else if (event.keyCode == 38)  // If up key is pressed, put the last command into the input field
@@ -183,35 +178,6 @@ package
 			commandStackCounter = pastCommand2.length;
 		}
 		
-		private function changeColour(e:ColourEvent):void
-		{
-			var bgColour:uint;
-			var txtColour:uint;
-			
-			if (e.value == "black")
-			{
-				outputCSS.parseCSS(blackText);
-				bgColour = 0xffffff;
-				txtColour = 0x000000;
-				isTextBlack = true;
-			}
-			else
-			{
-				outputCSS.parseCSS(whiteText);
-				bgColour = 0x000000;
-				txtColour = 0xffffff;
-				isTextBlack = false;
-			}
-			
-			formatText.color = txtColour;
-			userInputField.defaultTextFormat = formatText;
-			
-			rectangle.borderColor = userInputField.borderColor = txtColour;
-			rectangle.backgroundColor = bgColour;
-			
-			userOutputField.styleSheet = outputCSS;
-		}
-			
 	}
 
 }

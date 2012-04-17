@@ -1,7 +1,7 @@
 package objects.rooms.house 
 {
-	import objects.gettables.house.Towel;
 	import objects.Room;
+	import objects.gettables.house.Towel;
 
 	public class Bathroom extends Room
 	{	

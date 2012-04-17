@@ -13,7 +13,6 @@ package parser
 	import objects.Person;
 	import objects.Room;
 	
-	import signals.ColourEvent;
 	import signals.DialogueEvent;
 	import signals.OutputEvent;
 
@@ -234,8 +233,6 @@ package parser
 				return;		
 			if (checkGettableActions())
 				return;	
-			if (checkColours())
-				return;
 			var errorMsg:String = "I don't know how to " + inputCommand + ".";
 			this.dispatchEvent(new OutputEvent(errorMsg, OutputEvent.OUTPUT));
 		}
@@ -298,33 +295,7 @@ package parser
 				}
 			}
 			return false;
-		}
-		
-		private function checkColours():Boolean 
-		{
-			if (inputCommand == "switch colours")
-			{
-				var textColour:String;
-				var textMsg:String;
-				if (isWhiteText)
-				{
-					isWhiteText = false;
-					textColour = 'black';
-					textMsg = 'Switching to black text, white background.';
-				}
-				else
-				{
-					isWhiteText = true;
-					textColour = 'white';
-					textMsg = 'Switching to white text, black background.';
-				}
-				this.dispatchEvent(new OutputEvent(textMsg, OutputEvent.OUTPUT));
-				this.dispatchEvent(new ColourEvent(textColour, ColourEvent.OUTPUT));
-				return true;
-			}
-			return false;
-		}
-		
+		}		
 		
 	}
 	

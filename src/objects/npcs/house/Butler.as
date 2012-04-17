@@ -1,6 +1,5 @@
 package objects.npcs.house 
 {
-	import handler.NPCHolder;
 	import objects.Person;
 	import objects.rooms.house.Outdoors;
 

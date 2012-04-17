@@ -1,9 +1,9 @@
 package objects.rooms.house 
 {
+	import objects.Room;
 	import handler.InventoryHolder;
 	import objects.gettables.house.Treat;
 	import objects.npcs.house.Butler;
-	import objects.Room;
 
 	public class Livingroom extends Room
 	{	

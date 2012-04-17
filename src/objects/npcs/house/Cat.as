@@ -1,7 +1,7 @@
 package objects.npcs.house 
 {
-	import handler.NPCHolder;
 	import objects.Person;
+	import handler.NPCHolder;
 	import objects.rooms.house.Outdoors;
 
 	public class Cat extends Person

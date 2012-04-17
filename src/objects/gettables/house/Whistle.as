@@ -2,7 +2,6 @@ package objects.gettables.house
 {
 	import objects.Gettable;
 	import objects.npcs.house.Butler;
-	import objects.npcs.house.Dog;
 	import objects.npcs.house.Parrot;
 	import objects.rooms.house.Livingroom;
 
