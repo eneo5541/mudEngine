@@ -195,15 +195,6 @@ package parser
 // Move between rooms
 		private function checkDirectionCommand(newCommand:String):Boolean
 		{	
-			if (newCommand == "n") newCommand = "north";
-			else if (newCommand == "s") newCommand = "south";
-			else if (newCommand == "e") newCommand = "east";
-			else if (newCommand == "w") newCommand = "west";
-			else if (newCommand == "ne") newCommand = "northeast";
-			else if (newCommand == "se") newCommand = "southeast";
-			else if (newCommand == "sw") newCommand = "southwest";
-			else if (newCommand == "nw") newCommand = "northwest";
-			
 			var obj:* = roomHandler.exits; // Check if the command matches the exits of the room.
 			for (var i:* in obj) 
 			{

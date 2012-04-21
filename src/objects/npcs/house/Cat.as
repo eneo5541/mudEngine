@@ -31,7 +31,7 @@ package objects.npcs.house
 		{
 			dialogue = [
 				"The cat weaves between your feet.",
-				"The scratches at the door impatiently."
+				"The cat scratches at the door impatiently."
 			];
 		}
 		

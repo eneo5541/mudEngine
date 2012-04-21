@@ -28,7 +28,7 @@ package objects.gettables.house
 		override public function setAction():void
 		{
 			action = { 
-				action:["add parsley to soup", "add sprig to soup"],
+				action:["add parsley to soup", "add sprig to soup", "add parsley to pot", "add sprig to pot"],
 				parameter: { room:Kitchen, error:"There's no soup to add this to!" },
 				response:function(target:*):void {
 						var text:String = 'You crush up the sprig of parsley and sprinkle it onto the soup. Mmm, that smells good. ';
