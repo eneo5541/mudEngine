@@ -1,6 +1,7 @@
 package 
 {
 	import fl.controls.UIScrollBar;
+	import fl.managers.FocusManager;
 	
 	import flash.display.Sprite;
 	import flash.display.StageAlign;
@@ -41,6 +42,7 @@ package
 		private var commandStackCounter:int = 0;
 		private var maxTextLines:int = 350;
 		private var menu:ContextMenu = new ContextMenu();
+		private var focusManager:FocusManager;
 		
 		public function Main():void 
 		{						
@@ -86,7 +88,6 @@ package
 			userInputField.border = true;
 			userInputField.borderColor = 0xffffff;
 			userInputField.defaultTextFormat = formatText;
-			stage.focus = userInputField;
 			
 			outputScroll.direction = "vertical"; 
 			outputScroll.setSize(15, userOutputField.height+11);  
@@ -94,7 +95,10 @@ package
 			addChild(outputScroll); 
 			
 			stage.addEventListener(KeyboardEvent.KEY_DOWN, detectKey);
-				
+			
+			focusManager = new FocusManager(this);
+			focusManager.setFocus(userInputField);
+			
 			createParser(Bedroom); // This makes all the objects compile into the .swf, as they are all strongly referenced, branching out from the starting room
 		}
 	
@@ -131,6 +135,9 @@ package
 		
 		private function detectKey(event:KeyboardEvent):void
 		{
+			if (focusManager.getFocus() != userInputField) // Do not execute key commands unless user input is selected
+				return;
+			
 			if (event.keyCode == 13)
 			{
 				handleCommandStack(userInputField.text);

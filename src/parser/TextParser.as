@@ -218,12 +218,13 @@ package parser
 // Dynamic commands (action commands attached to either npcs in the room or items in the inventory) 
 		private function checkDynamicCommands(command:Array):void
 		{
-			if (checkRoomActions()) 
-				return;
 			if (checkNpcActions())
 				return;		
 			if (checkGettableActions())
 				return;	
+			if (checkRoomActions()) 
+				return;
+			
 			var errorMsg:String = "I don't know how to " + inputCommand + ".";
 			this.dispatchEvent(new OutputEvent(errorMsg, OutputEvent.OUTPUT));
 		}
@@ -241,7 +242,7 @@ package parser
 				{
 					for (var j:* in child.action.action)  
 					{
-						if (inputCommand == child.action.action[j])
+						if (inputCommand == child.action.action[j].toLowerCase())
 						{
 							roomHandler.getResponse(child.action);
 							return true;
@@ -258,7 +259,7 @@ package parser
 			{
 				for (var i:* in roomHandler.action.action)  // Checks for all alternative action commands for each particular action
 				{
-					if (inputCommand == roomHandler.action.action[i])  // If the command matches the action attached to this room
+					if (inputCommand == roomHandler.action.action[i].toLowerCase())  // If the command matches the action attached to this room
 					{// We can handle it this way since we can only ever be in a single room at a single time
 						roomHandler.getResponse(roomHandler.action);
 						return true;
@@ -277,7 +278,7 @@ package parser
 					for (var j:* in roomHandler.npcsThisRoom[i].action.action)
 					{
 						var npcAction:* = roomHandler.npcsThisRoom[i].action;
-						if (inputCommand == npcAction.action[j]) // Have to pass through the desired function since there can be multiple NPCs in a room
+						if (inputCommand == npcAction.action[j].toLowerCase()) // Have to pass through the desired function since there can be multiple NPCs in a room
 						{ 
 							roomHandler.getResponse(npcAction);
 							return true;

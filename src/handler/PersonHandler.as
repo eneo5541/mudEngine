@@ -97,7 +97,7 @@ package handler
 				var child:* = new personObj;
 				for (var j:* in child.alias)  // Then iterate all the aliases for that object
 				{
-					if (command == child.alias[j])  // If the inputted command matches any of the object's aliases
+					if (command == child.alias[j].toLowerCase())  // If the inputted command matches any of the object's aliases
 					{
 						if (loc == null)   // If no location parameter specified, return true
 						{
