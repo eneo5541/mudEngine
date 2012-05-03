@@ -78,7 +78,7 @@ package parser
 			var objectExists:String = roomHandler.gettableHandler.checkItemExists(command[1], InventoryHolder); // Check if there is an item of the same input command in the inventory
 			if (objectExists != null)
 			{
-				roomHandler.gettableHandler.moveGettable(objectExists, InventoryHolder, roomHandler.room);
+				roomHandler.gettableHandler.moveGettable(objectExists, roomHandler.room); // Do not need to explicitly state an origin, since objectExists already checks whether the object is a valid target.
 				this.dispatchEvent(new OutputEvent("You drop a " + roomHandler.gettableHandler.getObjectName(objectExists) + ".", OutputEvent.OUTPUT));
 			}
 			else
@@ -98,7 +98,7 @@ package parser
 				}
 				else
 				{
-					roomHandler.gettableHandler.moveGettable(objectExists, roomHandler.room, InventoryHolder);
+					roomHandler.gettableHandler.moveGettable(objectExists, InventoryHolder); // Do not need to explicitly state an origin, since objectExists already checks whether the object is a valid target.
 					this.dispatchEvent(new OutputEvent("You get a " + roomHandler.gettableHandler.getObjectName(objectExists) + ".", OutputEvent.OUTPUT));
 				}
 			}

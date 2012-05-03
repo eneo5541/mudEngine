@@ -250,9 +250,9 @@ package handler
 			gettableHandler.removeGettable(object);
 		}
 		
-		public function moveGettable(object:*, oldLocation:*, newLocation:*):void
+		public function moveGettable(object:*, location:*):void
 		{
-			gettableHandler.moveGettable(object, oldLocation, newLocation);
+			gettableHandler.moveGettable(object, location);
 		}
 		
 		private function gettableDialogue(e:DialogueEvent):void

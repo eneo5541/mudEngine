@@ -62,25 +62,23 @@ package handler
 			}	
 		}
 		
-		public function moveGettable(getObj:*, oldLocation:*, newLocation:*):void
+		public function moveGettable(getObj:*, loc:*):void
 		{
-			if (!(oldLocation is String))
-				oldLocation = getQualifiedClassName(oldLocation);
-			if (!(newLocation is String))
-				newLocation = getQualifiedClassName(newLocation);	
-			if (!(getObj is String))
+			if (!(getObj is String)) 
 				getObj = getQualifiedClassName(getObj);
-				
-			for (var i:* in gettableArray) // Iterate through all the objects in existance
+			
+			var getIndex:int = -1;
+			for (var i:* in gettableArray)
 			{
-				if (gettableArray[i].object == getObj && gettableArray[i].location == oldLocation)  // Find all objects that are in this current room
-				{
-					checkAddedToInventory(getObj, newLocation);
-					checkRemovedInventory(getObj, oldLocation);
-					gettableArray[i].location = newLocation;
-					return;
-				}
+				if (gettableArray[i].object == getObj) 
+					getIndex = i;
 			}
+			if (getIndex < 0) return; // Do not run if the gettable does not exist
+			
+			if (!(loc is String)) 
+				loc = getQualifiedClassName(loc);
+			
+			gettableArray[getIndex].location = loc;   // Go to the index of the gettable object and change the location.
 		}
 		
 		private function checkAddedToInventory(object:String, location:String):void
