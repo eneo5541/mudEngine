@@ -138,40 +138,40 @@ package
 			if (focusManager.getFocus() != userInputField) // Do not execute key commands unless user input is selected
 				return;
 			
-			if (event.keyCode == 13)
+			switch(event.keyCode)
 			{
-				handleCommandStack(userInputField.text);
-				
-				userOutputField.htmlText += "<div><span class='main'>\n>" + userInputField.text + "</span></div>";
-				
-				parse.parseCommand(userInputField.text);   // Pass the user's input to the textParser to look for commands
-				
-				userInputField.text = "";
-				
-				userOutputField.scrollV = userOutputField.bottomScrollV;  // Scroll to the bottom of the text field
-				outputScroll.scrollTarget = userOutputField; 
-			}
-			else if (event.keyCode == 38)  // If up key is pressed, put the last command into the input field
-			{
-				if (commandStackCounter > 0)
-				{
-					commandStackCounter--;
-					if(pastCommand2[commandStackCounter] != null)
-						userInputField.text = pastCommand2[commandStackCounter];
-				}
-			}
-			else if (event.keyCode == 40)  // If down is pressed, clear the input
-			{
-				if (commandStackCounter < pastCommand2.length-1)
-				{
-					commandStackCounter++;
-					if(pastCommand2[commandStackCounter] != null)
-						userInputField.text = pastCommand2[commandStackCounter];
-				}
-				else 
-				{
+				case 13:
+					handleCommandStack(userInputField.text);
+					
+					userOutputField.htmlText += "<div><span class='main'>\n>" + userInputField.text + "</span></div>";
+					parse.parseCommand(userInputField.text);   // Pass the user's input to the textParser to look for commands
 					userInputField.text = "";
-				}
+					
+					userOutputField.scrollV = userOutputField.bottomScrollV;  // Scroll to the bottom of the text field
+					outputScroll.scrollTarget = userOutputField; 
+					break;
+				case 38:
+					if (commandStackCounter > 0)
+					{
+						commandStackCounter--;
+						if(pastCommand2[commandStackCounter] != null)
+							userInputField.text = pastCommand2[commandStackCounter];
+					}
+					break;
+				case 40:
+					if (commandStackCounter < pastCommand2.length-1)
+					{
+						commandStackCounter++;
+						if(pastCommand2[commandStackCounter] != null)
+							userInputField.text = pastCommand2[commandStackCounter];
+					}
+					else 
+					{
+						userInputField.text = "";
+					}
+					break;
+				default:
+					null;
 			}
 		}
 		
