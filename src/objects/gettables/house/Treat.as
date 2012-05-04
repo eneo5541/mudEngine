@@ -31,6 +31,7 @@ package objects.gettables.house
 			action = { 
 				action:["feed biscuit to dog"],
 				parameter: { npc:Dog, error:"I don't know how to feed biscuit to dog." },
+				restart: { gettable:Whistle, error:"The dog scarfs down the treat and returns to panting and grinning." },
 				response:function(target:*):void {
 						var text:String = 'The dog wolfs down the treat eagerly before running away. You are annoyed to own such a fair-weather animal, but he returns soon, dropping a small whistle he '+
 						'found at your feet. Good dog.';
