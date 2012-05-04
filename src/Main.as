@@ -22,8 +22,6 @@ package
 	import signals.OutputEvent;
 	import parser.TextParser;
 	
-
-	[Frame(factoryClass="Preloader")]
 	public class Main extends Sprite 
 	{
 		private var userInputField:TextField;
