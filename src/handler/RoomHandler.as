@@ -143,13 +143,13 @@ package handler
 			}
 			if (action.restart != null)
 			{
-				if (checkAlreadyStarted(action.restart)) {  // If the parameter IS met, than the quest has already been started - do not continue
+				if (checkAlreadyStarted(action.restart)) {  // If the parameter IS met, then the quest has already been started - do not continue
 					outputText(action.restart.error);
 					return;
 				}
 			}
 			var f:Function = action.response;
-			f(this);  // The 'this' parameter allows the response function to be called from the roomHandler, instead of the room
+			f(this);  // The 'this' parameter allows the response function to call variables belonging to the roomHandler
 		}
 		
 		private function checkAlreadyStarted(parameter:*):Boolean // This allows the action to proceed if the item/npc DOES NOT exist
