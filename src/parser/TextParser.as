@@ -42,7 +42,21 @@ package parser
 		{
 			if (command == null || command.length == 0)
 				return;
-				
+			
+			var splitWords:Array = command.split(';');
+			for (var i:* in splitWords)
+			{
+				if (i > 11)
+				{
+					this.dispatchEvent(new OutputEvent('You cannot queue more than 12 commands. Aborting command.', OutputEvent.OUTPUT));
+					continue;
+				}
+				executeCommand(splitWords[i]);
+			}
+		}
+		
+		public function executeCommand(command:String):void
+		{	
 			inputCommand = command = command.toLowerCase();
 			
 			var splitSpaces:Array = command.split(" ");
@@ -53,7 +67,7 @@ package parser
 					break;
 				case "go":case "walk":
 					if (!checkDirectionCommand(splitSpaces[1]))
-						this.dispatchEvent(new OutputEvent("I don't see any " + splitSpaces[1] + " exit.", OutputEvent.OUTPUT));
+						this.dispatchEvent(new OutputEvent("You don't see any " + splitSpaces[1] + " exit.", OutputEvent.OUTPUT));
 					break;
 				case "inventory":case "i":case "inv":
 					var tr:String = roomHandler.gettableHandler.currentInventory(); 
@@ -83,7 +97,7 @@ package parser
 			}
 			else
 			{
-				this.dispatchEvent(new OutputEvent("I don't have any " + command[1] + " to drop.", OutputEvent.OUTPUT));
+				this.dispatchEvent(new OutputEvent("You don't have any " + command[1] + " to drop.", OutputEvent.OUTPUT));
 			}
 		}
 		
@@ -104,7 +118,7 @@ package parser
 			}
 			else
 			{
-				this.dispatchEvent(new OutputEvent("I don't see any " + command[1] + " here to get.", OutputEvent.OUTPUT));
+				this.dispatchEvent(new OutputEvent("You don't see any " + command[1] + " here to get.", OutputEvent.OUTPUT));
 			}
 		}
 		
@@ -131,7 +145,7 @@ package parser
 			if (checkForRoomItems(newCommand)) 
 				return; 
 			
-			this.dispatchEvent(new OutputEvent("I don't see any " + newCommand + " here.", OutputEvent.OUTPUT));
+			this.dispatchEvent(new OutputEvent("You don't see any " + newCommand + " here.", OutputEvent.OUTPUT));
 			return;
 		}
 		
@@ -225,7 +239,7 @@ package parser
 			if (checkRoomActions()) 
 				return;
 			
-			var errorMsg:String = "I don't know how to " + inputCommand + ".";
+			var errorMsg:String = "You don't know how to " + inputCommand + ".";
 			this.dispatchEvent(new OutputEvent(errorMsg, OutputEvent.OUTPUT));
 		}
 		

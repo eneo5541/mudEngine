@@ -102,7 +102,7 @@ package handler
 		private function addExits():String // Converts all of the anonymous objects into an array	
 		{	
 			if (this.exits == null) 
-				return "\nThere are no visible exits.";
+				return "\nThere are no obvious exits.";
 			
 			var obj:* = this.exits;
 			var objectList:Array = [];
