@@ -23,8 +23,8 @@ package handler
 			if (inventoryList.length == 0) 
 				return "You are not carrying anything.";
 				
-			var tr:InventoryString = Utils.listGettables(inventoryList);
-			return "You are carrying: \n" + InventoryString;
+			var inventoryString:String = Utils.listGettables(inventoryList);
+			return "You are carrying: \n" + inventoryString;
 		}
 		
 		// This pushes an item to the gettableArray that holds ALL gettables in the game and their location
