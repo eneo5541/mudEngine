@@ -35,7 +35,12 @@ package parser
 		
 		private function dialogueHandler(e:DialogueEvent):void
 		{
-			this.dispatchEvent(new OutputEvent(e.value, OutputEvent.OUTPUT));
+			outputHandler(e.value);
+		}
+
+		private function outputHandler(textOutput:String):void
+		{
+			this.dispatchEvent(new OutputEvent(textOutput, OutputEvent.OUTPUT));
 		}
 		
 		public function parseCommand(command:String):void
@@ -48,7 +53,7 @@ package parser
 			{
 				if (i > 11)
 				{
-					this.dispatchEvent(new OutputEvent('You cannot queue more than 12 commands. Aborting command.', OutputEvent.OUTPUT));
+					outputHandler('You cannot queue more than 12 commands. Aborting command.');
 					continue;
 				}
 				executeCommand(splitWords[i]);
@@ -67,11 +72,11 @@ package parser
 					break;
 				case "go":case "walk":
 					if (!checkDirectionCommand(splitSpaces[1]))
-						this.dispatchEvent(new OutputEvent("You don't see any " + splitSpaces[1] + " exit.", OutputEvent.OUTPUT));
+						outputHandler("You don't see any " + splitSpaces[1] + " exit.");
 					break;
 				case "inventory":case "i":case "inv":
 					var inventoryList:String = roomHandler.gettableHandler.currentInventory(); 
-					this.dispatchEvent(new OutputEvent(inventoryList, OutputEvent.OUTPUT));
+					outputHandler(inventoryList);
 					break;
 				case "get":case "g":case "take":
 					checkGetCommand(splitSpaces);
@@ -93,11 +98,11 @@ package parser
 			if (objectExists != null)
 			{
 				roomHandler.gettableHandler.moveGettable(objectExists, roomHandler.room); // Do not need to explicitly state an origin, since objectExists already checks whether the object is a valid target.
-				this.dispatchEvent(new OutputEvent("You drop a " + roomHandler.gettableHandler.getObjectName(objectExists) + ".", OutputEvent.OUTPUT));
+				outputHandler("You drop a " + roomHandler.gettableHandler.getObjectName(objectExists) + ".");
 			}
 			else
 			{
-				this.dispatchEvent(new OutputEvent("You don't have any " + command[1] + " to drop.", OutputEvent.OUTPUT));
+				outputHandler("You don't have any " + command[1] + " to drop.");
 			}
 		}
 		
@@ -108,17 +113,17 @@ package parser
 			{
 				if (roomHandler.gettableHandler.checkGettableLocation(InventoryHolder).length > 4) 
 				{
-					this.dispatchEvent(new OutputEvent("You are carrying too many things. Drop something to free up inventory space.", OutputEvent.OUTPUT));
+					outputHandler("You are carrying too many things. Drop something to free up inventory space.");
 				}
 				else
 				{
 					roomHandler.gettableHandler.moveGettable(objectExists, InventoryHolder); // Do not need to explicitly state an origin, since objectExists already checks whether the object is a valid target.
-					this.dispatchEvent(new OutputEvent("You get a " + roomHandler.gettableHandler.getObjectName(objectExists) + ".", OutputEvent.OUTPUT));
+					outputHandler("You get a " + roomHandler.gettableHandler.getObjectName(objectExists) + ".");
 				}
 			}
 			else
 			{
-				this.dispatchEvent(new OutputEvent("You don't see any " + command[1] + " here to get.", OutputEvent.OUTPUT));
+				outputHandler("You don't see any " + command[1] + " here to get.");
 			}
 		}
 		
@@ -128,7 +133,7 @@ package parser
 			if (command.length == 1) // If not looking at an object, just return room description
 			{
 				var longStr:String = roomHandler.getDescription();
-				this.dispatchEvent(new OutputEvent(longStr, OutputEvent.OUTPUT));  // Special signal that does not added HTML tags (since room already adds HTML tags)
+				outputHandler(longStr);  // Special signal that does not added HTML tags (since room already adds HTML tags)
 				return;
 			}
 			
@@ -145,7 +150,7 @@ package parser
 			if (checkForRoomItems(newCommand)) 
 				return; 
 			
-			this.dispatchEvent(new OutputEvent("You don't see any " + newCommand + " here.", OutputEvent.OUTPUT));
+			outputHandler("You don't see any " + newCommand + " here.");
 			return;
 		}
 		
@@ -154,7 +159,7 @@ package parser
 			var objectExists:String = roomHandler.gettableHandler.checkItemExists(command, InventoryHolder);
 			if (objectExists != null)
 			{
-				this.dispatchEvent(new OutputEvent(roomHandler.gettableHandler.getObjectDescript(objectExists), OutputEvent.OUTPUT));
+				outputHandler(roomHandler.gettableHandler.getObjectDescript(objectExists));
 				return true;
 			}
 			else
@@ -168,7 +173,7 @@ package parser
 			var objectExists:String = roomHandler.personHandler.checkNPCExists(command, roomHandler.room);
 			if (objectExists != null)
 			{
-				this.dispatchEvent(new OutputEvent(roomHandler.personHandler.getNPCDescript(objectExists), OutputEvent.OUTPUT));
+				outputHandler(roomHandler.personHandler.getNPCDescript(objectExists));
 				return true;
 			}
 			else
@@ -182,7 +187,7 @@ package parser
 			var objectExists:String = roomHandler.gettableHandler.checkItemExists(command, roomHandler.room);
 			if (objectExists != null)
 			{
-				this.dispatchEvent(new OutputEvent(roomHandler.gettableHandler.getObjectDescript(objectExists), OutputEvent.OUTPUT));
+				outputHandler(roomHandler.gettableHandler.getObjectDescript(objectExists));
 				return true;
 			}
 			else
@@ -198,7 +203,7 @@ package parser
 			{
 				if (command == i) 
 				{
-					this.dispatchEvent(new OutputEvent(itemObject[i], OutputEvent.OUTPUT));
+					outputHandler(itemObject[i]);
 					return true;
 				}
 			}
@@ -219,9 +224,9 @@ package parser
 					roomHandler.loadRoom(new mainClass as Room);
 					
 					var longStr:String = "You leave out the " + newCommand + " exit."; // Then fetch the new description
-					this.dispatchEvent(new OutputEvent(longStr, OutputEvent.OUTPUT));
+					outputHandler(longStr);
 					var roomStr:String = roomHandler.getDescription();  
-					this.dispatchEvent(new OutputEvent(roomStr, OutputEvent.OUTPUT));
+					outputHandler(roomStr, OutputEvent.OUTPUT);
 					return true;
 				}
 			}
@@ -240,7 +245,7 @@ package parser
 				return;
 			
 			var errorMsg:String = "You don't know how to " + inputCommand + ".";
-			this.dispatchEvent(new OutputEvent(errorMsg, OutputEvent.OUTPUT));
+			outputHandler(errorMsg);
 		}
 		
 		
