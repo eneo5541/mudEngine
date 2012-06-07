@@ -170,6 +170,10 @@ package handler
 					if (personHandler.searchPersons(parameterObj))
 						return true;
 					break;
+				case "room":
+					if (parameterObj == room)
+						return true;
+					break;
 				case "gettable":
 					if (gettableHandler.searchGettables(parameterObj))
 						return true;
