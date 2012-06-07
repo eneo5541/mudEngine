@@ -73,7 +73,7 @@ package handler
 		
 		private function loadNpcs(target:*):void
 		{
-			var npcObject:* = target;
+			var npcObject:* = target; // Same as loadGettables()
 			for (var i:* in npcObject)
 				personHandler.addPerson(npcObject[i], room);
 		}
