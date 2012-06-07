@@ -70,8 +70,8 @@ package parser
 						this.dispatchEvent(new OutputEvent("You don't see any " + splitSpaces[1] + " exit.", OutputEvent.OUTPUT));
 					break;
 				case "inventory":case "i":case "inv":
-					var tr:String = roomHandler.gettableHandler.currentInventory(); 
-					this.dispatchEvent(new OutputEvent(tr, OutputEvent.OUTPUT));
+					var inventoryList:String = roomHandler.gettableHandler.currentInventory(); 
+					this.dispatchEvent(new OutputEvent(inventoryList, OutputEvent.OUTPUT));
 					break;
 				case "get":case "g":case "take":
 					checkGetCommand(splitSpaces);
