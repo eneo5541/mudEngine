@@ -19,12 +19,12 @@ package handler
 		
 		public function currentInventory():String
 		{
-			var td:Array = gettablesThisRoom(InventoryHolder);
-			if (td.length == 0) 
+			var inventoryList:Array = gettablesThisRoom(InventoryHolder);
+			if (inventoryList.length == 0) 
 				return "You are not carrying anything.";
 				
-			var tr:String = Utils.listGettables(td);
-			return "You are carrying: \n" + tr;
+			var tr:InventoryString = Utils.listGettables(inventoryList);
+			return "You are carrying: \n" + InventoryString;
 		}
 		
 		// This pushes an item to the gettableArray that holds ALL gettables in the game and their location
