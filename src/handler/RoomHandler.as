@@ -109,8 +109,8 @@ package handler
 			for (var i:* in obj) 
 				objectList.push(i);
 			
-			var tr:String = Utils.listExits(objectList);
-			return tr;
+			var exitList:String = Utils.listExits(objectList);
+			return exitList;
 		}
 		
 		private function addNpcs():String
@@ -120,16 +120,16 @@ package handler
 			var toString:Array = [];
 			for (var i:* in npcsThisRoom)
 				toString.push(npcsThisRoom[i].shortDesc);	
-			var tr:String = Utils.listNpcs(toString);
+			var npcList:String = Utils.listNpcs(toString);
 			
-			return tr;
+			return npcList;
 		}
 		
 		private function addGettables():String
 		{
-			var td:Array = gettableHandler.gettablesThisRoom(room);
-			var tr:String = Utils.listGettables(td);
-			return tr;
+			var itemList:Array = gettableHandler.gettablesThisRoom(room);
+			var itemString:String = Utils.listGettables(itemList);
+			return itemString;
 		}
 		
 		public function getResponse(action:*):void
