@@ -226,7 +226,7 @@ package parser
 					var longStr:String = "You leave out the " + newCommand + " exit."; // Then fetch the new description
 					outputText(longStr);
 					var roomStr:String = roomHandler.getDescription();  
-					outputText(roomStr, OutputEvent.OUTPUT);
+					outputText(roomStr);
 					return true;
 				}
 			}

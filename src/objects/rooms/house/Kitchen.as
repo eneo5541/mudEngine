@@ -18,7 +18,7 @@ package objects.rooms.house
 		override public function setLongDesc():void
 		{
 			longDesc = "You are in a small, somewhat cramped kitchen. There is a stovetop here, over which a pot of soup is cooking. There is also a sink with several dishes in it, and a door leading outside. " +
-			"To the northeast is the livingroom.";
+			"You can see a balcony, just beyond the door. To the northeast is the livingroom.";
 		}
 		
 		override public function setExits():void
@@ -39,6 +39,7 @@ package objects.rooms.house
 				soup:"A large pot of delicious smelling soup. It smells like... bacon. If only you had some parsley to add to this.",
 				sink:"The sink has several dirty dishes in it, awaiting a good washing.",
 				dishes:"Three dirty looking plates sit in the sink.",
+				balcony:"A door separates the kitchen from the balcony outside.",
 				door:"This door leads outside. It is closed."
 			};
 		}

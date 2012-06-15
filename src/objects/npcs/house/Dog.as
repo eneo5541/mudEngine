@@ -29,8 +29,19 @@ package objects.npcs.house
 		{
 			dialogue = [
 				"The dog barks at the walls.",
-				"The scuttles about while sniffing the floor."
+				"The dog scuttles about while sniffing the floor."
 			];
+		}
+		
+		override public function setAction():void
+		{
+			action = { 
+				action:["pet dog", "pet the dog"],
+				response:function(target:*):void {
+						var text:String = 'The dog barks and drools profusely.';
+						target.outputText(text);
+						}
+			};
 		}
 	}
 

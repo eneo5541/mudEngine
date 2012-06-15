@@ -20,7 +20,7 @@ package objects.rooms.house
 		override public function setLongDesc():void
 		{
 			longDesc = "Several plush couches line the walls of this spacious living room. A sturdy looking coffee table has been placed in the middle. There is a hallway to the east, and a kitchen " +
-			"to the southwest.";
+			"to the southwest. Those couches sure look comfy.";
 		}
 		
 		override public function setExits():void

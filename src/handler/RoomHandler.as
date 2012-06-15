@@ -33,7 +33,7 @@ package handler
 		{
 			gettableHandler.addEventListener(DialogueEvent.OUTPUT, gettableDialogue);
 			
-			dialogueTimer = new Timer(15000);
+			dialogueTimer = new Timer(20000);
 			dialogueTimer.addEventListener(TimerEvent.TIMER, getDialogue);
 			dialogueTimer.start();
 		}
