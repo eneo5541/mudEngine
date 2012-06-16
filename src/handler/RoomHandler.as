@@ -241,6 +241,7 @@ package handler
 		
 		public function movePerson(object:*, location:*):void
 		{
+			personHandler.addPerson(object, location);
 			personHandler.movePerson(object, location);
 		}
 		
@@ -256,6 +257,7 @@ package handler
 		
 		public function moveGettable(object:*, location:*):void
 		{
+			gettableHandler.addGettable(object, location);
 			gettableHandler.moveGettable(object, location);
 		}
 		
