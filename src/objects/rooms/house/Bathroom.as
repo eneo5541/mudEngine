@@ -47,10 +47,13 @@ package objects.rooms.house
 		{
 			action = { 
 				action:["use sink", "use faucet", "use bowl"],
-				response:function(target:*):void {
-							target.outputText("You turn on the water and rinse your hands.");
-						}
+				response:useSink
 			};
+		}
+		
+		private function useSink(target:*):void
+		{
+			target.outputText("You turn on the water and rinse your hands.");
 		}
 		
 	}

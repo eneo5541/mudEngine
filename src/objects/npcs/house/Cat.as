@@ -39,13 +39,17 @@ package objects.npcs.house
 		{
 			action = { 
 				action:["let cat out", "let cat out the door", "let cat out door"],
-				response:function(target:*):void {
-						var text:String = 'The cat scampers outside as you hold the door open.';
-						target.outputText(text);
-						target.movePerson(Cat, NPCHolder);
-						target.addPerson(CatOutdoors, Outdoors)
-						}
-			};
+				response:letCatOut
+				};
+			//];
+		}
+		
+		private function letCatOut(target:*):void
+		{
+			target.outputText('The cat scampers outside as you hold the door open.');
+			
+			target.movePerson(Cat, NPCHolder);
+			target.addPerson(CatOutdoors, Outdoors)
 		}
 		
 	}

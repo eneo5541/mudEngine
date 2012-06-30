@@ -48,12 +48,14 @@ package objects.rooms.house
 		{
 			action = { 
 				action:["open door"],
-				response:function(target:*):void {
-							var text:String = 'You open the door and step outside.';
-							target.outputText(text);
-							target.loadRoom(new Outdoors);
-						}
+				response:openDoor
 			};
+		}
+		
+		private function openDoor(target:*):void
+		{
+			target.outputText('You open the door and step outside.');
+			target.loadRoom(new Outdoors);
 		}
 		
 	}

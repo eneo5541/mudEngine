@@ -45,12 +45,14 @@ package objects.rooms.house
 			action = { 
 				action:["open closet"],
 				restart: { gettable:Hat, error:"You open the closet, but there is nothing inside." },
-				response:function(target:*):void {
-							var text:String = 'You open the closet and find a hat inside.';
-							target.outputText(text);
-							target.addGettable(Hat, Bedroom);
-						}
+				response:useSink
 			};
+		}
+		
+		private function useSink(target:*):void
+		{
+			target.outputText('You open the closet and find a hat inside.');
+			target.addGettable(Hat, Bedroom);
 		}
 		
 	}

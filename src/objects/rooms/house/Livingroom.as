@@ -50,12 +50,14 @@ package objects.rooms.house
 			action = { 
 				action:["sit couches", "sit on couches", "sit couch", "sit on couch"],
 				restart: { gettable:Treat, error:"You sit on the couch." },
-				response:function(target:*):void {
-							var text:String = 'You sit on the couch and find a dog treat between the cushions, which you quickly pocket.';
-							target.outputText(text);
-							target.addGettable(Treat, InventoryHolder);
-						}
+				response:sitOnCouch
 			};
+		}
+		
+		private function sitOnCouch(target:*):void
+		{
+			target.outputText('You sit on the couch and find a dog treat between the cushions, which you quickly pocket.');
+			target.addGettable(Treat, InventoryHolder);
 		}
 		
 	}

@@ -37,13 +37,16 @@ package objects.npcs.house
 		{
 			action = { 
 				action:["rub cat"],
-				response:function(target:*):void {
-						var text:String = "You rub the cat's back, causing her to purr happily. Satisfied, she lets herself back in, leaving you alone in the balcony again.";
-						target.outputText(text);
-						target.removePerson(CatOutdoors);
-						target.movePerson(Cat, Kitchen);
-						}
+				response:rubCat
 			};
+		}
+		
+		private function rubCat(target:*):void
+		{
+			target.outputText("You rub the cat's back, causing her to purr happily. Satisfied, she lets herself back in, leaving you alone in the balcony again.");
+			
+			target.removePerson(CatOutdoors);
+			target.movePerson(Cat, Kitchen);
 		}
 		
 	}

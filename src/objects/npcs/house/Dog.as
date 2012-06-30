@@ -37,11 +37,13 @@ package objects.npcs.house
 		{
 			action = { 
 				action:["pet dog", "pet the dog"],
-				response:function(target:*):void {
-						var text:String = 'The dog barks and drools profusely.';
-						target.outputText(text);
-						}
+				response:petDog
 			};
+		}
+		
+		private function petDog(target:*):void
+		{
+			target.outputText('The dog barks and drools profusely.');
 		}
 	}
 

@@ -28,11 +28,13 @@ package objects.gettables.house
 		{
 			action = { 
 				action:["wear hat"],
-				response:function(target:*):void {
-						var text:String = 'You put the hat on your head and tweak it, off to an angle.';
-						target.outputText(text);
-						}
+				response:wearHat
 			};
+		}
+		
+		private function wearHat(target:*):void
+		{
+			target.outputText('You put the hat on your head and tweak it off to an angle.');
 		}
 		
 	}

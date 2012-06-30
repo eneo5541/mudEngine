@@ -30,14 +30,15 @@ package objects.gettables.house
 			action = { 
 				action:["add parsley to soup", "add sprig to soup", "add parsley to pot", "add sprig to pot"],
 				parameter: { room:Kitchen, error:"There's no soup to add this to!" },
-				response:function(target:*):void {
-						var text:String = 'You crush up the sprig of parsley and sprinkle it onto the soup. Mmm, that smells good. ';
-						target.outputText(text);
-						target.removeGettable(Herbs);
-						}
+				response:addHerbs
 			};
 		}
 		
+		private function addHerbs(target:*):void
+		{
+			target.outputText('You crush up the sprig of parsley and sprinkle it onto the soup. Mmm, that smells good.');
+			target.removeGettable(Herbs);
+		}
 	}
 
 
