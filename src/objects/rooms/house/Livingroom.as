@@ -47,11 +47,11 @@ package objects.rooms.house
 
 		override public function setAction():void
 		{
-			action = { 
+			actions = [{ 
 				action:["sit couches", "sit on couches", "sit couch", "sit on couch"],
 				restart: { gettable:Treat, error:"You sit on the couch." },
 				response:sitOnCouch
-			};
+			}];
 		}
 		
 		private function sitOnCouch(target:*):void

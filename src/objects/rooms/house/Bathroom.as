@@ -45,10 +45,10 @@ package objects.rooms.house
 
 		override public function setAction():void
 		{
-			action = { 
+			actions = [{ 
 				action:["use sink", "use faucet", "use bowl"],
 				response:useSink
-			};
+			}];
 		}
 		
 		private function useSink(target:*):void

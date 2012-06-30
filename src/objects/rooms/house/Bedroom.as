@@ -42,11 +42,11 @@ package objects.rooms.house
 
 		override public function setAction():void
 		{
-			action = { 
+			actions = [{ 
 				action:["open closet"],
 				restart: { gettable:Hat, error:"You open the closet, but there is nothing inside." },
 				response:useSink
-			};
+			}];
 		}
 		
 		private function useSink(target:*):void

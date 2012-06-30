@@ -46,10 +46,10 @@ package objects.rooms.house
 
 		override public function setAction():void
 		{
-			action = { 
+			actions = [{ 
 				action:["open door"],
 				response:openDoor
-			};
+			}];
 		}
 		
 		private function openDoor(target:*):void

@@ -26,10 +26,10 @@ package objects.gettables.house
 		
 		override public function setAction():void
 		{
-			action = { 
+			actions = [{ 
 				action:["wear hat"],
 				response:wearHat
-			};
+			}];
 		}
 		
 		private function wearHat(target:*):void

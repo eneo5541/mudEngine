@@ -24,7 +24,7 @@ package handler
 		public var longDesc:String;
 		public var exits:*;
 		public var items:*;
-		public var action:*;
+		public var actions:*;
 		public var npcsThisRoom:Array;
 		
 		public var dialogueTimer:Timer;
@@ -66,7 +66,7 @@ package handler
 			this.items = room.items;
 			this.shortDesc = room.shortDesc;
 			this.longDesc = room.longDesc;
-			this.action = room.action
+			this.actions = room.actions;
 			
 			dialogueTimer.start();
 		}

@@ -28,12 +28,12 @@ package objects.gettables.house
 		
 		override public function setAction():void
 		{
-			action = { 
+			actions = [{ 
 				action:["feed biscuit to dog"],
 				parameter: { npc:Dog, error:"You don't know how to feed biscuit to dog." },
 				restart: { gettable:Whistle, error:"The dog scarfs down the treat and returns to panting and grinning." },
 				response:feedDog
-			};
+			}];
 		}
 		
 		private function feedDog(target:*):void

@@ -27,11 +27,11 @@ package objects.gettables.house
 		
 		override public function setAction():void
 		{
-			action = { 
+			actions = [{ 
 				action:["add parsley to soup", "add sprig to soup", "add parsley to pot", "add sprig to pot"],
 				parameter: { room:Kitchen, error:"There's no soup to add this to!" },
 				response:addHerbs
-			};
+			}];
 		}
 		
 		private function addHerbs(target:*):void

@@ -35,10 +35,10 @@ package objects.npcs.house
 		
 		override public function setAction():void
 		{
-			action = { 
+			actions = [{ 
 				action:["rub cat"],
 				response:rubCat
-			};
+			}];
 		}
 		
 		private function rubCat(target:*):void

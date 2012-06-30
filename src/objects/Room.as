@@ -9,7 +9,7 @@ package objects
 		public var items:* = null;
 		public var npcs:Array = [];
 		public var gettables:Array = [];
-		public var action:* = null;
+		public var actions:Array = [];
  
 		function Room()
 		{			

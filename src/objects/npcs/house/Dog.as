@@ -35,15 +35,24 @@ package objects.npcs.house
 		
 		override public function setAction():void
 		{
-			action = { 
+			actions = [{ 
 				action:["pet dog", "pet the dog"],
 				response:petDog
-			};
+			},
+			{ 
+				action:["scratch dog", "scratch the dog"],
+				response:scratchDog
+			}];
 		}
 		
 		private function petDog(target:*):void
 		{
 			target.outputText('The dog barks and drools profusely.');
+		}
+		
+		private function scratchDog(target:*):void
+		{
+			target.outputText('The dog rolls over as you scratch him behind the ears.');
 		}
 	}
 

@@ -6,7 +6,7 @@ package objects
 		public var shortDesc:String = "";
 		public var longDesc:String = "";
 		public var alias:Array = [];
-		public var action:* = null;
+		public var actions:Array = [];
  
 		function Gettable()
 		{
