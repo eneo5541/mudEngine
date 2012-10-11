@@ -1,11 +1,21 @@
 package parser 
 {
 	import flash.text.TextField;
+	import flash.utils.ByteArray;
+	
 	public class Utils 
 	{
 		
 		public function Utils() 
 		{
+		}
+		
+		public static function capitalize(target:String):String
+		{
+			var firstLetter:String = target.substr(0, 1).toUpperCase();
+			var restOfWord:String = target.substr(1, target.length).toLowerCase()
+			
+			return firstLetter + restOfWord;
 		}
 		
 		public static function generateRandom(max:Number, min:Number = 0):Number
@@ -15,11 +25,13 @@ package parser
 		
 		public static function createTextField(x:int,y:int,width:int,height:int):TextField 
         {
+			var padding:Number = 6;
+			
             var result:TextField = new TextField();
-            result.x = x;
-            result.y = y;
-			result.width = width;
-			result.height = height;
+			result.x = x + 40 + padding;
+			result.y = y + padding;
+			result.width = width - 40 - (padding*2) - 15;
+			result.height = height - (padding * 2);
 			result.text = "";
             return result;
         }
@@ -80,6 +92,13 @@ package parser
 			return listString;
 		}
 		
+		public static function cloneArray(source:Object):* 
+		{ 
+			var byteArray:ByteArray = new ByteArray(); 
+			byteArray.writeObject(source); 
+			byteArray.position = 0; 
+			return(byteArray.readObject()); 
+		}		
 	}
 
 }

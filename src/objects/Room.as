@@ -10,7 +10,7 @@ package objects
 		public var npcs:Array = [];
 		public var gettables:Array = [];
 		public var actions:Array = [];
- 
+		
 		function Room()
 		{			
 			setExits();	

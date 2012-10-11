@@ -45,14 +45,12 @@ package objects.rooms.house
 			actions = [{ 
 				action:["open closet"],
 				restart: { gettable:Hat, error:"You open the closet, but there is nothing inside." },
-				response:useSink
+				response:function (target:*):void {
+						target.outputText('You open the closet and find a hat inside.');
+						target.addGettable(Hat, Bedroom);
+						target.reloadRoom();
+					}
 			}];
-		}
-		
-		private function useSink(target:*):void
-		{
-			target.outputText('You open the closet and find a hat inside.');
-			target.addGettable(Hat, Bedroom);
 		}
 		
 	}

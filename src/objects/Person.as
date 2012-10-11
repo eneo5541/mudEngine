@@ -8,7 +8,8 @@ package objects
 		public var alias:Array = [];
 		public var dialogue:Array = [];
 		public var actions:Array = [];
- 
+		public var conversations:Array = [];
+		
 		function Person()
 		{
 			setShortDesc();
@@ -16,6 +17,7 @@ package objects
 			setDialogue();
 			setAlias();
 			setAction();
+			setConversations();
 		}
 		
 		public function setShortDesc():void
@@ -35,6 +37,10 @@ package objects
 		}
 		
 		public function setAction():void
+		{
+		}
+		
+		public function setConversations():void
 		{
 		}
 		

@@ -2,45 +2,57 @@ package
 {
 	import fl.controls.UIScrollBar;
 	import fl.managers.FocusManager;
-	
+	import flash.display.Shape;
 	import flash.display.Sprite;
 	import flash.display.StageAlign;
 	import flash.display.StageScaleMode;
 	import flash.events.Event;
 	import flash.events.KeyboardEvent;
-	import flash.events.TextEvent;
 	import flash.text.StyleSheet;
 	import flash.text.TextField;
 	import flash.text.TextFieldType;
 	import flash.text.TextFormat;
 	import flash.ui.ContextMenu;
-	import flash.ui.ContextMenuItem;
-	import flash.utils.getQualifiedClassName;
-	
-	import objects.rooms.house.Bedroom;
+	import handlers.holders.InventoryHolder;
+	import handlers.SaveHandler;
+	import objects.User;
+	import parser.Intro;
 	import parser.Utils;
-	import signals.OutputEvent;
 	import parser.TextParser;
+	import signals.IntroEvent;
+	import signals.OutputEvent;
+	import signals.ParserEvent;
+	import ui.RoundedTextContainer;
+	
 	
 	public class Main extends Sprite 
 	{
 		private var userInputField:TextField;
-		private var userOutputField:TextField;
-		private var rectangle:TextField;
+		private var inventoryTitle:TextField;
+		private var sheetTitle:TextField;
 		private var parse:TextParser;
 		
 		private var outputScroll:UIScrollBar = new UIScrollBar(); 
 		private var outputCSS:StyleSheet = new StyleSheet();
-		private var whiteText:String = ".main { font-family: Verdana;font-size: 12px;text-align:left;color:#ffffff; } .black { color:#808080; } .red { color:#ff0000; } .green { color:#00ff00; } .yellow { color:#ffff00; } .blue { color:#0000ff; } .magenta { color:#ff00ff; } .cyan { color:#00ffff; } .white { color:#ffffff; }";
+		private var blackText:String = ".map { font-family:Courier New; font-size:13px; text-align:left; color:#000000; }.main { font-family:Tahoma; font-size:13px; text-align:left; color:#000000; letter-spacing:1px; } .black { color:#000000; } .red { color:#800000; } .green { color:#008000; } .yellow { color:#808000; } .blue { color:#000080; } .magenta { color:#800080; } .cyan { color:#008080; } .white { color:#c0c0c0; }";
+		private var whiteText:String = ".map { font-family:Courier New; font-size:13px; text-align:left; color:#ffffff; }.main { font-family:Tahoma; font-size:13px; text-align:left; color:#ffffff; letter-spacing:1px; } .black { color:#808080; } .red { color:#ff0000; } .green { color:#00ff00; } .yellow { color:#ffff00; } .blue { color:#0000ff; } .magenta { color:#ff00ff; } .cyan { color:#00ffff; } .white { color:#ffffff; }";
 		private var formatText:TextFormat = new TextFormat();
-		private var isTextBlack:Boolean = true;
 		
 		private var pastCommand:String = "";
 		private var pastCommand2:Array = new Array();
 		private var commandStackCounter:int = 0;
 		private var maxTextLines:int = 350;
+		private var intro:Intro;
+		private var user:User = new User();
+		private var saveHandler:SaveHandler = new SaveHandler();
 		private var menu:ContextMenu = new ContextMenu();
 		private var focusManager:FocusManager;
+		
+		private var textOutput:RoundedTextContainer;
+		private var textInput:RoundedTextContainer;
+		private var divider:Shape;
+		private var sheetText:RoundedTextContainer;
+		private var inventoryText:RoundedTextContainer;
 		
 		public function Main():void 
 		{						
@@ -57,78 +69,130 @@ package
 			stage.align=StageAlign.TOP;
 			stage.scaleMode = StageScaleMode.SHOW_ALL;
 			
-			outputCSS.parseCSS(whiteText);
+			formatText.size = 13;
+			formatText.letterSpacing = 1;
+			formatText.color = 0x000000;
+			formatText.font = "Tahoma";
 			
-			formatText.size = 12;
-			formatText.color = 0xffffff;
-			formatText.font = "Verdana";
 			
-			rectangle = Utils.createTextField(0, 0, 800, 600);
-			addChild(rectangle);
-			rectangle.border = true;
-			rectangle.borderColor = 0xffffff;
-			rectangle.background = true;
-			rectangle.backgroundColor = 0x000000;
-			rectangle.type = TextFieldType.DYNAMIC;
-			rectangle.selectable = false;
-			rectangle.mouseEnabled = false;
-			rectangle.tabEnabled = false;
+			textOutput = new RoundedTextContainer(229, 14, 857, 646, true);
+			textOutput.text.styleSheet = outputCSS;
+			addChild(textOutput);
 			
-			userOutputField = Utils.createTextField(0, 0, 785, 540);
-			addChild(userOutputField);
-			userOutputField.multiline = true; 
-			userOutputField.wordWrap = true;
-			userOutputField.styleSheet = outputCSS;
+			textInput = new RoundedTextContainer(229, 674, 857, 52, true);
+			textInput.removeChild(textInput.text);
+			addChild(textInput);
 			
-			userInputField = Utils.createTextField(0, 552, 800, 48);
+			divider = new Shape();
+			divider.graphics.lineStyle(2, 0x1f1f1f);
+			divider.graphics.moveTo(214, 21); 
+			divider.graphics.lineTo(214, 719);
+			addChild(divider);
+			
+			sheetText = new RoundedTextContainer(14, 14, 186, 379, false);
+			sheetText.text.styleSheet = outputCSS;
+			addChild(sheetText);
+			
+			inventoryText = new RoundedTextContainer(14, 407, 186, 319, false);
+			inventoryText.text.styleSheet = outputCSS;
+			addChild(inventoryText);
+			
+			
+			userInputField = Utils.createTextField(textInput.x, textInput.y, textInput.width, textInput.height);
 			addChild(userInputField);
-			userInputField.type = TextFieldType.INPUT
-			userInputField.border = true;
-			userInputField.borderColor = 0xffffff;
 			userInputField.defaultTextFormat = formatText;
+			userInputField.type = TextFieldType.INPUT
+			
+			inventoryTitle = Utils.createTextField(inventoryText.x+8, inventoryText.y+2, inventoryText.width, inventoryText.height);
+			addChild(inventoryTitle);	
+			inventoryTitle.defaultTextFormat = formatText;
+			inventoryTitle.text = 'INVENTORY:';
+			
+			sheetTitle = Utils.createTextField(sheetText.x+23, sheetText.y+2, sheetText.width, sheetText.height);
+			addChild(sheetTitle);	
+			sheetTitle.defaultTextFormat = formatText;
+			sheetTitle.text = 'SHEET:';
+			
 			
 			outputScroll.direction = "vertical"; 
-			outputScroll.setSize(15, userOutputField.height+11);  
-			outputScroll.move(785,1); 
+			outputScroll.setSize(15, textOutput.height+2);  
+			outputScroll.move(textOutput.x + textOutput.width-14,textOutput.y-1); 
 			addChild(outputScroll); 
-			
-			stage.addEventListener(KeyboardEvent.KEY_DOWN, detectKey);
 			
 			focusManager = new FocusManager(this);
 			focusManager.setFocus(userInputField);
 			
-			createParser(Bedroom); // This makes all the objects compile into the .swf, as they are all strongly referenced, branching out from the starting room
+			intro = new Intro();
+			addChild(intro);
+			
+			setUIColor(0xffffff);
+			
+			stage.addEventListener(KeyboardEvent.KEY_DOWN, detectKey);
+			stage.addEventListener(OutputEvent.OUTPUT, outputHandler);
+			intro.addEventListener(IntroEvent.STARTGAME, startGameProper);
+			intro.addEventListener(IntroEvent.LOADGAME, loadGameData);
+			
+			intro.introText();		
 		}
-	
-		private function createParser(startRoom:*):void
-		{
-			if (!(startRoom is String)) 
-				startRoom = getQualifiedClassName(startRoom);
-				
-			parse = new TextParser(startRoom);
-			parse.addEventListener(OutputEvent.OUTPUT, outputHandler);
+		
+		
+		private function startGameProper(e:IntroEvent):void
+		{			
+			this.user = e.value;
+			createParser();
+			
 			parse.parseCommand("look");
+			
+			updateCharacterHandler();
+		}
+		
+		private function loadGameData(e:IntroEvent):void
+		{
+			this.user = saveHandler.getUser();
+			createParser(saveHandler.getRoom());
+			
+			parse.roomHandler.gettableHandler.gettableArray = saveHandler.getItems();
+			parse.roomHandler.personHandler.personArray = saveHandler.getNpcs();
+			
+			parse.parseCommand("look");
+			saveHandler.saveGame(parse);
+			
+			updateCharacterHandler();
+		}	
+		
+		private function createParser(startRoom:String = 'objects.rooms.house::Bedroom'):void
+		{
+			parse = new TextParser(startRoom);
+			parse.addEventListener(ParserEvent.COLOUR, changeColour);
+			parse.addEventListener(ParserEvent.SHEET, updateCharacterHandler);
+			parse.addEventListener(ParserEvent.INVENTORY, updateCharacterHandler);
+			
+			parse.roomHandler.user = this.user;
+			parse.sheet.user = this.user;
+			addChild(parse);
+			
+			removeChild(intro);
+			intro.isIntroRunning = false;
 		}
 		
 		private function outputHandler(e:OutputEvent):void
-		{			
-			userOutputField.htmlText += "<div><span class='main'>\n" + e.value + "</span></div>";  // Using div tags allows the truncate function to remove specific blocks of text.
+		{
+			textOutput.text.htmlText += "<div><span class='main'>\n" + e.value + "</span></div>";  // Using div tags allows the truncate function to remove specific blocks of text.
+			// Truncate the text field if it is too long (to save memory)
+			if (textOutput.text.numLines > maxTextLines)
+				truncateOutput(textOutput.text.numLines, maxTextLines); 
 			
-			if (userOutputField.numLines > maxTextLines)   // Truncate the text field if it is too long (to save memory)
-				truncateOutput(userOutputField.numLines, maxTextLines); 
-			
-			userOutputField.scrollV = userOutputField.bottomScrollV;  // Scroll to the bottom of the text field
-			outputScroll.scrollTarget = userOutputField; 
+			textOutput.text.addEventListener(Event.SCROLL, scrollOutputText);
 		}
 		
 		private function truncateOutput(textLines:int, targetLines:int):void
 		{
-			var str:String = userOutputField.htmlText;
+			var str:String = textOutput.text.htmlText;
 			
-			var minCharacterIndex:int = userOutputField.getLineOffset(textLines - targetLines);
-			var maxCharacterIndex:int = userOutputField.htmlText.length;
+			var minCharacterIndex:int = textOutput.text.getLineOffset(textLines - targetLines);
+			var maxCharacterIndex:int = textOutput.text.htmlText.length;
 			var offsetIndex:int = str.indexOf("</div>", minCharacterIndex) + 6;   // Using htmlText, we have to remove the excess text in chunks of divs, as set by the outputHandler. 
-			userOutputField.htmlText = str.substr(offsetIndex, maxCharacterIndex); 
+			textOutput.text.htmlText = str.substr(offsetIndex, maxCharacterIndex); 
 		}
 		
 		private function detectKey(event:KeyboardEvent):void
@@ -140,13 +204,16 @@ package
 			{
 				case 13:
 					handleCommandStack(userInputField.text);
+					textOutput.text.htmlText += "<div><span class='main'>\n>" + userInputField.text + "</span></div>";
 					
-					userOutputField.htmlText += "<div><span class='main'>\n>" + userInputField.text + "</span></div>";
-					parse.parseCommand(userInputField.text);   // Pass the user's input to the textParser to look for commands
+					if (intro.isIntroRunning)
+						intro.parseIntroText(userInputField.text);
+					else
+						parse.parseCommand(userInputField.text);   // Pass the user's input to the textParser to look for commands
+					
 					userInputField.text = "";
-					
-					userOutputField.scrollV = userOutputField.bottomScrollV;  // Scroll to the bottom of the text field
-					outputScroll.scrollTarget = userOutputField; 
+					textOutput.text.scrollV = textOutput.text.bottomScrollV;// Scroll to the bottom of the text field
+					outputScroll.scrollTarget = textOutput.text; 
 					break;
 				case 38:
 					if (commandStackCounter > 0)
@@ -183,6 +250,60 @@ package
 			commandStackCounter = pastCommand2.length;
 		}
 		
+		private function changeColour(e:ParserEvent):void
+		{
+			if (e.value == "black")
+				setUIColor(0x000000);
+			else
+				setUIColor(0xffffff);
+		}
+		
+		private function setUIColor(txtColour:uint):void
+		{
+			if (txtColour == 0x000000)
+			{
+				outputCSS.parseCSS(blackText);
+				textOutput.setContainerBlack();
+				textInput.setContainerBlack();
+				sheetText.setContainerBlack();
+				inventoryText.setContainerBlack();
+			}
+			else
+			{
+				outputCSS.parseCSS(whiteText);
+				textOutput.setContainerWhite();
+				textInput.setContainerWhite();
+				sheetText.setContainerWhite();
+				inventoryText.setContainerWhite();
+			}
+			
+			formatText.color = txtColour;
+			
+			userInputField.defaultTextFormat = formatText;
+			inventoryTitle.textColor = txtColour;
+			sheetTitle.textColor = txtColour;
+			
+			textOutput.text.styleSheet = outputCSS;
+			sheetText.text.styleSheet = outputCSS;
+			inventoryText.text.styleSheet = outputCSS;
+		}
+		
+		private function updateCharacterHandler(e:ParserEvent=null):void
+		{			
+			if (parse != null)
+			{
+				inventoryText.text.htmlText = "<div><span class='main'>"+parse.roomHandler.gettableHandler.currentInventory()+"</span></div>"; 
+				sheetText.text.htmlText = "<div><span class='main'>"+parse.sheet.getSheet()+"</span></div>"; 
+			}
+		}
+		
+		private function scrollOutputText(event:Event):void
+		{
+			textOutput.text.scrollV = textOutput.text.maxScrollV;	
+			outputScroll.scrollTarget = textOutput.text;	
+			
+			textOutput.text.removeEventListener(Event.SCROLL, scrollOutputText);
+		}
 	}
 
 }

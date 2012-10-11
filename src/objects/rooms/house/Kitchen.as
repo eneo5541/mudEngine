@@ -55,7 +55,7 @@ package objects.rooms.house
 		private function openDoor(target:*):void
 		{
 			target.outputText('You open the door and step outside.');
-			target.loadRoom(new Outdoors);
+			target.moveUserToRoom(new Outdoors);
 		}
 		
 	}

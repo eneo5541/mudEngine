@@ -28,15 +28,12 @@ package objects.gettables.house
 		{
 			actions = [{ 
 				action:["wear hat"],
-				response:wearHat
+				response:function (target:*):void {
+						target.outputText('You put the hat on your head and tweak it off to an angle.');
+						target.addExperience(900);
+					}
 			}];
 		}
-		
-		private function wearHat(target:*):void
-		{
-			target.outputText('You put the hat on your head and tweak it off to an angle.');
-		}
-		
 	}
 
 

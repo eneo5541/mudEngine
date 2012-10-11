@@ -1,12 +1,11 @@
-package handler 
+package handlers 
 {
+	import flash.display.Sprite;
 	import flash.utils.getDefinitionByName;
 	import flash.utils.getQualifiedClassName;
-	
-	import objects.Gettable;
 	import objects.Person;
 
-	public class PersonHandler
+	public class PersonHandler extends Sprite
 	{
 		public var personArray:Array = [];
 		
@@ -41,7 +40,7 @@ package handler
 				if (personArray[i].object == personObj) 
 				{
 					personArray.splice(i, 1); 
-					//personArray[i].location = "DUMMY";  
+					//personArray[i].location = NPCHolder;  
 					return; 
 				}
 			}	
@@ -97,7 +96,7 @@ package handler
 				var child:* = new personObj;
 				for (var j:* in child.alias)  // Then iterate all the aliases for that object
 				{
-					if (command == child.alias[j].toLowerCase())  // If the inputted command matches any of the object's aliases
+					if (command.toLowerCase() == child.alias[j].toLowerCase())  // If the inputted command matches any of the object's aliases
 					{
 						if (loc == null)   // If no location parameter specified, return true
 						{
@@ -127,6 +126,24 @@ package handler
 					var personObj:Class = getDefinitionByName(personArray[i].object) as Class;
 					var child:* = new personObj;
 					return child.longDesc;
+				}
+			}
+			
+			return null;
+		}
+		
+		public function getNPCConversation(getObj:*):Array
+		{
+			if (!(getObj is String))
+					getObj = getQualifiedClassName(getObj);
+			
+			for (var i:* in personArray) // Iterate through all the objects in existance
+			{
+				if (personArray[i].object == getObj)
+				{
+					var personObj:Class = getDefinitionByName(personArray[i].object) as Class;
+					var child:* = new personObj;
+					return child.conversations;
 				}
 			}
 			

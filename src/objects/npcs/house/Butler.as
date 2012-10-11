@@ -34,6 +34,15 @@ package objects.npcs.house
 			];
 		}
 		
+		override public function setConversations():void
+		{
+			conversations = [
+				"I think some parsley would make a fine addition to our soup. There may be some outside the kitchen.",
+				"Have a seat - the couches are very comfortable.",
+				"I believe I put a hat away in the bedroom closet. You can have it, if you like."
+			];
+		}
+		
 	}
 
 

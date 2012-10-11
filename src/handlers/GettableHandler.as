@@ -1,15 +1,13 @@
-package handler 
+package handlers 
 {
-	import flash.events.EventDispatcher;
+	import flash.display.Sprite;
 	import flash.utils.getDefinitionByName;
 	import flash.utils.getQualifiedClassName;
-	
-	import objects.Gettable;
-	import objects.Person;
+	import handlers.holders.InventoryHolder;
 	import parser.Utils;
-	import signals.DialogueEvent;
+	import signals.OutputEvent;
 
-	public class GettableHandler extends EventDispatcher
+	public class GettableHandler extends Sprite
 	{
 		public var gettableArray:Array = [];
 		
@@ -19,12 +17,12 @@ package handler
 		
 		public function currentInventory():String
 		{
-			var inventoryList:Array = gettablesThisRoom(InventoryHolder);
-			if (inventoryList.length == 0) 
+			var allInventory:Array = gettablesThisRoom(InventoryHolder);
+			if (allInventory.length == 0) 
 				return "You are not carrying anything.";
 				
-			var inventoryString:String = Utils.listGettables(inventoryList);
-			return "You are carrying: \n" + inventoryString;
+			var listInventory:String = Utils.listGettables(allInventory);
+			return "You are carrying: \n" + listInventory;
 		}
 		
 		// This pushes an item to the gettableArray that holds ALL gettables in the game and their location
@@ -84,13 +82,13 @@ package handler
 		private function checkAddedToInventory(object:String, location:String):void
 		{
 			if (location == getQualifiedClassName(InventoryHolder))
-				this.dispatchEvent(new DialogueEvent(getObjectName(object) + ' has been added to your inventory.', DialogueEvent.OUTPUT)); 
+				this.dispatchEvent(new OutputEvent(getObjectName(object) + ' has been added to your inventory.', OutputEvent.OUTPUT));
 		}
 		
 		private function checkRemovedInventory(object:String, location:String):void
 		{
 			if (location == getQualifiedClassName(InventoryHolder))
-				this.dispatchEvent(new DialogueEvent(getObjectName(object) + ' has been removed from your inventory.', DialogueEvent.OUTPUT)); 
+				this.dispatchEvent(new OutputEvent(getObjectName(object) + ' has been removed from your inventory.', OutputEvent.OUTPUT));
 		}
 		
 		public function checkItemExists(command:String, loc:*=null):String   // Checks whether an input command matches any object aliases and returns the appropriate object
@@ -107,7 +105,7 @@ package handler
 				var child:* = new gettableObj;
 				for (var j:* in child.alias)  // Then iterate all the aliases for that object
 				{
-					if (command == child.alias[j].toLowerCase())  // If the inputted command matches any of the object's aliases
+					if (command.toLowerCase() == child.alias[j].toLowerCase())  // If the inputted command matches any of the object's aliases
 					{
 						if (loc == null)   // If no location parameter specified, return true
 						{

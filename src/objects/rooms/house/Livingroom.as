@@ -1,7 +1,7 @@
 package objects.rooms.house 
 {
+	import handlers.holders.InventoryHolder;
 	import objects.Room;
-	import handler.InventoryHolder;
 	import objects.gettables.house.Treat;
 	import objects.npcs.house.Butler;
 
@@ -50,17 +50,13 @@ package objects.rooms.house
 			actions = [{ 
 				action:["sit couches", "sit on couches", "sit couch", "sit on couch"],
 				restart: { gettable:Treat, error:"You sit on the couch." },
-				response:sitOnCouch
+				response:function (target:*):void {
+						target.outputText('You sit on the couch and find a dog treat between the cushions, which you quickly pocket.');
+						target.addGettable(Treat, InventoryHolder);
+						target.reloadRoom();
+					}
 			}];
 		}
-		
-		private function sitOnCouch(target:*):void
-		{
-			target.outputText('You sit on the couch and find a dog treat between the cushions, which you quickly pocket.');
-			target.addGettable(Treat, InventoryHolder);
-		}
-		
 	}
-
 
 }

@@ -6,12 +6,12 @@
     <movie input="" />
     <movie path="bin\mudEngine.swf" />
     <movie fps="30" />
-    <movie width="800" />
-    <movie height="600" />
+    <movie width="1100" />
+    <movie height="740" />
     <movie version="10" />
     <movie minorVersion="2" />
     <movie platform="Flash Player" />
-    <movie background="#ABABAB" />
+    <movie background="#2D2D2D" />
   </output>
   <!-- Other classes to be compiled into your SWF -->
   <classpaths>

@@ -1,44 +1,44 @@
 package parser 
 {
-	import flash.events.EventDispatcher;
+	import flash.display.Sprite;
 	import flash.utils.getDefinitionByName;
 	import flash.utils.getQualifiedClassName;
-	
-	import handler.GettableHandler;
-	import handler.InventoryHolder;
-	import handler.PersonHandler;
-	import handler.RoomHandler;
-	
+	import handlers.GettableHandler;
+	import handlers.holders.InventoryHolder;
+	import handlers.SaveHandler;
+	import handlers.RoomHandler;
 	import objects.Gettable;
-	import objects.Person;
 	import objects.Room;
-	
-	import signals.DialogueEvent;
+	import objects.rooms.house.Bedroom;
 	import signals.OutputEvent;
-
+	import signals.ParserEvent;
 	
-	public class TextParser extends EventDispatcher
+	
+	public class TextParser extends Sprite
 	{
 		public var roomHandler:RoomHandler;
+		public var sheet:Sheet;
+		private var saveHandler:SaveHandler = new SaveHandler();
 		private var inputCommand:String;
 		private var isWhiteText:Boolean = true;
+		private var _startingRoom:Bedroom = new Bedroom();  // This makes all the objects compile into the .swf, as they are all strongly referenced
 		
-		function TextParser(targetRoom:String)
+		function TextParser(targetRoom:String)  // Accepts a target room to start in, so we can load into a specific room
 		{
 			roomHandler = new RoomHandler();
+			addChild(roomHandler);
+			
+			sheet = new Sheet();
+			addChild(sheet);
 			
 			var tempRoom:Class = getDefinitionByName(targetRoom) as Class;
 			roomHandler.loadRoom(new tempRoom);
 			
-			roomHandler.addEventListener(DialogueEvent.OUTPUT, dialogueHandler);
+			roomHandler.addEventListener(ParserEvent.SHEET, incrementExperience);
+			roomHandler.addEventListener(OutputEvent.LOOK, lookHandler);
 		}
 		
-		private function dialogueHandler(e:DialogueEvent):void
-		{
-			outputText(e.value);
-		}
-
-		private function outputText(textOutput:String):void
+		private function outputHandler(textOutput:String):void
 		{
 			this.dispatchEvent(new OutputEvent(textOutput, OutputEvent.OUTPUT));
 		}
@@ -53,7 +53,7 @@ package parser
 			{
 				if (i > 11)
 				{
-					outputText('You cannot queue more than 12 commands. Aborting command.');
+					outputHandler('You cannot queue more than 12 commands. Aborting command.');
 					continue;
 				}
 				executeCommand(splitWords[i]);
@@ -61,7 +61,7 @@ package parser
 		}
 		
 		public function executeCommand(command:String):void
-		{	
+		{
 			inputCommand = command = command.toLowerCase();
 			
 			var splitSpaces:Array = command.split(" ");
@@ -72,17 +72,26 @@ package parser
 					break;
 				case "go":case "walk":
 					if (!checkDirectionCommand(splitSpaces[1]))
-						outputText("You don't see any " + splitSpaces[1] + " exit.");
+						outputHandler("You don't see any " + splitSpaces[1] + " exit.");
 					break;
-				case "inventory":case "i":case "inv":
-					var inventoryList:String = roomHandler.gettableHandler.currentInventory(); 
-					outputText(inventoryList);
-					break;
-				case "get":case "g":case "take":
+				case "get":case "take":
 					checkGetCommand(splitSpaces);
 					break;
-				case "drop":case "d":case "throw":
+				case "drop":case "discard":
 					checkDropCommand(splitSpaces);
+					break;
+				case "inventory":case "i":case "inv":
+					outputHandler(roomHandler.gettableHandler.currentInventory());
+					break;
+				case "sheet":
+					outputHandler(sheet.getSheet());
+					break;
+				case "save":
+					saveHandler.saveGame(this);
+					outputHandler("Saving the game...");
+					break;
+				case "colours":case "black":case "white":
+					checkColours(splitSpaces);
 					break;
 				default:
 					if (!checkDirectionCommand(splitSpaces[0]))   // Check if command is a direction command
@@ -94,36 +103,50 @@ package parser
 // Get and drop items		
 		private function checkDropCommand(command:Array):void
 		{
+			if (command.length == 1)
+			{
+				outputHandler("You don't have anything to drop.");  
+				return;
+			}
+			
 			var objectExists:String = roomHandler.gettableHandler.checkItemExists(command[1], InventoryHolder); // Check if there is an item of the same input command in the inventory
 			if (objectExists != null)
 			{
-				roomHandler.gettableHandler.moveGettable(objectExists, roomHandler.room); // Do not need to explicitly state an origin, since objectExists already checks whether the object is a valid target.
-				outputText("You drop a " + roomHandler.gettableHandler.getObjectName(objectExists) + ".");
+				roomHandler.gettableHandler.moveGettable(objectExists, roomHandler.room);
+				outputHandler("You drop a " + roomHandler.gettableHandler.getObjectName(objectExists) + ".");
+				this.dispatchEvent(new ParserEvent(null, ParserEvent.INVENTORY));
 			}
 			else
 			{
-				outputText("You don't have any " + command[1] + " to drop.");
+				outputHandler("You don't have any " + command[1] + " to drop.");
 			}
 		}
 		
 		private function checkGetCommand(command:Array):void
 		{
+			if (command.length == 1)
+			{
+				outputHandler("You don't have anything to get.");
+				return;
+			}
+			
 			var objectExists:String = roomHandler.gettableHandler.checkItemExists(command[1], roomHandler.room); // Check if there is an item of the same input command in the room
 			if (objectExists != null)
 			{
-				if (roomHandler.gettableHandler.checkGettableLocation(InventoryHolder).length > 4) 
+				if (roomHandler.gettableHandler.checkGettableLocation(InventoryHolder).length > 7) 
 				{
-					outputText("You are carrying too many things. Drop something to free up inventory space.");
+					outputHandler("You can only carry 8 items. Drop something to free up inventory space.");
 				}
 				else
 				{
-					roomHandler.gettableHandler.moveGettable(objectExists, InventoryHolder); // Do not need to explicitly state an origin, since objectExists already checks whether the object is a valid target.
-					outputText("You get a " + roomHandler.gettableHandler.getObjectName(objectExists) + ".");
+					roomHandler.gettableHandler.moveGettable(objectExists, InventoryHolder);
+					outputHandler("You get a " + roomHandler.gettableHandler.getObjectName(objectExists) + ".");
+					this.dispatchEvent(new ParserEvent(null, ParserEvent.INVENTORY));
 				}
 			}
 			else
 			{
-				outputText("You don't see any " + command[1] + " here to get.");
+				outputHandler("You don't see any " + command[1] + " here to get.");
 			}
 		}
 		
@@ -133,7 +156,7 @@ package parser
 			if (command.length == 1) // If not looking at an object, just return room description
 			{
 				var longStr:String = roomHandler.getDescription();
-				outputText(longStr);  // Special signal that does not added HTML tags (since room already adds HTML tags)
+				outputHandler(longStr);  // Special signal that does not added HTML tags (since room already adds HTML tags)
 				return;
 			}
 			
@@ -149,8 +172,11 @@ package parser
 				return; 
 			if (checkForRoomItems(newCommand)) 
 				return; 
-			
-			outputText("You don't see any " + newCommand + " here.");
+				
+			if (newCommand == 'me' || newCommand == roomHandler.user.userName.toLowerCase())
+				outputHandler(sheet.getSheet());
+			else
+				outputHandler("You don't see any " + newCommand + " here.");
 			return;
 		}
 		
@@ -159,7 +185,7 @@ package parser
 			var objectExists:String = roomHandler.gettableHandler.checkItemExists(command, InventoryHolder);
 			if (objectExists != null)
 			{
-				outputText(roomHandler.gettableHandler.getObjectDescript(objectExists));
+				outputHandler(roomHandler.gettableHandler.getObjectDescript(objectExists));
 				return true;
 			}
 			else
@@ -173,7 +199,7 @@ package parser
 			var objectExists:String = roomHandler.personHandler.checkNPCExists(command, roomHandler.room);
 			if (objectExists != null)
 			{
-				outputText(roomHandler.personHandler.getNPCDescript(objectExists));
+				outputHandler(roomHandler.personHandler.getNPCDescript(objectExists));
 				return true;
 			}
 			else
@@ -187,7 +213,7 @@ package parser
 			var objectExists:String = roomHandler.gettableHandler.checkItemExists(command, roomHandler.room);
 			if (objectExists != null)
 			{
-				outputText(roomHandler.gettableHandler.getObjectDescript(objectExists));
+				outputHandler(roomHandler.gettableHandler.getObjectDescript(objectExists));
 				return true;
 			}
 			else
@@ -203,7 +229,7 @@ package parser
 			{
 				if (command == i) 
 				{
-					outputText(itemObject[i]);
+					outputHandler(itemObject[i]);
 					return true;
 				}
 			}
@@ -213,20 +239,28 @@ package parser
 		
 // Move between rooms
 		private function checkDirectionCommand(newCommand:String):Boolean
-		{	
+		{
+			if (newCommand == "n") newCommand = "north";
+			else if (newCommand == "s") newCommand = "south";
+			else if (newCommand == "e") newCommand = "east";
+			else if (newCommand == "w") newCommand = "west";
+			else if (newCommand == "ne") newCommand = "northeast";
+			else if (newCommand == "se") newCommand = "southeast";
+			else if (newCommand == "sw") newCommand = "southwest";
+			else if (newCommand == "nw") newCommand = "northwest";
+			else if (newCommand == "u") newCommand = "up";
+			else if (newCommand == "d") newCommand = "down";
+			
 			var obj:* = roomHandler.exits; // Check if the command matches the exits of the room.
 			for (var i:* in obj) 
 			{
 				if (newCommand == i)
 				{
+					var longStr:String = "You leave out the " + newCommand + " exit."; // Then fetch the new description
 					var className:String = getQualifiedClassName(obj[i]);
 					var mainClass:Class = getDefinitionByName(className) as Class; // Change the room to the one matching the exit
-					roomHandler.loadRoom(new mainClass as Room);
+					roomHandler.moveUserToRoom(new mainClass as Room);
 					
-					var longStr:String = "You leave out the " + newCommand + " exit."; // Then fetch the new description
-					outputText(longStr);
-					var roomStr:String = roomHandler.getDescription();  
-					outputText(roomStr);
 					return true;
 				}
 			}
@@ -237,17 +271,22 @@ package parser
 // Dynamic commands (action commands attached to either npcs in the room or items in the inventory) 
 		private function checkDynamicCommands(command:Array):void
 		{
+			if (checkRoomActions()) 
+				return;	
 			if (checkNpcActions())
 				return;		
 			if (checkGettableActions())
-				return;	
-			if (checkRoomActions()) 
 				return;
 			
+			if (command[0] == "talk" || command[0] == "speak")
+			{
+				checkConversations(command);
+				return;
+			}
+			
 			var errorMsg:String = "You don't know how to " + inputCommand + ".";
-			outputText(errorMsg);
+			outputHandler(errorMsg);
 		}
-		
 		
 		private function checkGettableActions():Boolean
 		{
@@ -272,7 +311,6 @@ package parser
 		
 		private function checkNpcActions():Boolean 
 		{
-
 			for (var i:* in roomHandler.npcsThisRoom) // If there is an NPC in the room
 			{
 				var action:Boolean = actionHandler(roomHandler.npcsThisRoom[i].actions);
@@ -297,7 +335,96 @@ package parser
 				}
 			}
 			return false;
-		}	
+		}
+		
+		private function checkConversations(commands:Array):void
+		{
+			if (commands.length == 1)
+			{
+				outputHandler("Talking to yourself again?");
+				return;
+			}
+			
+			var talkTarget:String = '';
+			if (commands[1] == 'to')
+			{
+				if(commands.length > 2)
+					talkTarget = commands[2];
+			}
+			else 
+			{
+				talkTarget = commands[1];
+			}
+			
+			
+			var objectExists:String = roomHandler.personHandler.checkNPCExists(talkTarget, roomHandler.room);
+			if (objectExists != null)
+			{
+				var convoOptions:Array = roomHandler.personHandler.getNPCConversation(objectExists);
+				if (convoOptions == null || convoOptions.length == 0)
+				{
+					outputHandler(Utils.capitalize(talkTarget) + " has nothing to say to you.");
+					return;
+				}
+				
+				var randomId:int = Utils.generateRandom(0, convoOptions.length);
+				var randomConvo:String = convoOptions[randomId];
+				
+				outputHandler(Utils.capitalize(talkTarget) + " says: '" + randomConvo);
+				return;
+			}
+			else
+			{
+				outputHandler("You don't see any " + talkTarget + " to talk to.");
+				return;
+			}
+		}
+		
+		private function checkColours(commands:Array):void
+		{
+			switch (commands[0])
+			{
+				case "colours":
+					if (isWhiteText)
+						setTextBlack();
+					else
+						setTextWhite();
+					break;
+				case "black":
+					setTextBlack();
+					break;
+				case "white":
+					setTextWhite();
+					break;
+				default:
+					break;
+			}
+		}
+		
+		private function setTextWhite():void
+		{
+			isWhiteText = true;
+			outputHandler('Switching to white text, black background.');
+			this.dispatchEvent(new ParserEvent('white', ParserEvent.COLOUR));
+		}
+		
+		private function setTextBlack():void
+		{
+			isWhiteText = false;
+			outputHandler('Switching to black text, white background.');
+			this.dispatchEvent(new ParserEvent('black', ParserEvent.COLOUR));
+		}
+		
+		private function incrementExperience(e:ParserEvent):void
+		{
+			sheet.incrementExperience(e.value);
+			roomHandler.user = sheet.user;
+		}
+		
+		private function lookHandler(e:OutputEvent):void
+		{
+			parseCommand("look");
+		}
 	}
 	
 }

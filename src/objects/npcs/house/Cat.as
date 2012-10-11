@@ -1,7 +1,7 @@
 package objects.npcs.house 
 {
+	import handlers.holders.NPCHolder;
 	import objects.Person;
-	import handler.NPCHolder;
 	import objects.rooms.house.Outdoors;
 
 	public class Cat extends Person
@@ -39,16 +39,13 @@ package objects.npcs.house
 		{
 			actions = [{ 
 				action:["let cat out", "let cat out the door", "let cat out door"],
-				response:letCatOut
+				response:function (target:*):void {
+						target.outputText('The cat scampers outside as you hold the door open.');
+						target.movePerson(Cat, NPCHolder);
+						target.addPerson(CatOutdoors, Outdoors)
+						target.reloadRoom();
+					}
 				}];
-		}
-		
-		private function letCatOut(target:*):void
-		{
-			target.outputText('The cat scampers outside as you hold the door open.');
-			
-			target.movePerson(Cat, NPCHolder);
-			target.addPerson(CatOutdoors, Outdoors)
 		}
 		
 	}

@@ -37,24 +37,17 @@ package objects.npcs.house
 		{
 			actions = [{ 
 				action:["pet dog", "pet the dog"],
-				response:petDog
+				response:function(target:*):void {
+						target.outputText('The dog barks and drools profusely.');
+					}
 			},
 			{ 
 				action:["scratch dog", "scratch the dog"],
-				response:scratchDog
+				response:function (target:*):void {
+						target.outputText('The dog rolls over as you scratch him behind the ears.');
+					}
 			}];
 		}
-		
-		private function petDog(target:*):void
-		{
-			target.outputText('The dog barks and drools profusely.');
-		}
-		
-		private function scratchDog(target:*):void
-		{
-			target.outputText('The dog rolls over as you scratch him behind the ears.');
-		}
 	}
-
 
 }

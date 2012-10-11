@@ -1,22 +1,20 @@
-package handler 
+package handlers 
 {
-	import flash.events.EventDispatcher;
+	import flash.display.Sprite;
 	import flash.events.TimerEvent;
 	import flash.utils.getDefinitionByName;
 	import flash.utils.getQualifiedClassName;
 	import flash.utils.Timer;
-	
-	import objects.Gettable;
-	import objects.Person;
+	import handlers.holders.InventoryHolder;
 	import objects.Room;
-	
-	import signals.DialogueEvent;
+	import objects.User;
 	import signals.OutputEvent;
+	import signals.ParserEvent;
 	import parser.Utils;
 
-	public class RoomHandler extends EventDispatcher
+	public class RoomHandler extends Sprite
 	{
-		public var gettableHandler:GettableHandler = new GettableHandler();
+		public var gettableHandler:GettableHandler;
 		public var personHandler:PersonHandler = new PersonHandler();
 		
 		public var room:String;
@@ -26,12 +24,17 @@ package handler
 		public var items:*;
 		public var actions:*;
 		public var npcsThisRoom:Array;
+		public var user:User;
 		
 		public var dialogueTimer:Timer;
 		
 		function RoomHandler()
 		{
-			gettableHandler.addEventListener(DialogueEvent.OUTPUT, gettableDialogue);
+			gettableHandler = new GettableHandler();
+			addChild(gettableHandler);
+			
+			personHandler = new PersonHandler();
+			addChild(personHandler);
 			
 			dialogueTimer = new Timer(20000);
 			dialogueTimer.addEventListener(TimerEvent.TIMER, getDialogue);
@@ -46,9 +49,9 @@ package handler
 				var randomNpc:* = npcsThisRoom[randomId];
 				if (randomNpc.dialogue != null)  // Check if the NPC has dialogue
 				{ 
-					var randomDialogue:int = Utils.generateRandom(0, (randomNpc.dialogue.length * 3)); // This makes sure that dialogue will not always be displayed
+					var randomDialogue:int = Utils.generateRandom(0, (randomNpc.dialogue.length * 2)); // This makes sure that dialogue will not always be displayed
 					if(randomDialogue < randomNpc.dialogue.length)        // Send the dialogue up to the text parser, which will output it to screen
-						this.dispatchEvent(new DialogueEvent(randomNpc.dialogue[randomDialogue], DialogueEvent.OUTPUT)); 
+						this.dispatchEvent(new OutputEvent(randomNpc.dialogue[randomDialogue], OutputEvent.OUTPUT));
 				}
 			}
 		}
@@ -66,14 +69,16 @@ package handler
 			this.items = room.items;
 			this.shortDesc = room.shortDesc;
 			this.longDesc = room.longDesc;
-			this.actions = room.actions;
+			this.actions = room.actions
 			
 			dialogueTimer.start();
+			
+			getDescription();
 		}
 		
 		private function loadNpcs(target:*):void
 		{
-			var npcObject:* = target; // Same as loadGettables()
+			var npcObject:* = target;
 			for (var i:* in npcObject)
 				personHandler.addPerson(npcObject[i], room);
 		}
@@ -99,18 +104,18 @@ package handler
 			return required;
 		}
 		
-		private function addExits():String // Converts all of the anonymous objects into an array	
+		private function addExits():String  // Converts all of the anonymous objects into an array	
 		{	
 			if (this.exits == null) 
-				return "\nThere are no obvious exits.";
+				return "\nThere are no obvious exits.";	
 			
 			var obj:* = this.exits;
 			var objectList:Array = [];
 			for (var i:* in obj) 
 				objectList.push(i);
 			
-			var exitList:String = Utils.listExits(objectList);
-			return exitList;
+			var listedExits:String = Utils.listExits(objectList);
+			return listedExits;
 		}
 		
 		private function addNpcs():String
@@ -119,17 +124,17 @@ package handler
 			
 			var toString:Array = [];
 			for (var i:* in npcsThisRoom)
-				toString.push(npcsThisRoom[i].shortDesc);	
-			var npcList:String = Utils.listNpcs(toString);
+				toString.push(npcsThisRoom[i].shortDesc);
 			
-			return npcList;
+			var listedNPCs:String = Utils.listNpcs(toString);
+			return listedNPCs;
 		}
 		
 		private function addGettables():String
 		{
-			var itemList:Array = gettableHandler.gettablesThisRoom(room);
-			var itemString:String = Utils.listGettables(itemList);
-			return itemString;
+			var allGettables:Array = gettableHandler.gettablesThisRoom(room);
+			var listedGettables:String = Utils.listGettables(allGettables);
+			return listedGettables;
 		}
 		
 		public function getResponse(action:*):void
@@ -143,13 +148,13 @@ package handler
 			}
 			if (action.restart != null)
 			{
-				if (checkAlreadyStarted(action.restart)) {  // If the parameter IS met, then the quest has already been started - do not continue
+				if (checkAlreadyStarted(action.restart)) {  // If the parameter IS met, than the quest has already been started - do not continue
 					outputText(action.restart.error);
 					return;
 				}
 			}
 			var f:Function = action.response;
-			f(this);  // The 'this' parameter allows the response function to call variables belonging to the roomHandler
+			f(this);  // The 'this' parameter allows the response function to be called from the roomHandler, instead of the room
 		}
 		
 		private function checkAlreadyStarted(parameter:*):Boolean // This allows the action to proceed if the item/npc DOES NOT exist
@@ -170,9 +175,9 @@ package handler
 					if (personHandler.searchPersons(parameterObj))
 						return true;
 					break;
-				case "room":
+				 case "room":	
 					if (parameterObj == room)
-						return true;
+						return true;	
 					break;
 				case "gettable":
 					if (gettableHandler.searchGettables(parameterObj))
@@ -222,12 +227,42 @@ package handler
 							return true;
 					}
 					break;
+				case "level":
+					if (user.level >= parseInt(parameterObj))
+						return true;
+					break;
 				default:
 					break;
 			}
 			
 			return false;
 		}
+
+// Commands the object actions can call to affect the game world
+		public function addExperience(quantity:int):void
+		{			
+			this.dispatchEvent(new OutputEvent("\nYou have gained "+ quantity + " experience.", OutputEvent.OUTPUT));
+			this.dispatchEvent(new ParserEvent(quantity, ParserEvent.SHEET));
+		}
+		
+		public function moveUserToRoom(room:Room):void
+		{	
+			loadRoom(room);
+			lookAtRoom();
+		}
+		
+		public function lookAtRoom():void
+		{	
+			dialogueTimer.stop(); 
+			this.dispatchEvent(new OutputEvent(null, OutputEvent.LOOK));
+		}
+		
+		public function reloadRoom():void
+		{	
+			var thisRoom:Class = getDefinitionByName(this.room) as Class; // Change the room to the one matching the exit
+			loadRoom(new thisRoom as Room);
+			dialogueTimer.stop(); 
+		}	
 		
 		public function addPerson(object:*, location:*):void
 		{
@@ -248,29 +283,29 @@ package handler
 		public function addGettable(object:*, location:*):void
 		{
 			gettableHandler.addGettable(object, location);
+			
+			this.dispatchEvent(new ParserEvent(null, ParserEvent.INVENTORY));
 		}
 		
 		public function removeGettable(object:*):void
 		{
 			gettableHandler.removeGettable(object);
+			
+			this.dispatchEvent(new ParserEvent(null, ParserEvent.INVENTORY));
 		}
 		
 		public function moveGettable(object:*, location:*):void
 		{
 			gettableHandler.addGettable(object, location);
 			gettableHandler.moveGettable(object, location);
-		}
-		
-		private function gettableDialogue(e:DialogueEvent):void
-		{
-			outputText(e.value);
+			
+			this.dispatchEvent(new ParserEvent(null, ParserEvent.INVENTORY));
 		}
 		
 		public function outputText(newText:String):void
 		{
-			this.dispatchEvent(new DialogueEvent(newText, DialogueEvent.OUTPUT)); 
-		}		
-		
+			this.dispatchEvent(new OutputEvent(newText, OutputEvent.OUTPUT));
+		}	
 	}
 
 	

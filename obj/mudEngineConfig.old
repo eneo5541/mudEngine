@@ -16,7 +16,7 @@
     </define>
     <define append="true">
       <name>CONFIG::timeStamp</name>
-      <value>'30/06/2012'</value>
+      <value>'11/10/2012'</value>
     </define>
     <verbose-stacktraces>true</verbose-stacktraces>
     <source-path append="true">
@@ -30,10 +30,10 @@
   <file-specs>
     <path-element>C:\Users\Sar\Documents\AS3\mudEngine\src\Main.as</path-element>
   </file-specs>
-  <default-background-color>#ABABAB</default-background-color>
+  <default-background-color>#2D2D2D</default-background-color>
   <default-frame-rate>30</default-frame-rate>
   <default-size>
-    <width>800</width>
-    <height>600</height>
+    <width>1100</width>
+    <height>740</height>
   </default-size>
 </flex-config>

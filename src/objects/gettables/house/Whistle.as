@@ -33,27 +33,21 @@ package objects.gettables.house
 				action:["show whistle to butler"],
 				parameter: { npc:Butler, error:"You don't know how to show whistle to butler." },
 				restart: { npc:Parrot, error:"The butler stares at you and points to the parrot that he just summoned with your whistle. He only has the one parrot." },
-				response:showWhistle
+				response:function (target:*):void {
+						var text:String = 'The butler inspects the whistle as you hand it to him. Holding it to his lips, he gives it a shrill whistle that fills the room. You can hear wingbeats in the distance ' +
+						'and soon a large, majestic parrot comes to rest on his shoulder.'
+						target.outputText(text);
+						target.addPerson(Parrot, Livingroom);
+						target.removeGettable(Whistle);
+						target.reloadRoom();
+					}
 			},
 			{ 
 				action:["blow whistle", "use whistle", "play whistle"],
-				response:blowWhistle
+				response:function (target:*):void {
+						target.outputText("Try as you might, you just can't seem to make any noise with the whistle. Perhaps someone else would be able to show you.");
+					}
 			}];
-		}
-		
-		private function showWhistle(target:*):void
-		{
-			var text:String = 'The butler inspects the whistle as you hand it to him. Holding it to his lips, he gives it a shrill whistle that fills the room. You can hear wingbeats in the distance ' +
-			'and soon a large, majestic parrot comes to rest on his shoulder.'
-			target.outputText(text);
-			
-			target.addPerson(Parrot, Livingroom);
-			target.removeGettable(Whistle);
-		}
-		
-		private function blowWhistle(target:*):void
-		{
-			target.outputText("Try as you might, you just can't seem to make any noise with the whistle. Perhaps someone else would be able to show you.");
 		}
 	}
 

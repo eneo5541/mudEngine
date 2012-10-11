@@ -1,4 +1,4 @@
-package handler 
+package handlers.holders 
 {
 	// Empty class, used as location for NPCs that are removed temporarily from the game
 	public class NPCHolder
