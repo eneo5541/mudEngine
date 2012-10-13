@@ -10,6 +10,7 @@ package handlers
 	public class MapHandler 
 	{
 		private var mappedRooms:Array;
+		private var map:Array;
 		
 		private static var north:String = '|';
 		private static var south:String = '|';
@@ -19,8 +20,6 @@ package handlers
 		private static var southeast:String = '\\';
 		private static var northwest:String = '\\';
 		private static var southwest:String = '/';
-		
-		private var map:Array;
 		
 		public function MapHandler() 
 		{
@@ -33,14 +32,10 @@ package handlers
 		public function generateMap(startingRoom:Room):String
 		{
 			mappedRooms = [];
+			map = [];
+			map[0] = [' '];
 			
-			map[0] = [' ',' ',' ',' ',' ',' ',' ',' ',' ',' '];
-			map[1] = [' ',' ',' ',' ',' ',' ',' ',' ',' ',' '];
-			map[2] = [' ',' ',' ',' ',' ',' ',' ',' ',' ',' '];
-			map[3] = [' ',' ',' ',' ',' ',' ',' ',' ',' ',' '];
-			map[4] = [' ',' ',' ',' ',' ',' ',' ',' ',' ',' '];
-			
-			remap(startingRoom, 2, 7, true);
+			remap(startingRoom, 0, 0, true);
 			
 			var mapString:String = '';
 			var comma:RegExp = /,/g;
@@ -58,15 +53,11 @@ package handlers
 		private function remap(newRoom:Room, startingX:int, startingY:int, playerIsHere:Boolean):void
 		{
 			var roomName:String = getQualifiedClassName(newRoom);
-			var alreadyExists:Boolean = false;
 			for (var i:String in mappedRooms) 
 			{
 				if (roomName == mappedRooms[i])
-					alreadyExists = true;
+					return;
 			}
-			
-			if (alreadyExists)
-				return;
 			
 			var spanStart:String = newRoom.shortDesc.split(">")[0] + '>';
 			var spanStop:String = '</span>';
@@ -79,60 +70,122 @@ package handlers
 			
 			var savedX:int = startingX;
 			var savedY:int = startingY;
+			
 			var obj:* = newRoom.exits;
 			for (var j:* in obj)
 			{
 				startingX = savedX;
 				startingY = savedY;
+				
 				switch(j)
 				{
 					case 'north':
-						startingX--;
-						map[startingX][startingY] = spanStart+north+spanStop;
-						startingX--;
+						var nValues:* = decrementX(startingX, savedX);
+						startingX = nValues.startingX;
+						savedX = nValues.savedX;
+						
+						map[startingX][startingY] = spanStart + north + spanStop;
+						
+						nValues = decrementX(startingX, savedX);
+						startingX = nValues.startingX;
+						savedX = nValues.savedX;
 						break;
 					case 'south':
-						startingX++;
-						map[startingX][startingY] = spanStart+south+spanStop;
-						startingX++;
+						var sValues:* = incrementX(startingX);
+						startingX = sValues.startingX;
+						
+						map[startingX][startingY] = spanStart + south + spanStop;
+						
+						sValues = incrementX(startingX);
+						startingX = sValues.startingX;
 						break;
 					case 'east':
-						startingY++;
+						var eValues:* = incrementY(startingY);
+						startingY = eValues.startingY;
+						
 						map[startingX][startingY] = spanStart+east+spanStop;
-						startingY++;
+						
+						eValues = incrementY(startingY);
+						startingY = eValues.startingY;
 						break;
 					case 'west':
-						startingY--;
-						map[startingX][startingY] = spanStart+west+spanStop;
-						startingY--;
+						var wValues:* = decrementY(startingY, savedY);
+						startingY = wValues.startingY;
+						savedY = wValues.savedY;
+						
+						map[startingX][startingY] = spanStart + west + spanStop;
+						
+						wValues = decrementY(startingY, savedY);
+						startingY = wValues.startingY;
+						savedY = wValues.savedY;
 						break;
 					case 'northeast':
-						startingX--;
-						startingY++;
+						var neValues:* = decrementX(startingX, savedX);
+						startingX = neValues.startingX;
+						savedX = neValues.savedX;
+						
+						neValues = incrementY(startingY);
+						startingY = neValues.startingY;
+						
 						map[startingX][startingY] = spanStart+northeast+spanStop;
-						startingX--;
-						startingY++;
+						
+						neValues = decrementX(startingX, savedX);
+						startingX = neValues.startingX;
+						savedX = neValues.savedX;
+						
+						neValues = incrementY(startingY);
+						startingY = neValues.startingY;
 						break;
 					case 'southeast':
-						startingX++;
-						startingY++;
+						var seValues:* = incrementX(startingX);
+						startingX = seValues.startingX;
+						
+						seValues = incrementY(startingY);
+						startingY = seValues.startingY;
+						
 						map[startingX][startingY] = spanStart+southeast+spanStop;
-						startingX++;
-						startingY++;
+						
+						seValues = incrementX(startingX);
+						startingX = seValues.startingX;
+						
+						seValues = incrementY(startingY);
+						startingY = seValues.startingY;
 						break;
 					case 'northwest':
-						startingX--;
-						startingY--;
+						var nwValues:* = decrementX(startingX, savedX);
+						startingX = nwValues.startingX;
+						savedX = nwValues.savedX;
+						
+						nwValues = decrementY(startingY, savedY);
+						startingY = nwValues.startingY;
+						savedY = nwValues.savedY;
+						
 						map[startingX][startingY] = spanStart+northwest+spanStop;
-						startingX--;
-						startingY--;
+						
+						nwValues = decrementX(startingX, savedX);
+						startingX = nwValues.startingX;
+						savedX = nwValues.savedX;
+						
+						nwValues = decrementY(startingY, savedY);
+						startingY = nwValues.startingY;
+						savedY = nwValues.savedY;
 						break;
 					case 'southwest':
-						startingX++;
-						startingY--;
+						var swValues:* = incrementX(startingX);
+						startingX = swValues.startingX;
+						
+						swValues = decrementY(startingY, savedY);
+						startingY = swValues.startingY;
+						savedY = swValues.savedY;
+						
 						map[startingX][startingY] = spanStart+southwest+spanStop;
-						startingX++;
-						startingY--;
+						
+						swValues = incrementX(startingX);
+						startingX = swValues.startingX;
+						
+						swValues = decrementY(startingY, savedY);
+						startingY = swValues.startingY;
+						savedY = swValues.savedY;
 						break;
 					default:
 						continue;
@@ -141,6 +194,60 @@ package handlers
 				
 				remap(new obj[j] as Room, startingX, startingY, false);
 			}
+		}
+		
+		private function incrementX(startingX:int):*
+		{
+			startingX++;
+			if (startingX > map.length-1) 
+			{
+				var newArray:Array = [];
+				for (var i:* in map[0]) 
+					newArray.push(' ');
+				
+				map.push(newArray);
+			}
+			return { startingX:startingX };
+		}
+		
+		private function decrementX(startingX:int, savedX:int):*
+		{
+			startingX--;
+			if (startingX < 0) 
+			{
+				var newArray:Array = [];
+				for (var i:* in map[0]) 
+					newArray.push(' ');
+				
+				map.unshift(newArray);
+				startingX = 0;
+				savedX++;
+			}
+			return { startingX:startingX, savedX:savedX };
+		}
+		
+		private function incrementY(startingY:int):*
+		{
+			startingY++;
+			if (startingY > map[0].length-1) 
+			{
+				for (var i:* in map) 
+					map[i].push(' ');
+			}
+			return { startingY:startingY };
+		}
+		
+		private function decrementY(startingY:int, savedY:int):*
+		{
+			startingY--; 
+			if (startingY < 0) 
+			{
+				for (var i:* in map) 
+					map[i].unshift(' ');
+				startingY = 0;
+				savedY++;
+			}
+			return { startingY:startingY, savedY:savedY };
 		}
 		
 	}
