@@ -1,6 +1,5 @@
 package handlers 
 {
-	import flash.display.InteractiveObject;
 	import flash.utils.getQualifiedClassName;
 	import objects.Room;
 	/**
