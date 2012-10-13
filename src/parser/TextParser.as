@@ -98,7 +98,6 @@ package parser
 				case "map":
 					var mainClass:Class = getDefinitionByName(roomHandler.room) as Class; 
 					outputHandler(mapHandler.generateMap(new mainClass as Room));
-					//outputHandler(mapHandler.generateMap(_startingRoom));
 					break;
 				default:
 					if (!checkDirectionCommand(splitSpaces[0]))   // Check if command is a direction command
