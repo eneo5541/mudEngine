@@ -15,7 +15,7 @@ package handlers
 	public class RoomHandler extends Sprite
 	{
 		public var gettableHandler:GettableHandler;
-		public var personHandler:PersonHandler = new PersonHandler();
+		public var personHandler:PersonHandler;
 		
 		public var room:String;
 		public var shortDesc:String;
