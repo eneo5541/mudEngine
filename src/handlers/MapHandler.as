@@ -24,20 +24,23 @@ package handlers
 		
 		public function MapHandler() 
 		{
-			mappedRooms = [];
-		}
-		
-		public function generateMap(startingRoom:Room):void
-		{
+			mappedRooms = new Array();
+			
 			map = new Array();
 			map[0] = new Array();
+		}
+		
+		public function generateMap(startingRoom:Room):String
+		{
+			mappedRooms = [];
+			
 			map[0] = [' ',' ',' ',' ',' ',' ',' ',' ',' ',' '];
 			map[1] = [' ',' ',' ',' ',' ',' ',' ',' ',' ',' '];
 			map[2] = [' ',' ',' ',' ',' ',' ',' ',' ',' ',' '];
 			map[3] = [' ',' ',' ',' ',' ',' ',' ',' ',' ',' '];
 			map[4] = [' ',' ',' ',' ',' ',' ',' ',' ',' ',' '];
 			
-			remap(startingRoom, 2, 7);
+			remap(startingRoom, 2, 7, true);
 			
 			var mapString:String = '';
 			var comma:RegExp = /,/g;
@@ -48,11 +51,11 @@ package handlers
 				mapString += "\n" + mapLine.replace(comma, "");
 			}
 			
-			trace(mapString);
+			return mapString;
 		}
 		
 		
-		private function remap(newRoom:Room, startingX:int, startingY:int):void
+		private function remap(newRoom:Room, startingX:int, startingY:int, playerIsHere:Boolean):void
 		{
 			var roomName:String = getQualifiedClassName(newRoom);
 			var alreadyExists:Boolean = false;
@@ -65,7 +68,13 @@ package handlers
 			if (alreadyExists)
 				return;
 			
-			map[startingX][startingY] = 'X';
+			var spanStart:String = newRoom.shortDesc.split(">")[0] + '>';
+			var spanStop:String = '</span>';
+			
+			if (playerIsHere)
+				map[startingX][startingY] = "<span class='white'>O</span>";
+			else
+				map[startingX][startingY] = spanStart+'X'+spanStop;
 			mappedRooms.push(roomName);
 			
 			var savedX:int = startingX;
@@ -79,49 +88,49 @@ package handlers
 				{
 					case 'north':
 						startingX--;
-						map[startingX][startingY] = north;
+						map[startingX][startingY] = spanStart+north+spanStop;
 						startingX--;
 						break;
 					case 'south':
 						startingX++;
-						map[startingX][startingY] = south;
+						map[startingX][startingY] = spanStart+south+spanStop;
 						startingX++;
 						break;
 					case 'east':
 						startingY++;
-						map[startingX][startingY] = east;
+						map[startingX][startingY] = spanStart+east+spanStop;
 						startingY++;
 						break;
 					case 'west':
 						startingY--;
-						map[startingX][startingY] = west;
+						map[startingX][startingY] = spanStart+west+spanStop;
 						startingY--;
 						break;
 					case 'northeast':
 						startingX--;
 						startingY++;
-						map[startingX][startingY] = northeast;
+						map[startingX][startingY] = spanStart+northeast+spanStop;
 						startingX--;
 						startingY++;
 						break;
 					case 'southeast':
 						startingX++;
 						startingY++;
-						map[startingX][startingY] = southeast;
+						map[startingX][startingY] = spanStart+southeast+spanStop;
 						startingX++;
 						startingY++;
 						break;
 					case 'northwest':
 						startingX--;
 						startingY--;
-						map[startingX][startingY] = northwest;
+						map[startingX][startingY] = spanStart+northwest+spanStop;
 						startingX--;
 						startingY--;
 						break;
 					case 'southwest':
 						startingX++;
 						startingY--;
-						map[startingX][startingY] = southwest;
+						map[startingX][startingY] = spanStart+southwest+spanStop;
 						startingX++;
 						startingY--;
 						break;
@@ -130,9 +139,8 @@ package handlers
 						break;
 				}
 				
-				remap(new obj[j] as Room, startingX, startingY);
+				remap(new obj[j] as Room, startingX, startingY, false);
 			}
-			
 		}
 		
 	}

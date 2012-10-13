@@ -23,6 +23,7 @@ package parser
 		private var inputCommand:String;
 		private var isWhiteText:Boolean = true;
 		private var _startingRoom:Bedroom = new Bedroom();  // This makes all the objects compile into the .swf, as they are all strongly referenced
+		private var mapHandler:MapHandler = new MapHandler();
 		
 		function TextParser(targetRoom:String)  // Accepts a target room to start in, so we can load into a specific room
 		{
@@ -34,9 +35,6 @@ package parser
 			
 			var tempRoom:Class = getDefinitionByName(targetRoom) as Class;
 			roomHandler.loadRoom(new tempRoom);
-			
-			var mapHandler:MapHandler = new MapHandler();
-			mapHandler.generateMap(_startingRoom);
 			
 			roomHandler.addEventListener(ParserEvent.SHEET, incrementExperience);
 			roomHandler.addEventListener(OutputEvent.LOOK, lookHandler);
@@ -96,6 +94,11 @@ package parser
 					break;
 				case "colours":case "black":case "white":
 					checkColours(splitSpaces);
+					break;
+				case "map":
+					var mainClass:Class = getDefinitionByName(roomHandler.room) as Class; 
+					outputHandler(mapHandler.generateMap(new mainClass as Room));
+					//outputHandler(mapHandler.generateMap(_startingRoom));
 					break;
 				default:
 					if (!checkDirectionCommand(splitSpaces[0]))   // Check if command is a direction command
