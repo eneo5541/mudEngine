@@ -5,6 +5,7 @@ package parser
 	import flash.utils.getQualifiedClassName;
 	import handlers.GettableHandler;
 	import handlers.holders.InventoryHolder;
+	import handlers.MapHandler;
 	import handlers.SaveHandler;
 	import handlers.RoomHandler;
 	import objects.Gettable;
@@ -33,6 +34,9 @@ package parser
 			
 			var tempRoom:Class = getDefinitionByName(targetRoom) as Class;
 			roomHandler.loadRoom(new tempRoom);
+			
+			var mapHandler:MapHandler = new MapHandler();
+			mapHandler.generateMap(_startingRoom);
 			
 			roomHandler.addEventListener(ParserEvent.SHEET, incrementExperience);
 			roomHandler.addEventListener(OutputEvent.LOOK, lookHandler);
