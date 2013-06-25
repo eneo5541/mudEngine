@@ -138,7 +138,21 @@ package parser
 				return;
 			}
 			
-			var newCommand:String = inputCommand.substr(command[0].length+1, inputCommand.length);
+			var newCommand:String = inputCommand.substr(command[0].length + 1, inputCommand.length);
+			for (var i:* in command) 
+			{
+				if (inputCommand.indexOf(" from ") > -1)
+				{
+					inputCommand.indexOf(" from ")
+					newCommand = newCommand.substr(command[1].length + 1, newCommand.length);
+					var itemName:String = inputCommand.substring(command[0].length + 1, inputCommand.indexOf(" from "));
+					var targetName:String = inputCommand.substring(inputCommand.indexOf(" from ") + 6, inputCommand.length);
+					outputHandler(">>> Trying to take " + itemName + " from a " + targetName);
+					break;
+				}
+			}
+			
+			
 			var objectExists:String = roomHandler.gettableHandler.checkItemExists(newCommand, roomHandler.room); // Check if there is an item of the same input command in the room
 			if (objectExists != null)
 			{
