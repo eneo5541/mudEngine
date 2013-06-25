@@ -7,6 +7,7 @@ package objects.gettables.house
 		public function Closet() 
 		{
 			super();
+			isGettable = false;
 		}
 		
 		override public function setShortDesc():void

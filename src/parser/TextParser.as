@@ -161,6 +161,10 @@ package parser
 				{
 					outputHandler("You can only carry 8 items. Drop something to free up inventory space.");
 				}
+				else if (!roomHandler.gettableHandler.isObjectGettable(objectExists))
+				{
+					outputHandler("You cannot get a " + roomHandler.gettableHandler.getObjectName(objectExists) + ".");
+				}
 				else
 				{
 					roomHandler.gettableHandler.moveGettable(objectExists, InventoryHolder);
