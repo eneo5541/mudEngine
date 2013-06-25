@@ -145,16 +145,19 @@ package parser
 		{
 			newGame = newGame.toLowerCase();
 			
-			if (newGame == "resume") {
-				outputIntroText("Loading saved game...");
-				introStage = 10;
-			}
-			else if (newGame == "start") {
-				outputIntroText("Ok, starting new game...");
-			}
-			else {
-				outputIntroText("Not a valid choice. Try again");
-				introStage = -1;
+			switch (newGame)
+			{
+				case "resume":case "r":
+					outputIntroText("Loading saved game...");
+					introStage = 10;
+					break;
+				case "start":case "s":
+					outputIntroText("Ok, starting new game...");
+					break;
+				default:
+					outputIntroText("Not a valid choice. Try again");
+					introStage = -1;
+					break;
 			}
 		}
 		

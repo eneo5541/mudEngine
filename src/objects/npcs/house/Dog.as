@@ -36,13 +36,19 @@ package objects.npcs.house
 		override public function setAction():void
 		{
 			actions = [{ 
-				action:["pet dog", "pet the dog"],
+				keywords:[
+				["pet"],
+				["dog"],
+				],
 				response:function(target:*):void {
 						target.outputText('The dog barks and drools profusely.');
 					}
 			},
 			{ 
-				action:["scratch dog", "scratch the dog"],
+				keywords:[
+				["scratch"],
+				["dog"],
+				],
 				response:function (target:*):void {
 						target.outputText('The dog rolls over as you scratch him behind the ears.');
 					}

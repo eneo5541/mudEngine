@@ -1,5 +1,6 @@
 package parser 
 {
+	import flash.display.InteractiveObject;
 	import flash.display.Sprite;
 	import flash.utils.getDefinitionByName;
 	import flash.utils.getQualifiedClassName;
@@ -330,14 +331,26 @@ package parser
 		{
 			for (var j:* in actionObjects)
 			{
-				var actionTriggers:* = actionObjects[j].action;
-				for (var k:* in actionTriggers)
+				var keywords:* = actionObjects[j].keywords;
+				var inputList:Array = inputCommand.split(' ');
+				var matchedKeywords:int = 0;
+				
+				for (var c:* in keywords)   // The keywords are stored in arrays. The input string must contain a keyword from each array to pass
 				{
-					if (inputCommand == actionTriggers[k].toLowerCase()) // Have to pass through the desired function since there can be multiple NPCs in a room
-					{ 
-						roomHandler.getResponse(actionObjects[j]);
-						return true;
+					for (var inp:String in inputList)
+					{
+						if (keywords[c].indexOf(inputList[inp].toLowerCase()) > -1) 
+						{
+							matchedKeywords++;
+							break;
+						}
 					}
+				}
+				
+				if (matchedKeywords == keywords.length)
+				{
+					roomHandler.getResponse(actionObjects[j]);
+					return true;
 				}
 			}
 			return false;

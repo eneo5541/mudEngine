@@ -29,8 +29,12 @@ package objects.gettables.house
 		override public function setAction():void
 		{
 			actions = [{ 
-				action:["feed biscuit to dog"],
-				parameter: { npc:Dog, error:"You don't know how to feed biscuit to dog." },
+				keywords:[
+				["feed", "give"],
+				["biscuit", "food", "treat"],
+				["dog"],
+				],
+				parameter: { npc:Dog, error:"There is no dog here." },
 				restart: { gettable:Whistle, error:"The dog scarfs down the treat and returns to panting and grinning." },
 				response:function (target:*):void {
 						var text:String = 'The dog wolfs down the treat eagerly before running away. You are annoyed to own such a fair-weather animal, but he returns soon, dropping a small whistle he '+

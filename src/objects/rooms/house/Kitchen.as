@@ -47,15 +47,15 @@ package objects.rooms.house
 		override public function setAction():void
 		{
 			actions = [{ 
-				action:["open door"],
-				response:openDoor
+				keywords:[
+				["open"],
+				["door"],
+				],
+				response:function useSink(target:*):void {
+						target.outputText('You open the door and step outside.');
+						target.moveUserToRoom(new Outdoors);
+					}
 			}];
-		}
-		
-		private function openDoor(target:*):void
-		{
-			target.outputText('You open the door and step outside.');
-			target.moveUserToRoom(new Outdoors);
 		}
 		
 	}
