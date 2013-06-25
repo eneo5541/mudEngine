@@ -116,7 +116,8 @@ package parser
 				return;
 			}
 			
-			var objectExists:String = roomHandler.gettableHandler.checkItemExists(command[1], InventoryHolder); // Check if there is an item of the same input command in the inventory
+			var newCommand:String = inputCommand.substr(command[0].length+1, inputCommand.length);
+			var objectExists:String = roomHandler.gettableHandler.checkItemExists(newCommand, InventoryHolder); // Check if there is an item of the same input command in the inventory
 			if (objectExists != null)
 			{
 				roomHandler.gettableHandler.moveGettable(objectExists, roomHandler.room);
@@ -137,7 +138,8 @@ package parser
 				return;
 			}
 			
-			var objectExists:String = roomHandler.gettableHandler.checkItemExists(command[1], roomHandler.room); // Check if there is an item of the same input command in the room
+			var newCommand:String = inputCommand.substr(command[0].length+1, inputCommand.length);
+			var objectExists:String = roomHandler.gettableHandler.checkItemExists(newCommand, roomHandler.room); // Check if there is an item of the same input command in the room
 			if (objectExists != null)
 			{
 				if (roomHandler.gettableHandler.checkGettableLocation(InventoryHolder).length > 7) 
@@ -356,45 +358,37 @@ package parser
 			return false;
 		}
 		
-		private function checkConversations(commands:Array):void
+		private function checkConversations(command:Array):void
 		{
-			if (commands.length == 1)
+			if (command.length == 1)
 			{
 				outputHandler("Talking to yourself again?");
 				return;
 			}
 			
-			var talkTarget:String = '';
-			if (commands[1] == 'to')
-			{
-				if(commands.length > 2)
-					talkTarget = commands[2];
-			}
-			else 
-			{
-				talkTarget = commands[1];
-			}
+			var newCommand:String = inputCommand.substr(command[0].length+1, inputCommand.length);
+			if (command[1] == "to")   // Accomodate for 'look <object>' and 'look at <object>'
+				newCommand = newCommand.substr(command[1].length + 1, newCommand.length);			
 			
-			
-			var objectExists:String = roomHandler.personHandler.checkNPCExists(talkTarget, roomHandler.room);
+			var objectExists:String = roomHandler.personHandler.checkNPCExists(newCommand, roomHandler.room);
 			if (objectExists != null)
 			{
 				var convoOptions:Array = roomHandler.personHandler.getNPCConversation(objectExists);
 				if (convoOptions == null || convoOptions.length == 0)
 				{
-					outputHandler(Utils.capitalize(talkTarget) + " has nothing to say to you.");
+					outputHandler(Utils.capitalize(newCommand) + " has nothing to say to you.");
 					return;
 				}
 				
 				var randomId:int = Utils.generateRandom(0, convoOptions.length);
 				var randomConvo:String = convoOptions[randomId];
 				
-				outputHandler(Utils.capitalize(talkTarget) + " says: '" + randomConvo);
+				outputHandler(Utils.capitalize(newCommand) + " says: '" + randomConvo);
 				return;
 			}
 			else
 			{
-				outputHandler("You don't see any " + talkTarget + " to talk to.");
+				outputHandler("You don't see any " + newCommand + " to talk to.");
 				return;
 			}
 		}
