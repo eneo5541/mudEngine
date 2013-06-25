@@ -80,6 +80,9 @@ package parser
 				case "get":case "take":
 					checkGetCommand(splitSpaces);
 					break;
+				case "put":case "store":
+					checkPutCommand(splitSpaces);
+					break;
 				case "drop":case "discard":
 					checkDropCommand(splitSpaces);
 					break;
@@ -138,22 +141,20 @@ package parser
 				return;
 			}
 			
-			var newCommand:String = inputCommand.substr(command[0].length + 1, inputCommand.length);
+			var itemName:String = inputCommand.substr(command[0].length + 1, inputCommand.length);
+			var targetName:String = roomHandler.room;
+			
 			for (var i:* in command) 
 			{
 				if (inputCommand.indexOf(" from ") > -1)
 				{
-					inputCommand.indexOf(" from ")
-					newCommand = newCommand.substr(command[1].length + 1, newCommand.length);
-					var itemName:String = inputCommand.substring(command[0].length + 1, inputCommand.indexOf(" from "));
-					var targetName:String = inputCommand.substring(inputCommand.indexOf(" from ") + 6, inputCommand.length);
-					outputHandler(">>> Trying to take " + itemName + " from a " + targetName);
+					itemName = inputCommand.substring(command[0].length + 1, inputCommand.indexOf(" from "));
+					targetName = inputCommand.substring(inputCommand.indexOf(" from ") + 6, inputCommand.length);  // Must also check that the target is in the room or in the inventory. Also check target is a container.
 					break;
 				}
 			}
 			
-			
-			var objectExists:String = roomHandler.gettableHandler.checkItemExists(newCommand, roomHandler.room); // Check if there is an item of the same input command in the room
+			var objectExists:String = roomHandler.gettableHandler.checkItemExists(itemName, targetName); // Check if there is an item of the same input command in the room
 			if (objectExists != null)
 			{
 				if (roomHandler.gettableHandler.checkGettableLocation(InventoryHolder).length > 7) 
@@ -169,7 +170,42 @@ package parser
 			}
 			else
 			{
-				outputHandler("You don't see any " + command[1] + " here to get.");
+				outputHandler("You don't see any " + itemName + " here to get.");
+			}
+		}
+		
+		
+		private function checkPutCommand(command:Array):void
+		{
+			if (command.length == 1)
+			{
+				outputHandler("Put what, where?");
+				return;
+			}
+			
+			var itemName:String = "";
+			var targetName:String = "";
+			
+			for (var i:* in command) 
+			{
+				if (inputCommand.indexOf(" in ") > -1)
+				{
+					itemName = inputCommand.substring(command[0].length + 1, inputCommand.indexOf(" in "));
+					targetName = inputCommand.substring(inputCommand.indexOf(" in ") + 4, inputCommand.length); // Must also check that the target is in the room or in the inventory. Also check target is a container.
+					break;
+				}
+			}
+			
+			var objectExists:String = roomHandler.gettableHandler.checkItemExists(itemName, InventoryHolder); // Check if there is an item of the same input command in the inventory
+			if (objectExists != null)
+			{
+				roomHandler.gettableHandler.moveGettable(objectExists, targetName);
+				outputHandler("You put a " + roomHandler.gettableHandler.getObjectName(objectExists) + " in a " + targetName + ".");  // Change this to the target's short desc
+				this.dispatchEvent(new ParserEvent(null, ParserEvent.INVENTORY));
+			}
+			else
+			{
+				outputHandler("There's no " + itemName + " to put anywhere!");
 			}
 		}
 		

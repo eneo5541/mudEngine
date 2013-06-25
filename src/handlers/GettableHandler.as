@@ -127,7 +127,7 @@ package handlers
 		public function getObjectName(getObj:*):String
 		{
 			if (!(getObj is String))
-					getObj = getQualifiedClassName(getObj);
+				getObj = getQualifiedClassName(getObj);
 			
 			try
 			{
