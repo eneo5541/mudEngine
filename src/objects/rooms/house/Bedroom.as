@@ -1,5 +1,6 @@
 package objects.rooms.house 
 {
+	import objects.gettables.house.Closet;
 	import objects.Room;
 	import objects.gettables.house.Hat;
 	import objects.npcs.house.Dog;
@@ -31,6 +32,11 @@ package objects.rooms.house
 			npcs = [ Dog ];
 		}
 		
+		override public function setGettables():void
+		{
+			gettables = [ Closet ];
+		}
+		
 		override public function setItems():void
 		{
 			items = {
@@ -39,11 +45,14 @@ package objects.rooms.house
 				door:"The door leads out, to the west."
 			};
 		}
-
+		
 		override public function setAction():void
 		{
 			actions = [{ 
-				action:["open closet"],
+				keywords:[
+				["open"],
+				["closet", "cupboard"],
+				],
 				restart: { gettable:Hat, error:"You open the closet, but there is nothing inside." },
 				response:function (target:*):void {
 						target.outputText('You open the closet and find a hat inside.');

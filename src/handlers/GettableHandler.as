@@ -93,6 +93,7 @@ package handlers
 		
 		public function checkItemExists(command:String, loc:*=null):String   // Checks whether an input command matches any object aliases and returns the appropriate object
 		{
+			command = command.toLowerCase();
 			if (loc != null)
 			{
 				if (!(loc is String))
@@ -105,7 +106,7 @@ package handlers
 				var child:* = new gettableObj;
 				for (var j:* in child.alias)  // Then iterate all the aliases for that object
 				{
-					if (command.toLowerCase() == child.alias[j].toLowerCase())  // If the inputted command matches any of the object's aliases
+					if (command == child.alias[j].toLowerCase() || command == child.shortDesc.toLowerCase())  // If the inputted command matches any of the object's aliases
 					{
 						if (loc == null)   // If no location parameter specified, return true
 						{

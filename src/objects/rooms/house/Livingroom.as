@@ -47,8 +47,11 @@ package objects.rooms.house
 
 		override public function setAction():void
 		{
-			actions = [{ 
-				action:["sit couches", "sit on couches", "sit couch", "sit on couch"],
+			actions = [ { 
+				keywords:[
+				["sit"],
+				["couch", "couches"],
+				],
 				restart: { gettable:Treat, error:"You sit on the couch." },
 				response:function (target:*):void {
 						target.outputText('You sit on the couch and find a dog treat between the cushions, which you quickly pocket.');

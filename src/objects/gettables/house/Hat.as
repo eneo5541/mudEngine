@@ -27,7 +27,10 @@ package objects.gettables.house
 		override public function setAction():void
 		{
 			actions = [{ 
-				action:["wear hat"],
+				keywords:[
+				["wear"],
+				["hat"],
+				],
 				response:function (target:*):void {
 						target.outputText('You put the hat on your head and tweak it off to an angle.');
 						target.addExperience(900);
