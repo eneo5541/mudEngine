@@ -167,9 +167,9 @@ package parser
 				return;
 			}
 			
-			var newCommand:String = command[1]
+			var newCommand:String = inputCommand.substr(command[0].length+1, inputCommand.length);
 			if (command[1] == "at")   // Accomodate for 'look <object>' and 'look at <object>'
-				newCommand = command[2];
+				newCommand = newCommand.substr(command[1].length + 1, newCommand.length);
 			
 			if (checkInventory(newCommand)) 
 				return; 

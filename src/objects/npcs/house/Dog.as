@@ -16,7 +16,7 @@ package objects.npcs.house
 		
 		override public function setAlias():void
 		{
-			alias = ["dog"];
+			alias = ["dog", "lazy old dog"];
 		}
 		
 		override public function setLongDesc():void
