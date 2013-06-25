@@ -30,8 +30,12 @@ package objects.gettables.house
 		override public function setAction():void
 		{
 			actions = [{ 
-				action:["show whistle to butler"],
-				parameter: { npc:Butler, error:"You don't know how to show whistle to butler." },
+				keywords:[
+				["show"],
+				["whistle"],
+				["butler"],
+				],
+				parameter: { npc:Butler, error:"There is no butler here." },
 				restart: { npc:Parrot, error:"The butler stares at you and points to the parrot that he just summoned with your whistle. He only has the one parrot." },
 				response:function (target:*):void {
 						var text:String = 'The butler inspects the whistle as you hand it to him. Holding it to his lips, he gives it a shrill whistle that fills the room. You can hear wingbeats in the distance ' +
@@ -42,8 +46,11 @@ package objects.gettables.house
 						target.reloadRoom();
 					}
 			},
-			{ 
-				action:["blow whistle", "use whistle", "play whistle"],
+			{ 	
+				keywords:[
+				["blow", "play", "use"],
+				["whistle"],
+				],
 				response:function (target:*):void {
 						target.outputText("Try as you might, you just can't seem to make any noise with the whistle. Perhaps someone else would be able to show you.");
 					}

@@ -36,7 +36,10 @@ package objects.npcs.house
 		override public function setAction():void
 		{
 			actions = [{ 
-				action:["rub cat"],
+				keywords:[
+				["rub"],
+				["cat"],
+				],
 				response:function rubCat(target:*):void	{
 						target.outputText("You rub the cat's back, causing her to purr happily. Satisfied, she lets herself back in, leaving you alone in the balcony again.");
 						target.removePerson(CatOutdoors);

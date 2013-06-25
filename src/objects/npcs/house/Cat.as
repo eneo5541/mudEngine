@@ -37,8 +37,12 @@ package objects.npcs.house
 		
 		override public function setAction():void
 		{
-			actions = [{ 
-				action:["let cat out", "let cat out the door", "let cat out door"],
+			actions = [ { 
+				keywords:[
+				["let"],
+				["cat"],
+				["out"],
+				],
 				response:function (target:*):void {
 						target.outputText('The cat scampers outside as you hold the door open.');
 						target.movePerson(Cat, NPCHolder);

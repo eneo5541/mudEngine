@@ -45,8 +45,11 @@ package objects.rooms.house
 
 		override public function setAction():void
 		{
-			actions = [{ 
-				action:["use sink", "use faucet", "use bowl"],
+			actions = [ { 
+				keywords:[
+				["use", "turn"],
+				["sink", "faucet", "bowl", "tap"],
+				],
 				response:function useSink(target:*):void {
 						target.outputText("You turn on the water and rinse your hands.");
 					}

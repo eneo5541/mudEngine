@@ -1,5 +1,6 @@
 package parser 
 {
+	import flash.display.InteractiveObject;
 	import flash.display.Sprite;
 	import flash.utils.getDefinitionByName;
 	import flash.utils.getQualifiedClassName;
@@ -115,7 +116,8 @@ package parser
 				return;
 			}
 			
-			var objectExists:String = roomHandler.gettableHandler.checkItemExists(command[1], InventoryHolder); // Check if there is an item of the same input command in the inventory
+			var newCommand:String = inputCommand.substr(command[0].length+1, inputCommand.length);
+			var objectExists:String = roomHandler.gettableHandler.checkItemExists(newCommand, InventoryHolder); // Check if there is an item of the same input command in the inventory
 			if (objectExists != null)
 			{
 				roomHandler.gettableHandler.moveGettable(objectExists, roomHandler.room);
@@ -136,7 +138,8 @@ package parser
 				return;
 			}
 			
-			var objectExists:String = roomHandler.gettableHandler.checkItemExists(command[1], roomHandler.room); // Check if there is an item of the same input command in the room
+			var newCommand:String = inputCommand.substr(command[0].length+1, inputCommand.length);
+			var objectExists:String = roomHandler.gettableHandler.checkItemExists(newCommand, roomHandler.room); // Check if there is an item of the same input command in the room
 			if (objectExists != null)
 			{
 				if (roomHandler.gettableHandler.checkGettableLocation(InventoryHolder).length > 7) 
@@ -166,9 +169,9 @@ package parser
 				return;
 			}
 			
-			var newCommand:String = command[1]
+			var newCommand:String = inputCommand.substr(command[0].length+1, inputCommand.length);
 			if (command[1] == "at")   // Accomodate for 'look <object>' and 'look at <object>'
-				newCommand = command[2];
+				newCommand = newCommand.substr(command[1].length + 1, newCommand.length);
 			
 			if (checkInventory(newCommand)) 
 				return; 
@@ -330,58 +333,62 @@ package parser
 		{
 			for (var j:* in actionObjects)
 			{
-				var actionTriggers:* = actionObjects[j].action;
-				for (var k:* in actionTriggers)
+				var keywords:* = actionObjects[j].keywords;
+				var inputList:Array = inputCommand.split(' ');
+				var matchedKeywords:int = 0;
+				
+				for (var c:* in keywords)   // The keywords are stored in arrays. The input string must contain a keyword from each array to pass
 				{
-					if (inputCommand == actionTriggers[k].toLowerCase()) // Have to pass through the desired function since there can be multiple NPCs in a room
-					{ 
-						roomHandler.getResponse(actionObjects[j]);
-						return true;
+					for (var inp:String in inputList)
+					{
+						if (keywords[c].indexOf(inputList[inp].toLowerCase()) > -1) 
+						{
+							matchedKeywords++;
+							break;
+						}
 					}
+				}
+				
+				if (matchedKeywords == keywords.length)
+				{
+					roomHandler.getResponse(actionObjects[j]);
+					return true;
 				}
 			}
 			return false;
 		}
 		
-		private function checkConversations(commands:Array):void
+		private function checkConversations(command:Array):void
 		{
-			if (commands.length == 1)
+			if (command.length == 1)
 			{
 				outputHandler("Talking to yourself again?");
 				return;
 			}
 			
-			var talkTarget:String = '';
-			if (commands[1] == 'to')
-			{
-				if(commands.length > 2)
-					talkTarget = commands[2];
-			}
-			else 
-			{
-				talkTarget = commands[1];
-			}
+			var newCommand:String = inputCommand.substr(command[0].length+1, inputCommand.length);
+			if (command[1] == "to")   // Accomodate for 'look <object>' and 'look at <object>'
+				newCommand = newCommand.substr(command[1].length + 1, newCommand.length);			
 			
-			
-			var objectExists:String = roomHandler.personHandler.checkNPCExists(talkTarget, roomHandler.room);
+			var objectExists:String = roomHandler.personHandler.checkNPCExists(newCommand, roomHandler.room);
 			if (objectExists != null)
 			{
 				var convoOptions:Array = roomHandler.personHandler.getNPCConversation(objectExists);
 				if (convoOptions == null || convoOptions.length == 0)
 				{
-					outputHandler(Utils.capitalize(talkTarget) + " has nothing to say to you.");
+					outputHandler(Utils.capitalize(newCommand) + " has nothing to say to you.");
 					return;
 				}
 				
 				var randomId:int = Utils.generateRandom(0, convoOptions.length);
 				var randomConvo:String = convoOptions[randomId];
 				
-				outputHandler(Utils.capitalize(talkTarget) + " says: '" + randomConvo);
+				outputHandler(Utils.capitalize(newCommand) + " says: '" + randomConvo);
 				return;
 			}
 			else
 			{
-				outputHandler("You don't see any " + talkTarget + " to talk to.");
+				outputHandler("You don't see any " + newCommand + " to talk to.");
 				return;
 			}
 		}
