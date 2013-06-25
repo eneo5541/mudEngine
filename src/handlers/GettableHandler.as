@@ -4,6 +4,7 @@ package handlers
 	import flash.utils.getDefinitionByName;
 	import flash.utils.getQualifiedClassName;
 	import handlers.holders.InventoryHolder;
+	import objects.Container;
 	import parser.Utils;
 	import signals.OutputEvent;
 
@@ -169,7 +170,16 @@ package handlers
 			{
 				var gettableObj:Class = getDefinitionByName(getObj) as Class;
 				var child:* = new gettableObj;
-				return child.longDesc;
+				var longDesc:String = child.longDesc;
+				
+				if (child is Container)   // If the object is a container, list its contents when the user looks at the long description
+				{
+					var allGettables:Array = gettablesThisRoom(getObj);
+					var listedGettables:String = Utils.listGettables(allGettables);
+					
+					longDesc += "\n" + ((listedGettables.length == 0) ?  "It is empty." : "It contains:\n"+listedGettables);
+				}
+				return longDesc;
 			}
 			catch (error:Error)
 			{

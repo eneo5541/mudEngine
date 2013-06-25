@@ -9,6 +9,7 @@ package parser
 	import handlers.MapHandler;
 	import handlers.SaveHandler;
 	import handlers.RoomHandler;
+	import objects.Container;
 	import objects.Gettable;
 	import objects.Room;
 	import objects.rooms.house.Bedroom;
@@ -96,7 +97,7 @@ package parser
 					saveHandler.saveGame(this);
 					outputHandler("Saving the game...");
 					break;
-				case "colours":case "black":case "white":
+				case "colours":case "black":case "white": /// add talk and speak to this list
 					checkColours(splitSpaces);
 					break;
 				case "map":
@@ -110,7 +111,7 @@ package parser
 			}
 		}
 		
-// Get and drop items		
+// Drop items		
 		private function checkDropCommand(command:Array):void
 		{
 			if (command.length == 1)
@@ -133,14 +134,10 @@ package parser
 			}
 		}
 		
+// Get items, from both ground and containers
 		private function checkGetCommand(command:Array):void
 		{
-			if (command.length == 1)
-			{
-				outputHandler("You don't have anything to get.");
-				return;
-			}
-			
+			var errorOutput:String = "";
 			var itemName:String = inputCommand.substr(command[0].length + 1, inputCommand.length);
 			var targetName:String = roomHandler.room;
 			
@@ -149,44 +146,55 @@ package parser
 				if (inputCommand.indexOf(" from ") > -1)
 				{
 					itemName = inputCommand.substring(command[0].length + 1, inputCommand.indexOf(" from "));
-					targetName = inputCommand.substring(inputCommand.indexOf(" from ") + 6, inputCommand.length);  // Must also check that the target is in the room or in the inventory. Also check target is a container.
+					
+					var targetExists:String = roomHandler.gettableHandler.checkItemExists(inputCommand.substring(inputCommand.indexOf(" from ") + 6, inputCommand.length), roomHandler.room);   // Check if the target we're trying to get the item to is in the same room
+					if (targetExists != null)
+					{
+						var gettableObj:Class = getDefinitionByName(targetExists) as Class;   // If the target we're trying to get the item from is a container, use this object when we check the location of the item we're trying to get
+						var child:* = new gettableObj;
+						if (child is Container)
+							targetName = targetExists;
+					}
 					break;
 				}
 			}
 			
-			var objectExists:String = roomHandler.gettableHandler.checkItemExists(itemName, targetName); // Check if there is an item of the same input command in the room
-			if (objectExists != null)
+			errorOutput = "You don't see any " + itemName + " here to get.";
+			
+			if (command.length == 1)
 			{
-				if (roomHandler.gettableHandler.checkGettableLocation(InventoryHolder).length > 7) 
-				{
-					outputHandler("You can only carry 8 items. Drop something to free up inventory space.");
-				}
-				else if (!roomHandler.gettableHandler.isObjectGettable(objectExists))
-				{
-					outputHandler("You cannot get a " + roomHandler.gettableHandler.getObjectName(objectExists) + ".");
-				}
-				else
-				{
-					roomHandler.gettableHandler.moveGettable(objectExists, InventoryHolder);
-					outputHandler("You get a " + roomHandler.gettableHandler.getObjectName(objectExists) + ".");
-					this.dispatchEvent(new ParserEvent(null, ParserEvent.INVENTORY));
-				}
+				errorOutput = "You don't have anything to get.";
 			}
 			else
 			{
-				outputHandler("You don't see any " + itemName + " here to get.");
-			}
-		}
-		
-		
-		private function checkPutCommand(command:Array):void
-		{
-			if (command.length == 1)
-			{
-				outputHandler("Put what, where?");
-				return;
+				var objectExists:String = roomHandler.gettableHandler.checkItemExists(itemName, targetName); // Check if there is an item of the same input command in the room
+				if (objectExists != null)
+				{
+					if (roomHandler.gettableHandler.checkGettableLocation(InventoryHolder).length > 7) 
+					{
+						errorOutput = "You can only carry 8 items. Drop something to free up inventory space.";
+					}
+					else if (!roomHandler.gettableHandler.isObjectGettable(objectExists))
+					{
+						errorOutput = "You cannot get a " + roomHandler.gettableHandler.getObjectName(objectExists) + ".";
+					}
+					else
+					{
+						roomHandler.gettableHandler.moveGettable(objectExists, InventoryHolder);
+						outputHandler("You get a " + roomHandler.gettableHandler.getObjectName(objectExists) + ".");
+						this.dispatchEvent(new ParserEvent(null, ParserEvent.INVENTORY));
+						return;
+					}
+				}
 			}
 			
+			outputHandler(errorOutput);
+		}
+		
+// Put items into containers
+		private function checkPutCommand(command:Array):void
+		{
+			var errorOutput:String = "";
 			var itemName:String = "";
 			var targetName:String = "";
 			
@@ -195,25 +203,47 @@ package parser
 				if (inputCommand.indexOf(" in ") > -1)
 				{
 					itemName = inputCommand.substring(command[0].length + 1, inputCommand.indexOf(" in "));
-					targetName = inputCommand.substring(inputCommand.indexOf(" in ") + 4, inputCommand.length); // Must also check that the target is in the room or in the inventory. Also check target is a container.
+					targetName = inputCommand.substring(inputCommand.indexOf(" in ") + 4, inputCommand.length);
+					errorOutput = itemName;
 					break;
 				}
 			}
 			
-			var objectExists:String = roomHandler.gettableHandler.checkItemExists(itemName, InventoryHolder); // Check if there is an item of the same input command in the inventory
-			if (objectExists != null)
+			errorOutput = "You can't put the " + itemName + " in that.";
+			
+			if (itemName == "" || targetName == "")
 			{
-				roomHandler.gettableHandler.moveGettable(objectExists, targetName);
-				outputHandler("You put a " + roomHandler.gettableHandler.getObjectName(objectExists) + " in a " + targetName + ".");  // Change this to the target's short desc
-				this.dispatchEvent(new ParserEvent(null, ParserEvent.INVENTORY));
+				errorOutput = "What do you want to put the " + inputCommand.substring(command[0].length + 1, inputCommand.length) + " into?";
 			}
 			else
 			{
-				outputHandler("There's no " + itemName + " to put anywhere!");
+				var objectExists:String = roomHandler.gettableHandler.checkItemExists(itemName, InventoryHolder); // Check if there is an item of the same input command in the inventory
+				if (objectExists != null)
+				{
+					var targetExists:String = roomHandler.gettableHandler.checkItemExists(targetName, roomHandler.room);  // Check if the target we're trying to put the item to is in the same room
+					if (targetExists != null)
+					{
+						var gettableObj:Class = getDefinitionByName(targetExists) as Class;    // Check if the target we're trying to put the item to is a container
+						var child:* = new gettableObj;
+						if (child is Container)
+						{
+							roomHandler.gettableHandler.moveGettable(objectExists, targetExists);
+							outputHandler("You put a " + roomHandler.gettableHandler.getObjectName(objectExists) + " in a " + roomHandler.gettableHandler.getObjectName(targetExists) + "."); 
+							this.dispatchEvent(new ParserEvent(null, ParserEvent.INVENTORY));
+							return;
+						}						
+					}
+				}
+				else
+				{
+					errorOutput = "There's no " + itemName + " to put anywhere."
+				}
 			}
+			
+			outputHandler(errorOutput);
 		}
 		
-// Look (at the room, or at objects)		
+// Look (at the room or at objects)		
 		private function checkLookCommand(command:Array):void
 		{
 			if (command.length == 1) // If not looking at an object, just return room description
