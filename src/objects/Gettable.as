@@ -34,7 +34,7 @@ package objects
 		} 
 		
 		public var alias:Array = [];
-		public var isGettable:Boolean = false;
+		public var isGettable:Boolean = true;
 		
 		function Gettable()
 		{

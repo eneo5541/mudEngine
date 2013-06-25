@@ -142,6 +142,24 @@ package handlers
 			return null;
 		}
 		
+		public function isObjectGettable(getObj:*):Boolean
+		{
+			if (!(getObj is String))
+				getObj = getQualifiedClassName(getObj);
+			
+			try
+			{
+				var gettableObj:Class = getDefinitionByName(getObj) as Class;
+				var child:* = new gettableObj;
+				return child.isGettable;
+			}
+			catch (error:Error)
+			{
+				trace(error.message);
+			}
+			return false;
+		}
+		
 		public function getObjectDescript(getObj:*):String
 		{
 			if (!(getObj is String))
