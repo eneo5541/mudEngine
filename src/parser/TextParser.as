@@ -104,6 +104,9 @@ package parser
 					var mainClass:Class = getDefinitionByName(roomHandler.room) as Class; 
 					outputHandler(mapHandler.generateMap(new mainClass as Room));
 					break;
+				case "talk":case "speak":	
+					checkConversations(splitSpaces);
+					break;
 				default:
 					if (!checkDirectionCommand(splitSpaces[0]))   // Check if command is a direction command
 						checkDynamicCommands(splitSpaces);  // If not, check if it is a dynamic command
@@ -125,7 +128,7 @@ package parser
 			if (objectExists != null)
 			{
 				roomHandler.gettableHandler.moveGettable(objectExists, roomHandler.room);
-				outputHandler("You drop a " + roomHandler.gettableHandler.getObjectName(objectExists) + ".");
+				outputHandler("You drop a " + Utils.getObjectShortDesc(objectExists) + ".");
 				this.dispatchEvent(new ParserEvent(null, ParserEvent.INVENTORY));
 			}
 			else
@@ -176,12 +179,12 @@ package parser
 					}
 					else if (!roomHandler.gettableHandler.isObjectGettable(objectExists))
 					{
-						errorOutput = "You cannot get a " + roomHandler.gettableHandler.getObjectName(objectExists) + ".";
+						errorOutput = "You cannot get a " + Utils.getObjectShortDesc(objectExists) + ".";
 					}
 					else
 					{
 						roomHandler.gettableHandler.moveGettable(objectExists, InventoryHolder);
-						outputHandler("You get a " + roomHandler.gettableHandler.getObjectName(objectExists) + ".");
+						outputHandler("You get a " + Utils.getObjectShortDesc(objectExists) + ".");
 						this.dispatchEvent(new ParserEvent(null, ParserEvent.INVENTORY));
 						return;
 					}
@@ -228,7 +231,7 @@ package parser
 						if (child is Container)
 						{
 							roomHandler.gettableHandler.moveGettable(objectExists, targetExists);
-							outputHandler("You put a " + roomHandler.gettableHandler.getObjectName(objectExists) + " in a " + roomHandler.gettableHandler.getObjectName(targetExists) + "."); 
+							outputHandler("You put a " + Utils.getObjectShortDesc(objectExists) + " in a " + Utils.getObjectShortDesc(targetExists) + "."); 
 							this.dispatchEvent(new ParserEvent(null, ParserEvent.INVENTORY));
 							return;
 						}						
@@ -266,7 +269,7 @@ package parser
 			if (checkForRoomItems(newCommand)) 
 				return; 
 				
-			if (newCommand == 'me' || newCommand == roomHandler.user.userName.toLowerCase())
+			if (newCommand == 'me' || newCommand == 'self' || newCommand == roomHandler.user.userName.toLowerCase())
 				outputHandler(sheet.getSheet());
 			else
 				outputHandler("You don't see any " + newCommand + " here.");
@@ -371,12 +374,6 @@ package parser
 			if (checkGettableActions())
 				return;
 			
-			if (command[0] == "talk" || command[0] == "speak")
-			{
-				checkConversations(command);
-				return;
-			}
-			
 			var errorMsg:String = "You don't know how to " + inputCommand + ".";
 			outputHandler(errorMsg);
 		}
@@ -460,14 +457,14 @@ package parser
 				var convoOptions:Array = roomHandler.personHandler.getNPCConversation(objectExists);
 				if (convoOptions == null || convoOptions.length == 0)
 				{
-					outputHandler(Utils.capitalize(newCommand) + " has nothing to say to you.");
+					outputHandler(Utils.capitalize(Utils.getObjectShortDesc(objectExists)) + " has nothing to say to you.");
 					return;
 				}
 				
 				var randomId:int = Utils.generateRandom(0, convoOptions.length);
 				var randomConvo:String = convoOptions[randomId];
 				
-				outputHandler(Utils.capitalize(newCommand) + " says: '" + randomConvo);
+				outputHandler(Utils.capitalize(Utils.getObjectShortDesc(objectExists)) + " says: '" + randomConvo);
 				return;
 			}
 			else

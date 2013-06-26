@@ -1,8 +1,9 @@
 package objects.rooms.house 
 {
+	import handlers.holders.InventoryHolder;
+	import objects.gettables.house.Ball;
 	import objects.gettables.house.Closet;
 	import objects.Room;
-	import objects.gettables.house.Hat;
 	import objects.npcs.house.Dog;
 
 	public class Bedroom extends Room
@@ -19,7 +20,7 @@ package objects.rooms.house
 		
 		override public function setLongDesc():void
 		{
-			longDesc = "You are in a simple bedroom. There is a bed and a closet here. A door leads out, to the west. ";
+			longDesc = "You are in a simple bedroom. There is a bed and a chest here. A door leads out, to the west. ";
 		}
 		
 		override public function setExits():void
@@ -41,7 +42,7 @@ package objects.rooms.house
 		{
 			items = {
 				bed:"A neatly made bed.",
-				closet:"A nice, wooden closet. It is closed. ",
+				chest:"A nice, wooden chest. It is closed. ",
 				door:"The door leads out, to the west."
 			};
 		}
@@ -51,12 +52,12 @@ package objects.rooms.house
 			actions = [{ 
 				keywords:[
 				["open"],
-				["closet", "cupboard"],
+				["chest"],
 				],
-				restart: { gettable:Hat, error:"You open the closet, but there is nothing inside." },
+				excluded: { gettable:Ball, error:"You open the chest, but there is nothing inside." },
 				response:function (target:*):void {
-						target.outputText('You open the closet and find a hat inside.');
-						target.addGettable(Hat, Bedroom);
+						target.outputText('You open the chest and find a tennis ball inside.');
+						target.addGettable(Ball, InventoryHolder);
 						target.reloadRoom();
 					}
 			}];

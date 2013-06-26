@@ -23,6 +23,12 @@ package objects.gettables.house
 		{
 			longDesc = "An old, rickety closet.";
 		}
+		
+		override public function setContents():void
+		{
+			contents = [ Hat ];
+		}
+		
 	}
 
 }

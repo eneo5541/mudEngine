@@ -33,7 +33,7 @@ package objects.gettables.house
 				["parsley", "sprig"],
 				["pot", "soup"],
 				],
-				parameter: { room:Kitchen, error:"There's no soup to add this to." },
+				required: { room:Kitchen, error:"There's no soup to add this to." },
 				response:function addHerbs(target:*):void {
 						target.outputText('You crush up the sprig of parsley and sprinkle it onto the soup. Mmm, that smells good.');
 						target.removeGettable(Herbs);

@@ -52,7 +52,7 @@ package objects.rooms.house
 				["sit"],
 				["couch", "couches"],
 				],
-				restart: { gettable:Treat, error:"You sit on the couch." },
+				excluded: { gettable:Treat, error:"You sit on the couch." },
 				response:function (target:*):void {
 						target.outputText('You sit on the couch and find a dog treat between the cushions, which you quickly pocket.');
 						target.addGettable(Treat, InventoryHolder);
