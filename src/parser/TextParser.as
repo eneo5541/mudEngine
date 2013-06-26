@@ -97,7 +97,7 @@ package parser
 					saveHandler.saveGame(this);
 					outputHandler("Saving the game...");
 					break;
-				case "colours":case "black":case "white": /// add talk and speak to this list
+				case "colours":case "black":case "white":
 					checkColours(splitSpaces);
 					break;
 				case "map":
