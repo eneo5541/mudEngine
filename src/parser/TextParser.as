@@ -3,11 +3,10 @@ package parser
 	import flash.display.Sprite;
 	import flash.utils.getDefinitionByName;
 	import flash.utils.getQualifiedClassName;
-	import handlers.GettableHandler;
 	import handlers.holders.InventoryHolder;
 	import handlers.MapHandler;
-	import handlers.SaveHandler;
 	import handlers.RoomHandler;
+	import handlers.SaveHandler;
 	import objects.Container;
 	import objects.Gettable;
 	import objects.Room;

@@ -1,7 +1,6 @@
 package objects.npcs.house 
 {
 	import objects.Person;
-	import objects.rooms.house.Outdoors;
 
 	public class Butler extends Person
 	{		

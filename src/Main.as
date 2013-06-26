@@ -13,12 +13,11 @@ package
 	import flash.text.TextFieldType;
 	import flash.text.TextFormat;
 	import flash.ui.ContextMenu;
-	import handlers.holders.InventoryHolder;
 	import handlers.SaveHandler;
 	import objects.User;
 	import parser.Intro;
-	import parser.Utils;
 	import parser.TextParser;
+	import parser.Utils;
 	import signals.IntroEvent;
 	import signals.OutputEvent;
 	import signals.ParserEvent;

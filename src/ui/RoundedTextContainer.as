@@ -1,8 +1,7 @@
 package ui
 {
-	import flash.display.Sprite;
 	import flash.display.Shape;
-	import flash.events.KeyboardEvent;
+	import flash.display.Sprite;
 	import flash.geom.ColorTransform;
 	import flash.text.TextField;
 

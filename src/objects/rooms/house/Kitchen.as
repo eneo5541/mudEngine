@@ -1,7 +1,7 @@
 package objects.rooms.house 
 {
-	import objects.Room;
 	import objects.npcs.house.Cat;
+	import objects.Room;
 
 	public class Kitchen extends Room
 	{	

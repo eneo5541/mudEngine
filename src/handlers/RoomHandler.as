@@ -8,9 +8,9 @@ package handlers
 	import handlers.holders.InventoryHolder;
 	import objects.Room;
 	import objects.User;
+	import parser.Utils;
 	import signals.OutputEvent;
 	import signals.ParserEvent;
-	import parser.Utils;
 
 	public class RoomHandler extends Sprite
 	{

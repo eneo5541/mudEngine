@@ -3,8 +3,8 @@ package objects.rooms.house
 	import handlers.holders.InventoryHolder;
 	import objects.gettables.house.Ball;
 	import objects.gettables.house.Closet;
-	import objects.Room;
 	import objects.npcs.house.Dog;
+	import objects.Room;
 
 	public class Bedroom extends Room
 	{	

@@ -3,7 +3,6 @@ package objects.gettables.house
 	import flash.utils.getDefinitionByName;
 	import objects.Gettable;
 	import objects.npcs.house.Dog;
-	import objects.rooms.house.Bedroom;
 
 	public class Treat extends Gettable
 	{		

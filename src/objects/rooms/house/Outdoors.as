@@ -1,7 +1,7 @@
 package objects.rooms.house 
 {
-	import objects.Room;
 	import objects.gettables.house.Herbs;
+	import objects.Room;
 
 	public class Outdoors extends Room
 	{	
