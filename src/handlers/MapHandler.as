@@ -70,7 +70,7 @@ package handlers
 			var spanStop:String = "</span>";
 			
 			if (playerIsHere)
-				map[startingX][startingY] = "<span class='white'>X</span>";
+				map[startingX][startingY] = "<span class='main'>X</span>";
 			else
 				map[startingX][startingY] = spanStart + "O" + spanStop;
 			

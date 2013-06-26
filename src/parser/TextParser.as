@@ -97,7 +97,7 @@ package parser
 					saveHandler.saveGame(this);
 					outputHandler("Saving the game...");
 					break;
-				case "colours":case "black":case "white":
+				case "colours":case "colour":case "colors":case "color":case "black":case "white":
 					checkColours(splitSpaces);
 					break;
 				case "map":case "m":
@@ -469,12 +469,6 @@ package parser
 		{
 			switch (commands[0])
 			{
-				case "colours":
-					if (isWhiteText)
-						setTextBlack();
-					else
-						setTextWhite();
-					break;
 				case "black":
 					setTextBlack();
 					break;
@@ -482,6 +476,10 @@ package parser
 					setTextWhite();
 					break;
 				default:
+					if (isWhiteText)
+						setTextBlack();
+					else
+						setTextWhite();
 					break;
 			}
 		}
