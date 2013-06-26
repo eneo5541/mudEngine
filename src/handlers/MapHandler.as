@@ -13,7 +13,6 @@ package handlers
 		
 		private var mappedRooms:Array;
 		private var map:Array;
-		private var playersCurrentRoom:String;
 		
 		public function MapHandler() 
 		{
@@ -21,19 +20,17 @@ package handlers
 			map = new Array();
 		}
 		
-		public function generateMap(startingRoom:Room, currentRoom:String):String
+		public function generateMap(startingRoom:Room):String
 		{
-			playersCurrentRoom = currentRoom;
-			
 			createNewMap();   // Creates a grid for the rooms and exits to go on. Assumes that the map, generated from the middle of the grid, will not extend outside of the grid boundaries
 			
-			remap(startingRoom, gridSize/2, gridSize/2);    // Start generating the map with the first room, at the middle of the map
+			mapRoom(startingRoom, gridSize/2, gridSize/2, true);    // Start generating the map with the first room, at the middle of the map
 			
-			map = map.filter(returnContent);    // Filter out all the rows that did not have any rooms or exits added to them
-			var firstText:int = returnFirstColumn(map);   // Remove all the columns that do not have any data at them, until the left-most point of the map is in the first column
+			map = map.filter(removeEmptyRows);    // Filter out all the rows that did not have any rooms or exits added to them
+			var totalEmptyColumns:int = countEmptyColumns(map);   // Remove all the columns that do not have any data at them, until the left-most point of the map is in the first column
 			for (var i:* in map) 
 			{
-				for (var j:int = 0; j < firstText; j++) 
+				for (var j:int = 0; j < totalEmptyColumns; j++) 
 				{
 					map[i].shift();
 				}
@@ -47,18 +44,18 @@ package handlers
 			mappedRooms = [];
 			map = [];
 			
-			for (var y:int = 0; y < gridSize; y++) 
+			for (var x:int = 0; x < gridSize; x++) 
 			{
-				var td:Array = [" "];
-				for (var x:int = 0; x < gridSize; x++) 
+				var dummyRow:Array = [" "];
+				for (var y:int = 0; y < gridSize; y++) 
 				{
-					td.push(" ");
+					dummyRow.push(" ");
 				}
-				map.push(td);
+				map.push(dummyRow);
 			}
 		}
 		
-		private function remap(newRoom:Room, startingX:int, startingY:int):void
+		private function mapRoom(newRoom:Room, startingX:int, startingY:int, playerIsHere:Boolean=false):void
 		{
 			var roomName:String = getQualifiedClassName(newRoom);
 			for (var i:String in mappedRooms)    // Store each room that's been mapped. Prevents rooms being remapped back and forth.
@@ -72,7 +69,7 @@ package handlers
 			var spanStart:String = newRoom.shortDesc.split(">")[0] + ">";   // Take the colour of the room's shortDesc and use it to colour that room in the map
 			var spanStop:String = "</span>";
 			
-			if (roomName == playersCurrentRoom)
+			if (playerIsHere)
 				map[startingX][startingY] = "<span class='white'>X</span>";
 			else
 				map[startingX][startingY] = spanStart + "O" + spanStop;
@@ -141,11 +138,11 @@ package handlers
 						break;
 				}
 				
-				remap(new obj[j] as Room, startingX, startingY);   // For each exit, take the room assigned to that exit and add it to the map
+				mapRoom(new obj[j] as Room, startingX, startingY);   // For each exit, take the room assigned to that exit and add it to the map
 			}
 		}
 		
-		private function returnContent(element:Array, index:int, array:Array):Boolean
+		private function removeEmptyRows(element:Array, index:int, array:Array):Boolean
 		{
 			for (var j:* in element) 
 			{
@@ -156,22 +153,22 @@ package handlers
 			return false;
 		}
 		
-		private function returnFirstColumn(array:Array):int
+		private function countEmptyColumns(array:Array):int
 		{
-			var thisFirstText:int = gridSize;
+			var emptyColumns:int = gridSize;
 			for (var i:* in array) 
 			{
 				for (var j:* in array[i]) 
 				{
-					if (array[i][j] != "" && array[i][j] != " " && j < thisFirstText)
+					if (array[i][j] != "" && array[i][j] != " " && j < emptyColumns)
 					{
-						thisFirstText = j;
+						emptyColumns = j;
 						break;
 					}
 				}
 			}
 			
-			return thisFirstText;
+			return emptyColumns;
 		}
 		
 		private function mapToString():String
@@ -188,4 +185,5 @@ package handlers
 		}
 		
 	}
+	
 }

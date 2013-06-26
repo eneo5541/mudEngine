@@ -100,7 +100,8 @@ package parser
 					checkColours(splitSpaces);
 					break;
 				case "map":case "m":
-					outputHandler(mapHandler.generateMap(_startingRoom, roomHandler.room));
+					var mainClass:Class = getDefinitionByName(roomHandler.room) as Class;
+					outputHandler(mapHandler.generateMap(new mainClass as Room));
 					break;
 				case "talk":case "speak":	
 					checkConversations(splitSpaces);
