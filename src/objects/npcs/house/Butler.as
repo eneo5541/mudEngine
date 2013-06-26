@@ -39,7 +39,8 @@ package objects.npcs.house
 			conversations = [
 				"I think some parsley would make a fine addition to our soup. There may be some outside the kitchen.",
 				"Have a seat - the couches are very comfortable.",
-				"I believe I put a hat away in the bedroom closet. You can have it, if you like."
+				"I believe I put a hat away in the bedroom closet. You can have it, if you like.",
+				"The dog is very fond of his tennis ball. I believe its in the chest in the bedroom."
 			];
 		}
 		

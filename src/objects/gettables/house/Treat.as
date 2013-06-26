@@ -1,5 +1,6 @@
 package objects.gettables.house 
 {
+	import flash.utils.getDefinitionByName;
 	import objects.Gettable;
 	import objects.npcs.house.Dog;
 	import objects.rooms.house.Bedroom;
@@ -31,17 +32,17 @@ package objects.gettables.house
 			actions = [{ 
 				keywords:[
 				["feed", "give"],
-				["biscuit", "food", "treat"],
-				["dog"],
+				["biscuit", "food", "treat", "dog"],
+				["dog", ""],
 				],
-				parameter: { npc:Dog, error:"There is no dog here." },
-				restart: { gettable:Whistle, error:"The dog scarfs down the treat and returns to panting and grinning." },
+				required: { npc:Dog, error:"There is no dog here." },
+				excluded: { gettable:Whistle, error:"The dog scarfs down the treat and returns to panting and grinning." },
 				response:function (target:*):void {
 						var text:String = 'The dog wolfs down the treat eagerly before running away. You are annoyed to own such a fair-weather animal, but he returns soon, dropping a small whistle he '+
 						'found at your feet. Good dog.';
 						target.outputText(text);
 						target.removeGettable(Treat);
-						target.addGettable(Whistle, Bedroom);
+						target.addGettable(Whistle, getDefinitionByName(target.room));
 						target.reloadRoom();
 					}
 			}];

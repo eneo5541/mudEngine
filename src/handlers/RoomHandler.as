@@ -139,17 +139,17 @@ package handlers
 		
 		public function getResponse(action:*):void
 		{
-			if (action.parameter != null)
+			if (action.required != null)
 			{
-				if (!checkParametersMet(action.parameter)) { // If the parameter is NOT met, do not continue
-					outputText(action.parameter.error);
+				if (!checkParametersMet(action.required)) { // If the parameter is NOT met, do not continue
+					outputText(action.required.error);
 					return;
 				}
 			}
-			if (action.restart != null)
+			if (action.excluded != null)
 			{
-				if (checkAlreadyStarted(action.restart)) {  // If the parameter IS met, than the quest has already been started - do not continue
-					outputText(action.restart.error);
+				if (checkAlreadyStarted(action.excluded)) {  // If the parameter IS met, than the quest has already been started - do not continue
+					outputText(action.excluded.error);
 					return;
 				}
 			}
@@ -157,15 +157,15 @@ package handlers
 			f(this);  // The 'this' parameter allows the response function to be called from the roomHandler, instead of the room
 		}
 		
-		private function checkAlreadyStarted(parameter:*):Boolean // This allows the action to proceed if the item/npc DOES NOT exist
+		private function checkAlreadyStarted(required:*):Boolean // This allows the action to proceed if the item/npc DOES NOT exist
 		{
 			var parameterType:String = "";
 			var parameterObj:String = "";
-			for (var i:* in parameter) 
+			for (var i:* in required) 
 			{
 				if(i != "error") {    // Do not pick up error parameter, only targetted parameter
 					parameterType = i;
-					parameterObj = getQualifiedClassName(parameter[i]);
+					parameterObj = getQualifiedClassName(required[i]);
 				}
 			}
 			
@@ -190,18 +190,18 @@ package handlers
 			return false;
 		}
 		
-		private function checkParametersMet(parameter:*):Boolean // This allows the action to proceed ONLY if the item/npc DOES exist
+		private function checkParametersMet(required:*):Boolean // This allows the action to proceed ONLY if the item/npc DOES exist
 		{
 			var parameterType:String = "";
 			var parameterObj:String = "";
-			for (var i:* in parameter) 
+			for (var i:* in required) 
 			{
 				if(i != "error") {    // Do not pick up error parameter, only targetted parameter
 					parameterType = i;
-					if (getQualifiedClassName(parameter[i]) == 'int')
-						parameterObj = parameter[i] + "";
+					if (getQualifiedClassName(required[i]) == 'int')
+						parameterObj = required[i] + "";
 					else
-						parameterObj = getQualifiedClassName(parameter[i]);
+						parameterObj = getQualifiedClassName(required[i]);
 				}
 			}
 			

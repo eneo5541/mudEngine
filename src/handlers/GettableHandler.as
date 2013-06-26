@@ -4,6 +4,7 @@ package handlers
 	import flash.utils.getDefinitionByName;
 	import flash.utils.getQualifiedClassName;
 	import handlers.holders.InventoryHolder;
+	import objects.Container;
 	import parser.Utils;
 	import signals.OutputEvent;
 
@@ -26,7 +27,7 @@ package handlers
 		}
 		
 		// This pushes an item to the gettableArray that holds ALL gettables in the game and their location
-		public function addGettable(getObj:*, loc:*):void // Gettables can exist but not necessarily be placed in the game yet
+		public function addGettable(getObj:*, loc:*, addContainers:Boolean=true):void // Gettables can exist but not necessarily be placed in the game yet    // Check for the gettable's contents in here
 		{
 			if (!(getObj is String)) 
 				getObj = getQualifiedClassName(getObj);
@@ -42,6 +43,17 @@ package handlers
 			
 			checkAddedToInventory(getObj, loc);
 			gettableArray.push( { object:getObj, location:loc } );
+			
+			var gettableObj:Class = getDefinitionByName(getObj) as Class;
+			var child:* = new gettableObj;
+			
+			if (child is Container && addContainers)   // If the object is a container, add its contents when the item is loaded
+			{
+				for (var j:* in child.contents)
+				{
+					addGettable(getQualifiedClassName(child.contents[j]), getObj, false);
+				}
+			}
 		}
 		
 		public function removeGettable(getObj:*):void  // Similar to add command, but removes item from existance anywhere. 
@@ -82,13 +94,13 @@ package handlers
 		private function checkAddedToInventory(object:String, location:String):void
 		{
 			if (location == getQualifiedClassName(InventoryHolder))
-				this.dispatchEvent(new OutputEvent(getObjectName(object) + ' has been added to your inventory.', OutputEvent.OUTPUT));
+				this.dispatchEvent(new OutputEvent(Utils.getObjectShortDesc(object) + ' has been added to your inventory.', OutputEvent.OUTPUT));
 		}
 		
 		private function checkRemovedInventory(object:String, location:String):void
 		{
 			if (location == getQualifiedClassName(InventoryHolder))
-				this.dispatchEvent(new OutputEvent(getObjectName(object) + ' has been removed from your inventory.', OutputEvent.OUTPUT));
+				this.dispatchEvent(new OutputEvent(Utils.getObjectShortDesc(object) + ' has been removed from your inventory.', OutputEvent.OUTPUT));
 		}
 		
 		public function checkItemExists(command:String, loc:*=null):String   // Checks whether an input command matches any object aliases and returns the appropriate object
@@ -124,24 +136,6 @@ package handlers
 			return null;
 		}
 		
-		public function getObjectName(getObj:*):String
-		{
-			if (!(getObj is String))
-					getObj = getQualifiedClassName(getObj);
-			
-			try
-			{
-				var gettableObj:Class = getDefinitionByName(getObj) as Class;
-				var child:* = new gettableObj;
-				return child.shortDesc;
-			}
-			catch (error:Error)
-			{
-				trace(error.message);
-			}
-			return null;
-		}
-		
 		public function isObjectGettable(getObj:*):Boolean
 		{
 			if (!(getObj is String))
@@ -169,7 +163,16 @@ package handlers
 			{
 				var gettableObj:Class = getDefinitionByName(getObj) as Class;
 				var child:* = new gettableObj;
-				return child.longDesc;
+				var longDesc:String = child.longDesc;
+				
+				if (child is Container)   // If the object is a container, list its contents when the user looks at the long description
+				{
+					var allGettables:Array = gettablesThisRoom(getObj);
+					var listedGettables:String = Utils.listGettables(allGettables);
+					
+					longDesc += "\n" + ((listedGettables.length == 0) ?  "It is empty." : "It contains:\n"+listedGettables);
+				}
+				return longDesc;
 			}
 			catch (error:Error)
 			{

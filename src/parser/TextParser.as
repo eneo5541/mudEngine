@@ -9,6 +9,7 @@ package parser
 	import handlers.MapHandler;
 	import handlers.SaveHandler;
 	import handlers.RoomHandler;
+	import objects.Container;
 	import objects.Gettable;
 	import objects.Room;
 	import objects.rooms.house.Bedroom;
@@ -80,6 +81,9 @@ package parser
 				case "get":case "take":
 					checkGetCommand(splitSpaces);
 					break;
+				case "put":case "store":
+					checkPutCommand(splitSpaces);
+					break;
 				case "drop":case "discard":
 					checkDropCommand(splitSpaces);
 					break;
@@ -93,12 +97,15 @@ package parser
 					saveHandler.saveGame(this);
 					outputHandler("Saving the game...");
 					break;
-				case "colours":case "black":case "white":
+				case "colours":case "black":case "white": /// add talk and speak to this list
 					checkColours(splitSpaces);
 					break;
 				case "map":
 					var mainClass:Class = getDefinitionByName(roomHandler.room) as Class; 
 					outputHandler(mapHandler.generateMap(new mainClass as Room));
+					break;
+				case "talk":case "speak":	
+					checkConversations(splitSpaces);
 					break;
 				default:
 					if (!checkDirectionCommand(splitSpaces[0]))   // Check if command is a direction command
@@ -107,7 +114,7 @@ package parser
 			}
 		}
 		
-// Get and drop items		
+// Drop items		
 		private function checkDropCommand(command:Array):void
 		{
 			if (command.length == 1)
@@ -121,7 +128,7 @@ package parser
 			if (objectExists != null)
 			{
 				roomHandler.gettableHandler.moveGettable(objectExists, roomHandler.room);
-				outputHandler("You drop a " + roomHandler.gettableHandler.getObjectName(objectExists) + ".");
+				outputHandler("You drop a " + Utils.getObjectShortDesc(objectExists) + ".");
 				this.dispatchEvent(new ParserEvent(null, ParserEvent.INVENTORY));
 			}
 			else
@@ -130,40 +137,116 @@ package parser
 			}
 		}
 		
+// Get items, from both ground and containers
 		private function checkGetCommand(command:Array):void
 		{
-			if (command.length == 1)
+			var errorOutput:String = "";
+			var itemName:String = inputCommand.substr(command[0].length + 1, inputCommand.length);
+			var targetName:String = roomHandler.room;
+			
+			for (var i:* in command) 
 			{
-				outputHandler("You don't have anything to get.");
-				return;
+				if (inputCommand.indexOf(" from ") > -1)
+				{
+					itemName = inputCommand.substring(command[0].length + 1, inputCommand.indexOf(" from "));
+					
+					var targetExists:String = roomHandler.gettableHandler.checkItemExists(inputCommand.substring(inputCommand.indexOf(" from ") + 6, inputCommand.length), roomHandler.room);   // Check if the target we're trying to get the item to is in the same room
+					if (targetExists != null)
+					{
+						var gettableObj:Class = getDefinitionByName(targetExists) as Class;   // If the target we're trying to get the item from is a container, use this object when we check the location of the item we're trying to get
+						var child:* = new gettableObj;
+						if (child is Container)
+							targetName = targetExists;
+					}
+					break;
+				}
 			}
 			
-			var newCommand:String = inputCommand.substr(command[0].length+1, inputCommand.length);
-			var objectExists:String = roomHandler.gettableHandler.checkItemExists(newCommand, roomHandler.room); // Check if there is an item of the same input command in the room
-			if (objectExists != null)
+			errorOutput = "You don't see any " + itemName + " here to get.";
+			
+			if (command.length == 1)
 			{
-				if (roomHandler.gettableHandler.checkGettableLocation(InventoryHolder).length > 7) 
-				{
-					outputHandler("You can only carry 8 items. Drop something to free up inventory space.");
-				}
-				else if (!roomHandler.gettableHandler.isObjectGettable(objectExists))
-				{
-					outputHandler("You cannot get a " + roomHandler.gettableHandler.getObjectName(objectExists) + ".");
-				}
-				else
-				{
-					roomHandler.gettableHandler.moveGettable(objectExists, InventoryHolder);
-					outputHandler("You get a " + roomHandler.gettableHandler.getObjectName(objectExists) + ".");
-					this.dispatchEvent(new ParserEvent(null, ParserEvent.INVENTORY));
-				}
+				errorOutput = "You don't have anything to get.";
 			}
 			else
 			{
-				outputHandler("You don't see any " + command[1] + " here to get.");
+				var objectExists:String = roomHandler.gettableHandler.checkItemExists(itemName, targetName); // Check if there is an item of the same input command in the room
+				if (objectExists != null)
+				{
+					if (roomHandler.gettableHandler.checkGettableLocation(InventoryHolder).length > 7) 
+					{
+						errorOutput = "You can only carry 8 items. Drop something to free up inventory space.";
+					}
+					else if (!roomHandler.gettableHandler.isObjectGettable(objectExists))
+					{
+						errorOutput = "You cannot get a " + Utils.getObjectShortDesc(objectExists) + ".";
+					}
+					else
+					{
+						roomHandler.gettableHandler.moveGettable(objectExists, InventoryHolder);
+						outputHandler("You get a " + Utils.getObjectShortDesc(objectExists) + ".");
+						this.dispatchEvent(new ParserEvent(null, ParserEvent.INVENTORY));
+						return;
+					}
+				}
 			}
+			
+			outputHandler(errorOutput);
 		}
 		
-// Look (at the room, or at objects)		
+// Put items into containers
+		private function checkPutCommand(command:Array):void
+		{
+			var errorOutput:String = "";
+			var itemName:String = "";
+			var targetName:String = "";
+			
+			for (var i:* in command) 
+			{
+				if (inputCommand.indexOf(" in ") > -1)
+				{
+					itemName = inputCommand.substring(command[0].length + 1, inputCommand.indexOf(" in "));
+					targetName = inputCommand.substring(inputCommand.indexOf(" in ") + 4, inputCommand.length);
+					errorOutput = itemName;
+					break;
+				}
+			}
+			
+			errorOutput = "You can't put the " + itemName + " in that.";
+			
+			if (itemName == "" || targetName == "")
+			{
+				errorOutput = "What do you want to put the " + inputCommand.substring(command[0].length + 1, inputCommand.length) + " into?";
+			}
+			else
+			{
+				var objectExists:String = roomHandler.gettableHandler.checkItemExists(itemName, InventoryHolder); // Check if there is an item of the same input command in the inventory
+				if (objectExists != null)
+				{
+					var targetExists:String = roomHandler.gettableHandler.checkItemExists(targetName, roomHandler.room);  // Check if the target we're trying to put the item to is in the same room
+					if (targetExists != null)
+					{
+						var gettableObj:Class = getDefinitionByName(targetExists) as Class;    // Check if the target we're trying to put the item to is a container
+						var child:* = new gettableObj;
+						if (child is Container)
+						{
+							roomHandler.gettableHandler.moveGettable(objectExists, targetExists);
+							outputHandler("You put a " + Utils.getObjectShortDesc(objectExists) + " in a " + Utils.getObjectShortDesc(targetExists) + "."); 
+							this.dispatchEvent(new ParserEvent(null, ParserEvent.INVENTORY));
+							return;
+						}						
+					}
+				}
+				else
+				{
+					errorOutput = "There's no " + itemName + " to put anywhere."
+				}
+			}
+			
+			outputHandler(errorOutput);
+		}
+		
+// Look (at the room or at objects)		
 		private function checkLookCommand(command:Array):void
 		{
 			if (command.length == 1) // If not looking at an object, just return room description
@@ -186,7 +269,7 @@ package parser
 			if (checkForRoomItems(newCommand)) 
 				return; 
 				
-			if (newCommand == 'me' || newCommand == roomHandler.user.userName.toLowerCase())
+			if (newCommand == 'me' || newCommand == 'self' || newCommand == roomHandler.user.userName.toLowerCase())
 				outputHandler(sheet.getSheet());
 			else
 				outputHandler("You don't see any " + newCommand + " here.");
@@ -291,12 +374,6 @@ package parser
 			if (checkGettableActions())
 				return;
 			
-			if (command[0] == "talk" || command[0] == "speak")
-			{
-				checkConversations(command);
-				return;
-			}
-			
 			var errorMsg:String = "You don't know how to " + inputCommand + ".";
 			outputHandler(errorMsg);
 		}
@@ -380,14 +457,14 @@ package parser
 				var convoOptions:Array = roomHandler.personHandler.getNPCConversation(objectExists);
 				if (convoOptions == null || convoOptions.length == 0)
 				{
-					outputHandler(Utils.capitalize(newCommand) + " has nothing to say to you.");
+					outputHandler(Utils.capitalize(Utils.getObjectShortDesc(objectExists)) + " has nothing to say to you.");
 					return;
 				}
 				
 				var randomId:int = Utils.generateRandom(0, convoOptions.length);
 				var randomConvo:String = convoOptions[randomId];
 				
-				outputHandler(Utils.capitalize(newCommand) + " says: '" + randomConvo);
+				outputHandler(Utils.capitalize(Utils.getObjectShortDesc(objectExists)) + " says: '" + randomConvo);
 				return;
 			}
 			else
