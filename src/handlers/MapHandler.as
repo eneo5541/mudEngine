@@ -2,70 +2,80 @@ package handlers
 {
 	import flash.utils.getQualifiedClassName;
 	import objects.Room;
-	/**
-	 * ...
-	 * @author eric
-	 */
+
 	public class MapHandler 
 	{
+		private static var gridSize:int = 100;
+		private static var vertical:String = ' |';   // North and south
+		private static var horizontal:String = '-';   // East and west
+		private static var rightDiagonal:String = '/';   // Northeast and southwest
+		private static var leftDiagonal:String = '\\';   // Northwest and southeast
+		
 		private var mappedRooms:Array;
 		private var map:Array;
-		
-		private static var north:String = '|';
-		private static var south:String = '|';
-		private static var east:String = '-';
-		private static var west:String = '-';
-		private static var northeast:String = '/';
-		private static var southeast:String = '\\';
-		private static var northwest:String = '\\';
-		private static var southwest:String = '/';
+		private var playersCurrentRoom:String;
 		
 		public function MapHandler() 
 		{
 			mappedRooms = new Array();
-			
 			map = new Array();
-			map[0] = new Array();
 		}
 		
-		public function generateMap(startingRoom:Room):String
+		public function generateMap(startingRoom:Room, currentRoom:String):String
+		{
+			playersCurrentRoom = currentRoom;
+			
+			createNewMap();   // Creates a grid for the rooms and exits to go on. Assumes that the map, generated from the middle of the grid, will not extend outside of the grid boundaries
+			
+			remap(startingRoom, gridSize/2, gridSize/2);    // Start generating the map with the first room, at the middle of the map
+			
+			map = map.filter(returnContent);    // Filter out all the rows that did not have any rooms or exits added to them
+			var firstText:int = returnFirstColumn(map);   // Remove all the columns that do not have any data at them, until the left-most point of the map is in the first column
+			for (var i:* in map) 
+			{
+				for (var j:int = 0; j < firstText; j++) 
+				{
+					map[i].shift();
+				}
+			}
+			
+			return mapToString();   // Convert the map's arrays to strings
+		}
+		
+		private function createNewMap():void
 		{
 			mappedRooms = [];
 			map = [];
-			map[0] = [' '];
 			
-			remap(startingRoom, 0, 0, true);
-			
-			var mapString:String = '';
-			var comma:RegExp = /,/g;
-			
-			for (var i:* in map) 
+			for (var y:int = 0; y < gridSize; y++) 
 			{
-				var mapLine:String = new String(map[i]);
-				mapString += "\n" + mapLine.replace(comma, "");
+				var td:Array = [" "];
+				for (var x:int = 0; x < gridSize; x++) 
+				{
+					td.push(" ");
+				}
+				map.push(td);
 			}
-			
-			return mapString;
 		}
 		
-		
-		private function remap(newRoom:Room, startingX:int, startingY:int, playerIsHere:Boolean):void
+		private function remap(newRoom:Room, startingX:int, startingY:int):void
 		{
 			var roomName:String = getQualifiedClassName(newRoom);
-			for (var i:String in mappedRooms) 
+			for (var i:String in mappedRooms)    // Store each room that's been mapped. Prevents rooms being remapped back and forth.
 			{
 				if (roomName == mappedRooms[i])
 					return;
 			}
 			
-			var spanStart:String = newRoom.shortDesc.split(">")[0] + '>';
-			var spanStop:String = '</span>';
-			
-			if (playerIsHere)
-				map[startingX][startingY] = "<span class='white'>O</span>";
-			else
-				map[startingX][startingY] = spanStart+'X'+spanStop;
 			mappedRooms.push(roomName);
+			
+			var spanStart:String = newRoom.shortDesc.split(">")[0] + ">";   // Take the colour of the room's shortDesc and use it to colour that room in the map
+			var spanStop:String = "</span>";
+			
+			if (roomName == playersCurrentRoom)
+				map[startingX][startingY] = "<span class='white'>X</span>";
+			else
+				map[startingX][startingY] = spanStart + "O" + spanStop;
 			
 			var savedX:int = startingX;
 			var savedY:int = startingY;
@@ -79,176 +89,103 @@ package handlers
 				switch(j)
 				{
 					case 'north':
-						var nValues:* = decrementX(startingX, savedX);
-						startingX = nValues.startingX;
-						savedX = nValues.savedX;
-						
-						map[startingX][startingY] = spanStart + north + spanStop;
-						
-						nValues = decrementX(startingX, savedX);
-						startingX = nValues.startingX;
-						savedX = nValues.savedX;
+						startingX--;	// For each exit, offset the coordinates to the exit's location relative to the room
+						map[startingX][startingY] = spanStart +  vertical + spanStop;   // Draw the direction symbol for the exit 
+						startingX--;    // Offset again for the room attached to the exit
 						break;
 					case 'south':
-						var sValues:* = incrementX(startingX);
-						startingX = sValues.startingX;
-						
-						map[startingX][startingY] = spanStart + south + spanStop;
-						
-						sValues = incrementX(startingX);
-						startingX = sValues.startingX;
+						startingX++;
+						map[startingX][startingY] = spanStart + vertical + spanStop;
+						startingX++;
 						break;
 					case 'east':
-						var eValues:* = incrementY(startingY);
-						startingY = eValues.startingY;
-						
-						map[startingX][startingY] = spanStart+east+spanStop;
-						
-						eValues = incrementY(startingY);
-						startingY = eValues.startingY;
+						startingY++;
+						map[startingX][startingY] = spanStart + horizontal + spanStop;
+						startingY++;
 						break;
 					case 'west':
-						var wValues:* = decrementY(startingY, savedY);
-						startingY = wValues.startingY;
-						savedY = wValues.savedY;
-						
-						map[startingX][startingY] = spanStart + west + spanStop;
-						
-						wValues = decrementY(startingY, savedY);
-						startingY = wValues.startingY;
-						savedY = wValues.savedY;
+						startingY--;
+						map[startingX][startingY] = spanStart + horizontal + spanStop;
+						startingY--;
 						break;
 					case 'northeast':
-						var neValues:* = decrementX(startingX, savedX);
-						startingX = neValues.startingX;
-						savedX = neValues.savedX;
-						
-						neValues = incrementY(startingY);
-						startingY = neValues.startingY;
-						
-						map[startingX][startingY] = spanStart+northeast+spanStop;
-						
-						neValues = decrementX(startingX, savedX);
-						startingX = neValues.startingX;
-						savedX = neValues.savedX;
-						
-						neValues = incrementY(startingY);
-						startingY = neValues.startingY;
+						startingX--;
+						startingY++;
+						map[startingX][startingY] = spanStart + rightDiagonal + spanStop;
+						startingX--;
+						startingY++;
 						break;
 					case 'southeast':
-						var seValues:* = incrementX(startingX);
-						startingX = seValues.startingX;
-						
-						seValues = incrementY(startingY);
-						startingY = seValues.startingY;
-						
-						map[startingX][startingY] = spanStart+southeast+spanStop;
-						
-						seValues = incrementX(startingX);
-						startingX = seValues.startingX;
-						
-						seValues = incrementY(startingY);
-						startingY = seValues.startingY;
+						startingX++;
+						startingY++;
+						map[startingX][startingY] = spanStart + leftDiagonal + spanStop;
+						startingX++;
+						startingY++;
 						break;
 					case 'northwest':
-						var nwValues:* = decrementX(startingX, savedX);
-						startingX = nwValues.startingX;
-						savedX = nwValues.savedX;
-						
-						nwValues = decrementY(startingY, savedY);
-						startingY = nwValues.startingY;
-						savedY = nwValues.savedY;
-						
-						map[startingX][startingY] = spanStart+northwest+spanStop;
-						
-						nwValues = decrementX(startingX, savedX);
-						startingX = nwValues.startingX;
-						savedX = nwValues.savedX;
-						
-						nwValues = decrementY(startingY, savedY);
-						startingY = nwValues.startingY;
-						savedY = nwValues.savedY;
+						startingX--;
+						startingY--;
+						map[startingX][startingY] = spanStart + leftDiagonal + spanStop;
+						startingX--;
+						startingY--;
 						break;
 					case 'southwest':
-						var swValues:* = incrementX(startingX);
-						startingX = swValues.startingX;
-						
-						swValues = decrementY(startingY, savedY);
-						startingY = swValues.startingY;
-						savedY = swValues.savedY;
-						
-						map[startingX][startingY] = spanStart+southwest+spanStop;
-						
-						swValues = incrementX(startingX);
-						startingX = swValues.startingX;
-						
-						swValues = decrementY(startingY, savedY);
-						startingY = swValues.startingY;
-						savedY = swValues.savedY;
+						startingX++;
+						startingY--;
+						map[startingX][startingY] = spanStart + rightDiagonal + spanStop;
+						startingX++;
+						startingY--;
 						break;
 					default:
 						continue;
 						break;
 				}
 				
-				remap(new obj[j] as Room, startingX, startingY, false);
+				remap(new obj[j] as Room, startingX, startingY);   // For each exit, take the room assigned to that exit and add it to the map
 			}
 		}
 		
-		private function incrementX(startingX:int):*
+		private function returnContent(element:Array, index:int, array:Array):Boolean
 		{
-			startingX++;
-			if (startingX > map.length-1) 
+			for (var j:* in element) 
 			{
-				var newArray:Array = [];
-				for (var i:* in map[0]) 
-					newArray.push(' ');
-				
-				map.push(newArray);
+				if (element[j] != "" && element[j] != " ")
+					return true;
 			}
-			return { startingX:startingX };
+			
+			return false;
 		}
 		
-		private function decrementX(startingX:int, savedX:int):*
+		private function returnFirstColumn(array:Array):int
 		{
-			startingX--;
-			if (startingX < 0) 
+			var thisFirstText:int = gridSize;
+			for (var i:* in array) 
 			{
-				var newArray:Array = [];
-				for (var i:* in map[0]) 
-					newArray.push(' ');
-				
-				map.unshift(newArray);
-				startingX = 0;
-				savedX++;
+				for (var j:* in array[i]) 
+				{
+					if (array[i][j] != "" && array[i][j] != " " && j < thisFirstText)
+					{
+						thisFirstText = j;
+						break;
+					}
+				}
 			}
-			return { startingX:startingX, savedX:savedX };
+			
+			return thisFirstText;
 		}
 		
-		private function incrementY(startingY:int):*
+		private function mapToString():String
 		{
-			startingY++;
-			if (startingY > map[0].length-1) 
+			var mapString:String = "";
+			var comma:RegExp = /,/g;
+			for (var i:* in map) 
 			{
-				for (var i:* in map) 
-					map[i].push(' ');
+				var mapLine:String = new String(map[i]);
+				mapString += "\n" + mapLine.replace(comma, "");
 			}
-			return { startingY:startingY };
-		}
-		
-		private function decrementY(startingY:int, savedY:int):*
-		{
-			startingY--; 
-			if (startingY < 0) 
-			{
-				for (var i:* in map) 
-					map[i].unshift(' ');
-				startingY = 0;
-				savedY++;
-			}
-			return { startingY:startingY, savedY:savedY };
+			
+			return mapString;
 		}
 		
 	}
-
 }

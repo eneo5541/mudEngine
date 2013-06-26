@@ -1,6 +1,5 @@
 package parser 
 {
-	import flash.display.InteractiveObject;
 	import flash.display.Sprite;
 	import flash.utils.getDefinitionByName;
 	import flash.utils.getQualifiedClassName;
@@ -100,9 +99,8 @@ package parser
 				case "colours":case "black":case "white":
 					checkColours(splitSpaces);
 					break;
-				case "map":
-					var mainClass:Class = getDefinitionByName(roomHandler.room) as Class; 
-					outputHandler(mapHandler.generateMap(new mainClass as Room));
+				case "map":case "m":
+					outputHandler(mapHandler.generateMap(_startingRoom, roomHandler.room));
 					break;
 				case "talk":case "speak":	
 					checkConversations(splitSpaces);
