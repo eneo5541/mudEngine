@@ -113,7 +113,7 @@ package parser
 		
 		private function askForRace():void
 		{
-			var intro:String = 	"Hail, " + user.userName + "! \n" +
+			var intro:String = 	"Greetings, " + user.userName + "! \n" +
 				"What race do you hail from?";
 			outputIntroText(intro);
 		}
