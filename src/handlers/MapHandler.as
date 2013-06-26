@@ -146,7 +146,7 @@ package handlers
 		{
 			for (var j:* in element) 
 			{
-				if (element[j] != "" && element[j] != " ")
+				if (element[j] != " ")
 					return true;
 			}
 			
@@ -160,7 +160,7 @@ package handlers
 			{
 				for (var j:* in array[i]) 
 				{
-					if (array[i][j] != "" && array[i][j] != " " && j < emptyColumns)
+					if (array[i][j] != " " && j < emptyColumns)
 					{
 						emptyColumns = j;
 						break;

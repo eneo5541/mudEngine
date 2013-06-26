@@ -18,13 +18,15 @@ package parser
 	
 	public class TextParser extends Sprite
 	{
-		public var roomHandler:RoomHandler;
 		public var sheet:Sheet;
-		private var saveHandler:SaveHandler = new SaveHandler();
+		
+		public var roomHandler:RoomHandler;
+		public var saveHandler:SaveHandler = new SaveHandler();
+		public var mapHandler:MapHandler = new MapHandler();
+		
 		private var inputCommand:String;
 		private var isWhiteText:Boolean = true;
 		private var _startingRoom:Bedroom = new Bedroom();  // This makes all the objects compile into the .swf, as they are all strongly referenced
-		private var mapHandler:MapHandler = new MapHandler();
 		
 		function TextParser(targetRoom:String)  // Accepts a target room to start in, so we can load into a specific room
 		{
@@ -335,16 +337,7 @@ package parser
 // Move between rooms
 		private function checkDirectionCommand(newCommand:String):Boolean
 		{
-			if (newCommand == "n") newCommand = "north";
-			else if (newCommand == "s") newCommand = "south";
-			else if (newCommand == "e") newCommand = "east";
-			else if (newCommand == "w") newCommand = "west";
-			else if (newCommand == "ne") newCommand = "northeast";
-			else if (newCommand == "se") newCommand = "southeast";
-			else if (newCommand == "sw") newCommand = "southwest";
-			else if (newCommand == "nw") newCommand = "northwest";
-			else if (newCommand == "u") newCommand = "up";
-			else if (newCommand == "d") newCommand = "down";
+			newCommand = Utils.getDirectionFromShortcut(newCommand);
 			
 			var obj:* = roomHandler.exits; // Check if the command matches the exits of the room.
 			for (var i:* in obj) 

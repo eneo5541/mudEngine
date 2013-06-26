@@ -119,6 +119,35 @@ package parser
 			}
 			return null;
 		}
+		
+		public static function getDirectionFromShortcut(shortcut:String):String
+		{
+			switch(shortcut)
+			{
+				case "n":
+					return "north";
+				case "s":
+					return "south";
+				case "e":
+					return "east";
+				case "w":
+					return "west";
+				case "ne":
+					return "northeast";
+				case "se":
+					return "southeast";
+				case "nw":
+					return "northwest";
+				case "sw":
+					return "southwest";
+				case "u":
+					return "up";
+				case "d":
+					return "down";
+				default:
+					return shortcut;
+			}
+		}
 	}
 
 }

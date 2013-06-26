@@ -37,7 +37,7 @@ package objects.npcs.house
 		{
 			actions = [{ 
 				keywords:[
-				["rub"],
+				["rub", "pet"],
 				["cat"],
 				],
 				response:function rubCat(target:*):void	{
@@ -46,7 +46,17 @@ package objects.npcs.house
 						target.movePerson(Cat, Kitchen);
 						target.reloadRoom();
 					}
-			}];
+			},
+			{ 
+				keywords:[
+				["let"],
+				["cat"],
+				["in"],
+				],
+				response:function (target:*):void {
+						target.outputText('The cat paws and bats at your leg as you approach the door, demanding to be pet.');
+					}
+				}];
 		}
 		
 	}
