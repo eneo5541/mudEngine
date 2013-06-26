@@ -2,6 +2,8 @@ package parser
 {
 	import flash.text.TextField;
 	import flash.utils.ByteArray;
+	import flash.utils.getDefinitionByName;
+	import flash.utils.getQualifiedClassName;
 	
 	public class Utils 
 	{
@@ -98,7 +100,25 @@ package parser
 			byteArray.writeObject(source); 
 			byteArray.position = 0; 
 			return(byteArray.readObject()); 
-		}		
+		}	
+		
+		public static function getObjectShortDesc(getObj:*):String
+		{
+			if (!(getObj is String))
+				getObj = getQualifiedClassName(getObj);
+			
+			try
+			{
+				var obj:Class = getDefinitionByName(getObj) as Class;
+				var child:* = new obj;
+				return child.shortDesc;
+			}
+			catch (error:Error)
+			{
+				trace(error.message);
+			}
+			return null;
+		}
 	}
 
 }

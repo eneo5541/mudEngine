@@ -35,8 +35,8 @@ package objects.gettables.house
 				["whistle"],
 				["butler"],
 				],
-				parameter: { npc:Butler, error:"There is no butler here." },
-				restart: { npc:Parrot, error:"The butler stares at you and points to the parrot that he just summoned with your whistle. He only has the one parrot." },
+				required: { npc:Butler, error:"There is no butler here." },
+				excluded: { npc:Parrot, error:"The butler stares at you and points to the parrot that he just summoned with your whistle. He only has the one parrot." },
 				response:function (target:*):void {
 						var text:String = 'The butler inspects the whistle as you hand it to him. Holding it to his lips, he gives it a shrill whistle that fills the room. You can hear wingbeats in the distance ' +
 						'and soon a large, majestic parrot comes to rest on his shoulder.'

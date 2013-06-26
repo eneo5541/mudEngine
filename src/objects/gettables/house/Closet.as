@@ -7,7 +7,6 @@ package objects.gettables.house
 		public function Closet() 
 		{
 			super();
-			isGettable = false;
 		}
 		
 		override public function setShortDesc():void
@@ -24,6 +23,12 @@ package objects.gettables.house
 		{
 			longDesc = "An old, rickety closet.";
 		}
+		
+		override public function setContents():void
+		{
+			contents = [ Hat ];
+		}
+		
 	}
 
 }
