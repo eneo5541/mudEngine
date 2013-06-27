@@ -1,12 +1,13 @@
 package objects 
 {
+	import flash.utils.Dictionary;
 
 	public class Room 
 	{
 		public var shortDesc:String = "";
 		public var longDesc:String = "";
-		public var exits:* = null;
-		public var items:* = null;
+		public var exits:Dictionary = new Dictionary();
+		public var items:Dictionary = new Dictionary();
 		public var npcs:Array = [];
 		public var gettables:Array = [];
 		public var actions:Array = [];

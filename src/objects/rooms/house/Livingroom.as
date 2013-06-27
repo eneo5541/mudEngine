@@ -25,8 +25,8 @@ package objects.rooms.house
 		
 		override public function setExits():void
 		{
-			exits = { east:Hallway,
-					southwest:Kitchen };
+			exits["east"] = Hallway;
+			exits["southwest"] = Kitchen;
 		}
 		
 		override public function setNpcs():void
@@ -36,15 +36,13 @@ package objects.rooms.house
 		
 		override public function setItems():void
 		{
-			items = {
-				couches:"Three plush couches line the walls. They look like they would be very comfortable to sit on.",
-				table:"A small, round table. It has seen plenty of use.",
-				walls:"Simple white walls.",
-				hallway:"The hallway leads to the rest of the house.",
-				kitchen:"There is a delicious smell coming from the kitchen."
-			};
+			items["couches"] = "Three plush couches line the walls. They look like they would be very comfortable to sit on.";
+			items["table"] = "A small, round table. It has seen plenty of use.";
+			items["walls"] = "Simple white walls.";
+			items["hallway"] = "The hallway leads to the rest of the house.";
+			items["balcony"] = "There is a delicious smell coming from the kitchen.";
 		}
-
+		
 		override public function setAction():void
 		{
 			actions = [ { 

@@ -2,6 +2,7 @@ package handlers
 {
 	import flash.display.Sprite;
 	import flash.events.TimerEvent;
+	import flash.utils.Dictionary;
 	import flash.utils.getDefinitionByName;
 	import flash.utils.getQualifiedClassName;
 	import flash.utils.Timer;
@@ -20,8 +21,8 @@ package handlers
 		public var room:String;
 		public var shortDesc:String;
 		public var longDesc:String;
-		public var exits:*;
-		public var items:*;
+		public var exits:Dictionary;
+		public var items:Dictionary;
 		public var actions:*;
 		public var npcsThisRoom:Array;
 		public var user:User;
@@ -109,9 +110,8 @@ package handlers
 			if (this.exits == null) 
 				return "\nThere are no obvious exits.";	
 			
-			var obj:* = this.exits;
 			var objectList:Array = [];
-			for (var i:* in obj) 
+			for (var i:String in this.exits) 
 				objectList.push(i);
 			
 			var listedExits:String = Utils.listExits(objectList);

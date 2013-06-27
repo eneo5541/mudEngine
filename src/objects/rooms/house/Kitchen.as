@@ -23,7 +23,7 @@ package objects.rooms.house
 		
 		override public function setExits():void
 		{
-			exits = { northeast:Livingroom };
+			exits["northeast"] = Livingroom;
 		}
 		
 		override public function setNpcs():void
@@ -33,15 +33,13 @@ package objects.rooms.house
 		
 		override public function setItems():void
 		{
-			items = {
-				stovetop:"A stovetop with four heating elements. A pot of soup is cooking on one of them.",
-				pot:"A large pot of delicious smelling soup. It smells like... bacon. If only you had some parsley to add to this.",
-				soup:"A large pot of delicious smelling soup. It smells like... bacon. If only you had some parsley to add to this.",
-				sink:"The sink has several dirty dishes in it, awaiting a good washing.",
-				dishes:"Three dirty looking plates sit in the sink.",
-				balcony:"A door separates the kitchen from the balcony outside.",
-				door:"This door leads outside. It is closed."
-			};
+			items["stovetop"] = "A stovetop with four heating elements. A pot of soup is cooking on one of them.";
+			items["pot"] = "A large pot of delicious smelling soup. It smells like... bacon. If only you had some parsley to add to this.";
+			items["soup"] = "A large pot of delicious smelling soup. It smells like... bacon. If only you had some parsley to add to this.";
+			items["sink"] = "The sink has several dirty dishes in it, awaiting a good washing.";
+			items["dishes"] = "Three dirty looking plates sit in the sink.";
+			items["balcony"] = "A door separates the kitchen from the balcony outside.";
+			items["door"] = "This door leads outside. It is closed.";
 		}
 
 		override public function setAction():void

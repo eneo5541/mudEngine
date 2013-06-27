@@ -22,7 +22,7 @@ package objects.rooms.house
 		
 		override public function setExits():void
 		{
-			exits = { north:Hallway };
+			exits["north"] = Hallway;
 		}
 		
 		override public function setGettables():void
@@ -32,15 +32,13 @@ package objects.rooms.house
 		
 		override public function setItems():void
 		{
-			items = {
-				sink:"A simple ceramic bowl with a faucet. You can use it.",
-				bowl:"A simple ceramic bowl with a faucet. You can use it.",
-				faucet:"A simple ceramic bowl with a faucet. You can use it.",
-				counter:"The black marble counter is very shiny.",
-				towels:"Three pink towels have been neatly folded and placed onto the counter, beside the sink.",
-				stack:"Three pink towels have been neatly folded and placed onto the counter, beside the sink.",
-				hallway:"The hallway leads to the rest of the house."
-			};
+			items["sink"] = "A simple ceramic bowl with a faucet. You can use it.";
+			items["bowl"] = "A simple ceramic bowl with a faucet. You can use it.";
+			items["faucet"] = "A simple ceramic bowl with a faucet. You can use it.";
+			items["counter"] = "The black marble counter is very shiny.";
+			items["towels"] = "Three pink towels have been neatly folded and placed onto the counter, beside the sink.";
+			items["stack"] = "Three pink towels have been neatly folded and placed onto the counter, beside the sink.";
+			items["hallway"] = "The hallway leads to the rest of the house.";
 		}
 
 		override public function setAction():void

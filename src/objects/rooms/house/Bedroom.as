@@ -25,7 +25,7 @@ package objects.rooms.house
 		
 		override public function setExits():void
 		{
-			exits = { west:Hallway };
+			exits["west"] = Hallway;
 		}
 		
 		override public function setNpcs():void
@@ -40,11 +40,9 @@ package objects.rooms.house
 		
 		override public function setItems():void
 		{
-			items = {
-				bed:"A neatly made bed.",
-				chest:"A nice, wooden chest. It is closed. ",
-				door:"The door leads out, to the west."
-			};
+			items["bed"] = "A neatly made bed.";
+			items["chest"] = "A nice, wooden chest. It is closed.";
+			items["door"] = "The door leads out, to the west.";
 		}
 		
 		override public function setAction():void

@@ -21,18 +21,16 @@ package objects.rooms.house
 		
 		override public function setExits():void
 		{
-			exits = { east:Bedroom,
-					south:Bathroom,
-					west:Livingroom };
+			exits["east"] = Bedroom;
+			exits["south"] = Bathroom;
+			exits["west"] = Livingroom;
 		}
 		
 		override public function setItems():void
 		{
-			items = {
-				bedroom:"A cosy looking bedroom",
-				bathroom:"The bathroom looks very clean.",
-				livingroom:"A nice livingroom with plush furniture."
-			};
+			items["bedroom"] = "A cosy looking bedroom",
+			items["bathroom"] = "The bathroom looks very clean.",
+			items["livingroom"] = "A nice livingroom with plush furniture."
 		}
 		
 	}

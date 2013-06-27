@@ -23,7 +23,7 @@ package objects.rooms.house
 		
 		override public function setExits():void
 		{
-			exits = { inside:Kitchen };
+			exits["in"] = Kitchen;
 		}
 		
 		override public function setGettables():void
@@ -33,16 +33,14 @@ package objects.rooms.house
 		
 		override public function setItems():void
 		{
-			items = {
-				balcony:"A wooden balcony.",
-				trees:"Huge trees stretch into the sky and blot out the sunlight.",
-				bushes:"Thick bushes of white flowers.",
-				flowers:"These large, white flowers are very striking.",
-				sunlight:"Thin rays of light pour in through the tree coverage overhead.",
-				birds:"You can't see them, but they are making a lot of noise.",
-				insects:"You can't see them, but they are making a lot of noise.",
-				door:"The door leads back inside."
-			};
+			items["balcony"] = "A wooden balcony.";
+			items["trees"] = "Huge trees stretch into the sky and blot out the sunlight.";
+			items["bushes"] = "Thick bushes of white flowers.";
+			items["flowers"] = "These large, white flowers are very striking.";
+			items["sunlight"] = "Thin rays of light pour in through the tree coverage overhead.";
+			items["birds"] = "You can't see them, but they are making a lot of noise..";
+			items["insects"] = "You can't see them, but they are making a lot of noise.";
+			items["door"] = "The door leads back inside.";
 		}
 		
 	}

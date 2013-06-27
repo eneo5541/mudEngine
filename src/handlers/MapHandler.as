@@ -78,7 +78,7 @@ package handlers
 			var savedY:int = startingY;
 			
 			var obj:* = newRoom.exits;
-			for (var j:* in obj)
+			for (var j:String in obj)
 			{
 				startingX = savedX;
 				startingY = savedY;

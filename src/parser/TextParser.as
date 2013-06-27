@@ -1,6 +1,7 @@
 package parser 
 {
 	import flash.display.Sprite;
+	import flash.utils.Dictionary;
 	import flash.utils.getDefinitionByName;
 	import flash.utils.getQualifiedClassName;
 	import handlers.holders.InventoryHolder;
@@ -101,8 +102,8 @@ package parser
 					checkColours(splitSpaces);
 					break;
 				case "map":case "m":
-					var mainClass:Class = getDefinitionByName(roomHandler.room) as Class;
-					outputHandler(mapHandler.generateMap(new mainClass as Room));
+					//var mainClass:Class = getDefinitionByName(roomHandler.room) as Class;
+					//outputHandler(mapHandler.generateMap(new mainClass as Room));
 					break;
 				case "talk":case "speak":	
 					checkConversations(splitSpaces);
@@ -320,8 +321,8 @@ package parser
 		
 		private function checkForRoomItems(command:String):Boolean
 		{
-			var itemObject:* = roomHandler.items; // Check if the second word matches the room's items 
-			for (var i:* in itemObject) 
+			var itemObject:Dictionary = roomHandler.items; // Check if the second word matches the room's items 
+			for (var i:String in itemObject) 
 			{
 				if (command == i) 
 				{
@@ -338,8 +339,8 @@ package parser
 		{
 			newCommand = Utils.getDirectionFromShortcut(newCommand);
 			
-			var obj:* = roomHandler.exits; // Check if the command matches the exits of the room.
-			for (var i:* in obj) 
+			var obj:Dictionary = roomHandler.exits; // Check if the command matches the exits of the room.
+			for (var i:String in obj) 
 			{
 				if (newCommand == i)
 				{
