@@ -6,7 +6,7 @@ package handlers
 	public class MapHandler 
 	{
 		private static var gridSize:int = 100;
-		private static var vertical:String = ' |';   // North and south
+		private static var vertical:String = '|';   // North and south
 		private static var horizontal:String = '-';   // East and west
 		private static var rightDiagonal:String = '/';   // Northeast and southwest
 		private static var leftDiagonal:String = '\\';   // Northwest and southeast
@@ -36,7 +36,7 @@ package handlers
 				}
 			}
 			
-			return mapToString();   // Convert the map's arrays to strings
+			return "<span class='map'>" + mapToString() + "</span>";   // Convert the map's arrays to strings
 		}
 		
 		private function createNewMap():void
@@ -70,7 +70,7 @@ package handlers
 			var spanStop:String = "</span>";
 			
 			if (playerIsHere)
-				map[startingX][startingY] = "<span class='main'>X</span>";
+				map[startingX][startingY] = "X";
 			else
 				map[startingX][startingY] = spanStart + "O" + spanStop;
 			
