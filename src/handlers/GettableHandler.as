@@ -181,7 +181,6 @@ package handlers
 			return null;
 		}
 		
-		
 		public function gettablesThisRoom(room:*):Array
 		{
 			var gettablesInRoom:Array = checkGettableLocation(room);  // Return gettables in the room
