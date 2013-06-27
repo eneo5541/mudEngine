@@ -71,7 +71,7 @@ package parser
 			var splitSpaces:Array = command.split(" ");
 			switch (splitSpaces[0])
 			{
-				case "look":case "l":
+				case "look":case "l":case "examine":case "ex":case "exa":case "x":
 					checkLookCommand(splitSpaces);
 					break;
 				case "go":case "walk":
